@@ -41,20 +41,37 @@
       </tags>
   </entry>
   <entry>
+    <title>Hello World</title>
+    <url>/2024/03/15/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a class="link" href="https://hexo.io/">Hexo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>! This is your very first post. Check <a class="link" href="https://hexo.io/docs/">documentation <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link" href="https://hexo.io/docs/troubleshooting.html">troubleshooting <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> or you can ask me on <a class="link" href="https://github.com/hexojs/hexo/issues">GitHub <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/writing.html">Writing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/server.html">Server <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/generating.html">Generating <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/one-command-deployment.html">Deployment <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>GDB 使用指南-1</title>
     <url>/2024/03/18/gdb-1/</url>
     <content><![CDATA[<p>本文主要描述了GDB的基础命令使用</p>
 <h1 id="GDB-介绍"><a href="#GDB-介绍" class="headerlink" title="GDB 介绍"></a>GDB 介绍</h1><p>GDB，全称GNU调试器（GNU Debugger），是一个强大的Unix系统下的源代码级调试工具。它可以帮助程序员查看程序在执行过程中的内部状态，从而更好地理解程序的运行机制。GDB主要用于调试C和C++语言编写的程序。它的存在，使得我们能够更深入地了解程序的运行过程，找出并修复程序中的错误。</p>
 <h1 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h1><h2 id="启动GDB"><a href="#启动GDB" class="headerlink" title="启动GDB"></a>启动GDB</h2><p>假如我们有一个编译好的C++程序，名字是<code>a.out</code>，（记得编译的时候要带<code>-g</code>表示有调试信息），接下来我们需要启动GDB</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">gdb a.out</span><br></pre></td></tr></table></figure></div>
-<p><a href="https://img.tg/image/Ogk3e6"><img lazyload src="/images/loading.svg" data-src="https://ooo.0x0.ooo/2024/03/18/Ogk3e6.png" alt="Ogk3e6.png"></a></p>
+
 <h2 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h2><p>在GDB中，我们可以通过<code>list</code>来查看源码信息</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) list</span><br></pre></td></tr></table></figure></div>
-
-<p><a href="https://img.tg/image/OgkXsD"><img lazyload src="/images/loading.svg" data-src="https://ooo.0x0.ooo/2024/03/18/OgkXsD.png" alt="OgkXsD.png"></a></p>
+<p><a href="https://img.tg/image/Ogk3e6"><img lazyload src="/images/loading.svg" data-src="https://ooo.0x0.ooo/2024/03/18/Ogk3e6.png" alt="Ogk3e6.png"></a></p>
 <h2 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h2><p>断点是调试的核心，允许在程序特定的位置暂停执行，可以通过<code>break</code>来设置断点，通常只需要<code>b + 文件名: + 行号</code>即可</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) b main.cpp:5</span><br></pre></td></tr></table></figure></div>
-
+<p><a href="https://img.tg/image/OgkXsD"><img lazyload src="/images/loading.svg" data-src="https://ooo.0x0.ooo/2024/03/18/OgkXsD.png" alt="OgkXsD.png"></a></p>
 <h2 id="查看断点"><a href="#查看断点" class="headerlink" title="查看断点"></a>查看断点</h2><p>在设置了多个断点之后，我们可能需要查看所有的断点信息，来确保没有遗漏或者打错位置的断点，可以使用<code>info breakpoints</code>来查看所有的断点</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info breakpoints </span><br></pre></td></tr></table></figure></div>
 <p><a href="https://img.tg/image/OgkIoF"><img lazyload src="/images/loading.svg" data-src="https://ooo.0x0.ooo/2024/03/18/OgkIoF.png" alt="OgkIoF.png"></a></p>
@@ -82,24 +99,6 @@
         <tag>CPP</tag>
         <tag>调试</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2024/03/15/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a class="link" href="https://hexo.io/">Hexo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>! This is your very first post. Check <a class="link" href="https://hexo.io/docs/">documentation <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link" href="https://hexo.io/docs/troubleshooting.html">troubleshooting <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> or you can ask me on <a class="link" href="https://github.com/hexojs/hexo/issues">GitHub <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/writing.html">Writing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/server.html">Server <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/generating.html">Generating <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/one-command-deployment.html">Deployment <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-]]></content>
   </entry>
   <entry>
     <title>java语法</title>
