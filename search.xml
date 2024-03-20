@@ -140,6 +140,130 @@
       </tags>
   </entry>
   <entry>
+    <title>GDB使用指南-3</title>
+    <url>/2024/03/20/gdb-3/</url>
+    <content><![CDATA[<h1 id="调试运行环境"><a href="#调试运行环境" class="headerlink" title="调试运行环境"></a>调试运行环境</h1><h2 id="设置运行参数"><a href="#设置运行参数" class="headerlink" title="设置运行参数"></a>设置运行参数</h2><p>先放一段源码，方便自个调试</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span> <span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;The arguments&#x27; count is: &quot;</span> &lt;&lt; argc &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; argc; i++) &#123;</span><br><span class="line">        std::cout &lt;&lt; argv[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>在GDB中，可以通过<code>set args</code>命令来设置运行参数</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) set args 参数1 参数2...</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="改变工作目录"><a href="#改变工作目录" class="headerlink" title="改变工作目录"></a>改变工作目录</h2><p>有时候我们需要在GDB跳转到别的文件目录中</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) cd /path/to/directory</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="设置输入输出"><a href="#设置输入输出" class="headerlink" title="设置输入输出"></a>设置输入输出</h2><p>假设我们有一个<code>input.txt</code>和一个<code>output.txt</code>作为程序的输入和输出文件，我们想让gdb在启动程序的时候进行重定向</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) run &lt; input.txt &gt; output.txt</span><br></pre></td></tr></table></figure></div>
+
+<p>如果想保存整个程序的日志文件，我们需要<code>set logging</code>命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) set logging file 文件名</span><br><span class="line">(gdb) set logging on</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="线程调试"><a href="#线程调试" class="headerlink" title="线程调试"></a>线程调试</h2><p>放一份源码，方便调试</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">( []() &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::cout &lt;&lt; <span class="string">&quot;this is thread 1&quot;</span> &lt;&lt; std::endl;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::this_thread::sleep_for(</span></span></span><br><span class="line"><span class="params"><span class="function">            std::chrono::duration( std::chrono::seconds( <span class="number">10</span> ) ) );</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125; )</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">( []() &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::cout &lt;&lt; <span class="string">&quot;this is thread 2&quot;</span> &lt;&lt; std::endl;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::this_thread::sleep_for(</span></span></span><br><span class="line"><span class="params"><span class="function">            std::chrono::duration( std::chrono::seconds( <span class="number">10</span> ) ) );</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125; )</span></span>;</span><br><span class="line">    t1.<span class="built_in">detach</span>(), t2.<span class="built_in">detach</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>在线程调试中，如果要查看线程信息可以使用<code>info thread</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info thread</span><br></pre></td></tr></table></figure></div>
+
+<p>如果需要切换到特定的线程里面</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) thread 线程号</span><br></pre></td></tr></table></figure></div>
+
+<p>其他关于线程的命令</p>
+<ul>
+<li><p><code>break location thread thread-id</code>: 在指定线程上设置断点，仅当该特定线程执行时，它才会停止。</p>
+</li>
+<li><p><code>set scheduler-locking</code>: 控制在调试过程中其他线程的行为。可以设置以下模式：</p>
+<p>off：不锁定，所有线程都可以运行。<br>on：锁定，只有当前线程可以运行。<br>step：只有一个线程在单步执行时才锁定其他线程。</p>
+</li>
+<li><p><code>thread apply all command</code>: 对所有线程执行指定的命令。</p>
+</li>
+<li><p><code>set follow-fork-mode</code>: 设置GDB在fork系统调用时如何跟踪进程。可以设置为 parent 或 child，分别表示跟踪父进程或子进程。</p>
+</li>
+<li><p><code>set detach-on-fork</code>: 控制GDB在fork后是否保持调试父进程和子进程。</p>
+</li>
+<li><p><code>catch thread</code>: 在任何线程创建或退出时设置断点。</p>
+</li>
+<li><p><code>thread select</code>: 切换到已经停止的线程（例如，通过断点或者异常）。</p>
+</li>
+</ul>
+<h2 id="检查堆栈"><a href="#检查堆栈" class="headerlink" title="检查堆栈"></a>检查堆栈</h2><p>先放一份源码，方便调试</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(i &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">test</span>(i - <span class="number">1</span>);</span><br><span class="line">    std::cout &lt;&lt; i &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">test</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>在调试过程中，堆栈是经常需要查看的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info stack</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload src="/images/loading.svg" data-src="https://pic.imgdb.cn/item/65fae7ba9f345e8d03ce1ec5.png" alt="stack"></p>
+<h1 id="跳转命令"><a href="#跳转命令" class="headerlink" title="跳转命令"></a>跳转命令</h1><p>在GDB中，我们可以使用jump命令（或简写为j）来实现跳转执行。例如，如果我们想从当前位置直接跳到第10行执行，可以使用以下命令：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">j 10</span><br></pre></td></tr></table></figure></div>
+
+<p>这样程序就会直接跳转到第10行开始执行，跳过中间所有的代码</p>
+<h2 id="跳转的限制"><a href="#跳转的限制" class="headerlink" title="跳转的限制"></a>跳转的限制</h2><p>虽然跳转命令很强大，但它也有一些限制。例如，我们不能跳到一个没有被加载的函数或模块中，也不能跳到一个已经执行完毕的函数或模块中。<br>此外，频繁地使用跳转命令可能会导致程序状态的不一致，因此在使用时需要格外小心。</p>
+<h2 id="跳转应用的场景"><a href="#跳转应用的场景" class="headerlink" title="跳转应用的场景"></a>跳转应用的场景</h2><ol>
+<li><strong>绕过错误或崩溃</strong>：如果你在调试过程中遇到了一个会导致程序崩溃的代码块，并且希望跳过这部分代码继续调试程序的其他部分，可以使用jump命令。</li>
+<li><strong>重复执行代码</strong>：你可能想反复执行某段代码以观察问题，jump能够让你回到这段代码的起点。</li>
+<li><strong>测试代码路径</strong>：在多个分支或执行路径的代码中，你可能想强制执行某个特定的路径，即使它实际上在当前的程序状态下不会被执行。</li>
+<li><strong>跳过执行时间很长的函数</strong>：在调试时，你可能不想等待一个耗时的函数完成。你可以跳过这个函数的调用，直接跳到其后的代码执行。</li>
+</ol>
+<h1 id="信号命令"><a href="#信号命令" class="headerlink" title="信号命令"></a>信号命令</h1><p>信号是一种通知机制，用于告知进程某些事件已经发生。经常被用于处理异常情况（例如程序错误、外部中断等），在GDB中我们可以通过信号命令来处理、模拟这些信号</p>
+<h2 id="生成和处理信号"><a href="#生成和处理信号" class="headerlink" title="生成和处理信号"></a>生成和处理信号</h2><p>在GDB中，我们可以使用signal命令来发送信号到正在调试的程序。例如，要发送一个SIGINT信号，我们可以使用以下命令：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) signal SIGINT</span><br></pre></td></tr></table></figure></div>
+
+<p>这是模拟用户按下<code>Ctrl+C</code>的情况</p>
+<h2 id="查看和设置信号"><a href="#查看和设置信号" class="headerlink" title="查看和设置信号"></a>查看和设置信号</h2><p>要查看当前程序如何处理各种信号，可以使用<code>info signals</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) info signals</span><br></pre></td></tr></table></figure></div>
+
+<p>这将显示所有信号及其当前的处理方式。</p>
+<p>如果我们想改变某个信号的处理方式，可以使用<code>handle</code>命令。例如，要让程序在接收到SIGINT信号时停止并打印消息，我们可以使用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) handle SIGINT stop print</span><br></pre></td></tr></table></figure></div>
+
+<p>这样，每当程序接收到<code>SIGINT</code>信号时，它都会停止执行并在GDB中打印消息</p>
+<h1 id="运行SHELL命令"><a href="#运行SHELL命令" class="headerlink" title="运行SHELL命令"></a>运行SHELL命令</h1><p>要想运行shell命令，我们只需要在命令前加上shell关键字即可</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">(gdb) shell ...</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="调试core文件"><a href="#调试core文件" class="headerlink" title="调试core文件"></a>调试core文件</h1><p>在软件开发过程中，程序可能会出现崩溃。为了更好地理解和解决这些崩溃，我们经常需要调试程序的core文件。core文件是程序崩溃时生成的，它包含了程序崩溃时的内存快照，帮助我们定位问题。</p>
+<h2 id="生成core文件"><a href="#生成core文件" class="headerlink" title="生成core文件"></a>生成core文件</h2><p>先放一份源文件，方便调试</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;numeric&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> a[<span class="number">10</span>];</span><br><span class="line">    std::<span class="built_in">iota</span>(a , a + <span class="number">10</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; a[<span class="number">100001</span>] &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<p>当程序崩溃时，系统通常会生成一个core文件，要确保core文件被生成，需要设置<code>ulimit</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">ulimit -c unlimited</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="使用GDB查看core文件"><a href="#使用GDB查看core文件" class="headerlink" title="使用GDB查看core文件"></a>使用GDB查看core文件</h2><p>要使用GDB查看core文件，我们需要两个文件：崩溃的程序的可执行文件和core文件。使用以下命令启动GDB：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">gdb &lt;executable-file&gt; &lt;core-file&gt;</span><br></pre></td></tr></table></figure></div>
+
+<p>这里可以使用coredumpctl来调用gdb</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 启动最新的core文件</span><br><span class="line">coredumpctl debug</span><br></pre></td></tr></table></figure></div>
+<p><img lazyload src="/images/loading.svg" data-src="https://pic.imgdb.cn/item/65faf78d9f345e8d0337efe7.png" alt="core"></p>
+<h2 id="实时观察进程Crash信息"><a href="#实时观察进程Crash信息" class="headerlink" title="实时观察进程Crash信息"></a>实时观察进程Crash信息</h2><p>有时，我们可能希望实时观察进程的崩溃信息，而不是等待程序崩溃后再查看core文件。为此，我们可以使用strace工具跟踪系统调用和信号。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">strace -o output.txt &lt;executable-file&gt;</span><br></pre></td></tr></table></figure></div>
+
+<p>这将在output.txt文件中记录所有的系统调用和信号，帮助我们实时观察进程的行为。</p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>CPP</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2024/03/15/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a class="link" href="https://hexo.io/">Hexo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>! This is your very first post. Check <a class="link" href="https://hexo.io/docs/">documentation <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link" href="https://hexo.io/docs/troubleshooting.html">troubleshooting <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> or you can ask me on <a class="link" href="https://github.com/hexojs/hexo/issues">GitHub <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/writing.html">Writing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/server.html">Server <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/generating.html">Generating <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
+
+<p>More info: <a class="link" href="https://hexo.io/docs/one-command-deployment.html">Deployment <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>java语法</title>
     <url>/2024/03/16/java-grammar/</url>
     <content><![CDATA[<h1 id="the-grammar-of-java"><a href="#the-grammar-of-java" class="headerlink" title="the grammar of java"></a>the grammar of java</h1><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>byte:</p>
@@ -826,23 +950,5 @@
       <tags>
         <tag>java</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2024/03/15/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a class="link" href="https://hexo.io/">Hexo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>! This is your very first post. Check <a class="link" href="https://hexo.io/docs/">documentation <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link" href="https://hexo.io/docs/troubleshooting.html">troubleshooting <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> or you can ask me on <a class="link" href="https://github.com/hexojs/hexo/issues">GitHub <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/writing.html">Writing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/server.html">Server <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/generating.html">Generating <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure></div>
-
-<p>More info: <a class="link" href="https://hexo.io/docs/one-command-deployment.html">Deployment <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-]]></content>
   </entry>
 </search>
