@@ -20,14 +20,14 @@
     
         <meta name="description" content="socket编程socket的概念Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。 Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux 网络编程01">
+<meta property="og:title" content="socket的创建和连接">
 <meta property="og:url" content="http://example.com/2024/06/30/linux-socket-programming-1/index.html">
 <meta property="og:site_name" content="Raven&#39;s blog">
 <meta property="og:description" content="socket编程socket的概念Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。 Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s2.loli.net/2024/06/30/SPcvUQlrHe3F9ZI.png">
 <meta property="article:published_time" content="2024-06-29T16:51:53.000Z">
-<meta property="article:modified_time" content="2024-06-30T01:18:51.367Z">
+<meta property="article:modified_time" content="2024-07-03T08:23:49.241Z">
 <meta property="article:author" content="Raven005">
 <meta property="article:tag" content="C&#x2F;C++">
 <meta property="article:tag" content="网络编程">
@@ -47,7 +47,7 @@
     
     <title>
         
-            linux 网络编程01 -
+            socket的创建和连接 -
         
         Raven&#39;s blog
     </title>
@@ -418,7 +418,7 @@
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -444,7 +444,7 @@
         <div class="article-title relative w-full">
             
                 <div class="w-full flex items-center pt-6 justify-start">
-                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">linux 网络编程01</h1>
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">socket的创建和连接</h1>
                 </div>
             
             </div>
@@ -472,8 +472,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-06-30 09:18:51</span>
-            <span class="mobile">2024-06-30 09:18:51</span>
+            <span class="desktop">2024-07-03 16:23:49</span>
+            <span class="mobile">2024-07-03 16:23:49</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -743,27 +743,27 @@
     <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
      <i aria-hidden="true"></i><span>推荐阅读</span>
     </div>
-    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/03/24/network-optimization/" title="OpenWrt TCP UDP 网络性能优化" rel="bookmark">
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/03/linux-socket-programming-2/" title="asio socket的创建和连接" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="asio socket的创建和连接" class="!max-w-none">
+  <span class="title">asio socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/03/24/network-optimization/" title="OpenWrt TCP UDP 网络性能优化" rel="bookmark">
   <img src="/images/background_light.jpg" alt="OpenWrt TCP UDP 网络性能优化" class="!max-w-none">
   <span class="title">OpenWrt TCP UDP 网络性能优化</span>
 </a><a class="recommended-article-item" href="/2024/07/02/operating-system-1/" title="操作系统笔记01" rel="bookmark">
   <img src="/images/background_light.jpg" alt="操作系统笔记01" class="!max-w-none">
   <span class="title">操作系统笔记01</span>
-</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
-  <span class="title">GDB使用指南-3</span>
 </a></div>
    </div>
    <div class="recommended-mobile">
    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
      <i aria-hidden="true"></i><span>推荐阅读</span>
    </div>
-   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/03/24/network-optimization/" title="OpenWrt TCP UDP 网络性能优化" rel="bookmark">
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/03/linux-socket-programming-2/" title="asio socket的创建和连接" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="asio socket的创建和连接" class="!max-w-none">
+  <span class="title">asio socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/03/24/network-optimization/" title="OpenWrt TCP UDP 网络性能优化" rel="bookmark">
   <img src="/images/background_light.jpg" alt="OpenWrt TCP UDP 网络性能优化" class="!max-w-none">
   <span class="title">OpenWrt TCP UDP 网络性能优化</span>
-</a><a class="recommended-article-item" href="/2024/07/02/operating-system-1/" title="操作系统笔记01" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="操作系统笔记01" class="!max-w-none">
-  <span class="title">操作系统笔记01</span>
 </a></div>
    </div>
   </div>
@@ -814,7 +814,7 @@
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">linux 网络编程01</div>
+        <div class="page-title">socket的创建和连接</div>
         <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#socket%E7%BC%96%E7%A8%8B"><span class="nav-text">socket编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#socket%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-text">socket的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">socket的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket%E6%8F%90%E4%BE%9B%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">socket提供的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-socket"><span class="nav-text">1. socket()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-bind"><span class="nav-text">2. bind()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-listen"><span class="nav-text">3. listen()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-accept"><span class="nav-text">4. accept()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-connect"><span class="nav-text">5. connect()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-send"><span class="nav-text">6. send()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-recv"><span class="nav-text">7. recv()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-sendto"><span class="nav-text">8. sendto()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-recvfrom"><span class="nav-text">9. recvfrom()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-close"><span class="nav-text">10. close()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-setsockopt"><span class="nav-text">11. setsockopt()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-getsockopt"><span class="nav-text">12. getsockopt()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-shutdown"><span class="nav-text">13. shutdown()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-socket%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B"><span class="nav-text">TCP socket通信流程</span></a></li></ol></li></ol>
 
     </div>
@@ -848,11 +848,11 @@
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        14 posts in total
+                        15 posts in total
                     </span>
                     
                         <span>
-                            41.2k words in total
+                            43.7k words in total
                         </span>
                     
                 </p>
