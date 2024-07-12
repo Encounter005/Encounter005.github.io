@@ -13,30 +13,23 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/03/18/gdb-2/"/>
+    <link rel="canonical" href="http://example.com/2024/07/13/factory/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="本文主要描述了GDB中断点调试和数据命令的使用方法 断点调试设置断点要设置断点时，使用break或b来设置断点 1b main.cpp:5  条件断点有时，我们只想在满足特定条件时暂停程序 1b main.cpp:5 if i &#x3D;&#x3D; 5   查看断点如果需要查看所有断点所在的位置信息，使用info breakpoints 1info breakpoints  清除断点有些断点我们不再需要，可以直接">
+        <meta name="description" content="简介在软件开发中，工厂模式是一种设计模式，主要用于创建对象而不暴露具体类的创建细节。这种模式的主要目标是封装创建过程，并将创建逻辑从客户端代码中解耦出来。 定义和意图：工厂模式的意图在于提供一个创建一系列相关或相互依赖的对象的过程，而无需指定这些对象的具体类。它通过定义一个工厂类来实现这一功能，该工厂类负责根据输入参数决定创建哪个具体类的实例。 常见形式工厂模式通常有以下几种常见形式：  简单工厂">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GDB 使用指南-2">
-<meta property="og:url" content="http://example.com/2024/03/18/gdb-2/index.html">
+<meta property="og:title" content="工厂模式">
+<meta property="og:url" content="http://example.com/2024/07/13/factory/index.html">
 <meta property="og:site_name" content="Raven&#39;s blog">
-<meta property="og:description" content="本文主要描述了GDB中断点调试和数据命令的使用方法 断点调试设置断点要设置断点时，使用break或b来设置断点 1b main.cpp:5  条件断点有时，我们只想在满足特定条件时暂停程序 1b main.cpp:5 if i &#x3D;&#x3D; 5   查看断点如果需要查看所有断点所在的位置信息，使用info breakpoints 1info breakpoints  清除断点有些断点我们不再需要，可以直接">
+<meta property="og:description" content="简介在软件开发中，工厂模式是一种设计模式，主要用于创建对象而不暴露具体类的创建细节。这种模式的主要目标是封装创建过程，并将创建逻辑从客户端代码中解耦出来。 定义和意图：工厂模式的意图在于提供一个创建一系列相关或相互依赖的对象的过程，而无需指定这些对象的具体类。它通过定义一个工厂类来实现这一功能，该工厂类负责根据输入参数决定创建哪个具体类的实例。 常见形式工厂模式通常有以下几种常见形式：  简单工厂">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png">
-<meta property="og:image" content="https://pic.imgdb.cn/item/65f84de19f345e8d03ec15c8.png">
-<meta property="og:image" content="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1c4e.png">
-<meta property="og:image" content="https://pic.imgdb.cn/item/65f84de19f345e8d03ec185b.png">
-<meta property="og:image" content="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1ad6.png">
-<meta property="article:published_time" content="2024-03-18T14:24:45.000Z">
-<meta property="article:modified_time" content="2024-06-29T09:08:02.685Z">
+<meta property="article:published_time" content="2024-07-12T16:57:23.000Z">
+<meta property="article:modified_time" content="2024-07-12T16:57:23.983Z">
 <meta property="article:author" content="Raven005">
-<meta property="article:tag" content="C&#x2F;C++">
-<meta property="article:tag" content="调试">
+<meta property="article:tag" content="设计模式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png">
     
     
     <!--- Icon Part-->
@@ -48,7 +41,7 @@
     
     <title>
         
-            GDB 使用指南-2 -
+            工厂模式 -
         
         Raven&#39;s blog
     </title>
@@ -445,7 +438,7 @@
         <div class="article-title relative w-full">
             
                 <div class="w-full flex items-center pt-6 justify-start">
-                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">GDB 使用指南-2</h1>
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">工厂模式</h1>
                 </div>
             
             </div>
@@ -466,15 +459,15 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-03-18 22:24:45</span>
-        <span class="mobile">2024-03-18 22:24:45</span>
+        <span class="desktop">2024-07-13 00:57:23</span>
+        <span class="mobile">2024-07-13 00:57:23</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-06-29 17:08:02</span>
-            <span class="mobile">2024-06-29 17:08:02</span>
+            <span class="desktop">2024-07-13 00:57:23</span>
+            <span class="mobile">2024-07-13 00:57:23</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -488,7 +481,7 @@
                     
                         
                         <li>
-                            <a href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
                         </li>
                     
                     
@@ -502,11 +495,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/C-C/">C/C++</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/%E8%B0%83%E8%AF%95/">调试</a>&nbsp;
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>&nbsp;
                     </li>
                 
             </ul>
@@ -516,12 +505,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>438 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.2k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>1 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>7 Mins</span>
         </span>
     
     
@@ -540,69 +529,77 @@
 
 
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-            <p>本文主要描述了GDB中断点调试和数据命令的使用方法</p>
-<h1 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h1><h2 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h2><p>要设置断点时，使用<code>break</code>或<code>b</code>来设置断点</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b main.cpp:5</span><br></pre></td></tr></table></figure></div>
+            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在软件开发中，工厂模式是一种设计模式，主要用于创建对象而不暴露具体类的创建细节。这种模式的主要目标是封装创建过程，并将创建逻辑从客户端代码中解耦出来。</p>
+<h2 id="定义和意图："><a href="#定义和意图：" class="headerlink" title="定义和意图："></a>定义和意图：</h2><p><strong>工厂模式</strong>的意图在于提供一个创建一系列相关或相互依赖的对象的过程，而无需指定这些对象的具体类。它通过定义一个工厂类来实现这一功能，该工厂类负责根据输入参数决定创建哪个具体类的实例。</p>
+<h2 id="常见形式"><a href="#常见形式" class="headerlink" title="常见形式"></a>常见形式</h2><p>工厂模式通常有以下几种常见形式：</p>
+<ol>
+<li><p><strong>简单工厂（Simple Factory）</strong>：<br>这是最基础的形式，它不依赖于类层次结构，并且通常被用于静态语言中。工厂只创建一个类族中的对象，通过传入参数来决定创建哪个具体类。</p>
+</li>
+<li><p><strong>抽象工厂（Abstract Factory）</strong>：<br>抽象工厂模式提供了一系列的工厂方法，用于创建一组相关的产品对象。这些产品可以属于不同的家族，但必须遵循共同的接口或抽象定义。其目的是在多个产品的上下文之间进行隔离，使得客户端代码只需要知道如何使用产品而不是如何创建它们。</p>
+</li>
+<li><p><strong>单例工厂（Singleton Factory）</strong>：<br>在此模式中，工厂类是单例的，确保了在整个应用范围内只有一个实例存在，并且提供一个公共的方法来访问这个实例。这是一种常见的设计模式，用于限制资源访问或配置设置。</p>
+</li>
+<li><p><strong>构造函数工厂（Constructor Factory）</strong>：<br>这种形式在面向对象语言中较为常见，它通过构造方法创建和初始化对象。构造函数工厂可以接受参数构建具有特定配置的对象，提供了一种动态调整对象属性的机制。</p>
+</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ul>
+<li>在需要根据环境或运行时条件选择具体类时。</li>
+<li>当客户端代码不应该依赖于具体的类实现细节，而是应该通过抽象接口进行交互时。</li>
+<li>当创建复杂对象需要多个步骤、参数和依赖关系时（例如，配置文件中的信息用于决定对象实例的创建）。</li>
+</ul>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>假设我们有一个简单工厂模式的例子。假设我们要根据用户输入创建不同类型的形状：</p>
+<div class="highlight-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Abstract product</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Shape</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Shape</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Shape</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">draw</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// Concrete Product</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Circle</span> : <span class="keyword">public</span> Shape &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">draw</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;this is a circle&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Square</span> : <span class="keyword">public</span> Shape &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">draw</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;this is a square&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Abstract Creator</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ShapeFactory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> std::shared_ptr&lt;Shape&gt; <span class="title">createShape</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ShapeFactory</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CircleFactory</span> : <span class="keyword">public</span> ShapeFactory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">std::shared_ptr&lt;Shape&gt; <span class="title">createShape</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">make_shared</span>&lt;Circle&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SquareFactory</span> : <span class="keyword">public</span> ShapeFactory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> std::shared_ptr&lt;Shape&gt; <span class="title">createShape</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">make_shared</span>&lt;Square&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// Client</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::unique_ptr&lt;CircleFactory&gt; circleFactory = std::<span class="built_in">make_unique</span>&lt;CircleFactory&gt;();</span><br><span class="line">    std::unique_ptr&lt;SquareFactory&gt; squareFactory = std::<span class="built_in">make_unique</span>&lt;SquareFactory&gt;();</span><br><span class="line">    <span class="keyword">auto</span> circle = circleFactory-&gt;<span class="built_in">createShape</span>();</span><br><span class="line">    <span class="keyword">auto</span> square = squareFactory-&gt;<span class="built_in">createShape</span>();</span><br><span class="line">    circle-&gt;<span class="built_in">draw</span>();</span><br><span class="line">    square-&gt;<span class="built_in">draw</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<h2 id="条件断点"><a href="#条件断点" class="headerlink" title="条件断点"></a>条件断点</h2><p>有时，我们只想在满足特定条件时暂停程序</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b main.cpp:5 if i == 5</span><br></pre></td></tr></table></figure></div>
-
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png"
-                     
-                ></p>
-<h2 id="查看断点"><a href="#查看断点" class="headerlink" title="查看断点"></a>查看断点</h2><p>如果需要查看所有断点所在的位置信息，使用<code>info breakpoints</code></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info breakpoints</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="清除断点"><a href="#清除断点" class="headerlink" title="清除断点"></a>清除断点</h2><p>有些断点我们不再需要，可以直接清除</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 清理第5行的断点</span><br><span class="line">clear main.cpp:5</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h2><p>观察点允许我们监视变量的值，并在其值发生变化时暂停程序。这对于跟踪变量的变化非常有用</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">watch variable_name</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="捕捉点"><a href="#捕捉点" class="headerlink" title="捕捉点"></a>捕捉点</h2><p>捕捉点是一种特殊类型的断点，它允许我们在发生特定事件，如抛出异常时暂停程序。</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 设置捕捉点</span><br><span class="line">catch throw</span><br></pre></td></tr></table></figure></div>
-
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec15c8.png"
-                     
-                ></p>
-<p>这将设置一个捕捉点，当程序抛出异常时，它将暂停。</p>
-<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="显示表达式值"><a href="#显示表达式值" class="headerlink" title="显示表达式值"></a>显示表达式值</h2><p>在GDB中，可以通过<code>print</code>来评估表达式并显示其值</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print variable_name</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="查看数据类型"><a href="#查看数据类型" class="headerlink" title="查看数据类型"></a>查看数据类型</h2><p>当我们需要查看一个变量的类型，（例如类型推断的变量），需要使用<code>whatis</code>命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whatis variable_name</span><br></pre></td></tr></table></figure></div>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1c4e.png"
-                     
-                ></p>
-<h2 id="打印变量值"><a href="#打印变量值" class="headerlink" title="打印变量值"></a>打印变量值</h2><p><code>display</code>命令可以自动显示表达式的值，每次程序停止时都会显示</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display x</span><br></pre></td></tr></table></figure></div>
-
-<p>每次程序停止时，都会显示变量x的值</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec185b.png"
-                     
-                ></p>
-<h2 id="修改变量值"><a href="#修改变量值" class="headerlink" title="修改变量值"></a>修改变量值</h2><p>在某些情况下，需要在调试过程中修改变量值。假设要将变量x的值设置为5，使用<code>set</code>命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set variable x = 5</span><br></pre></td></tr></table></figure></div>
-
-<p>这将立即更改变量x的值，而不需要重新编译或重新启动程序。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1ad6.png"
-                     
-                ></p>
+<p>在这个例子中，<code>Shape</code> 和 <code>ShapeFactory</code> 是接口和抽象类的例子。工厂模式通过创建具体实现的实例（即 <code>Circle</code> 或 <code>Square</code>）来满足客户端的不同需求，而不需要在代码中硬编码具体的类名。</p>
+<h3 id="具体分析："><a href="#具体分析：" class="headerlink" title="具体分析："></a>具体分析：</h3><ol>
+<li><p><strong>接口（Abstract Class）</strong>：</p>
+<ul>
+<li><code>Shape</code>：这是抽象产品类，定义了一个纯虚函数<code>draw()</code>，用于绘制形状。</li>
+<li><code>CircleFactory</code>, <code>SquareFactory</code>：这些是抽象创建者类的实现。它们都实现了从抽象创建者类继承的<code>createShape()</code>接口方法。</li>
+</ul>
+</li>
+<li><p><strong>具体类</strong>：</p>
+<ul>
+<li><code>Circle</code> 和 <code>Square</code> 是具体产品类。它们各自实现了<code>draw()</code>函数以表示不同形状的绘制方式。</li>
+</ul>
+</li>
+<li><p><strong>工厂模式</strong>：</p>
+<ul>
+<li>在这个例子中，通过使用抽象创建者（<code>ShapeFactory</code>）和具体创建者（<code>CircleFactory</code>, <code>SquareFactory</code>），我们可以在不直接引用具体产品类的情况下创建产品对象。这种方法使得客户端代码与具体的产品实现解耦。</li>
+</ul>
+</li>
+<li><p><strong>测试函数</strong>：</p>
+<ul>
+<li><code>test_func()</code> 函数展示了如何通过工厂模式实例化不同的产品。它首先创建了<code>CircleFactory</code>和<code>SquareFactory</code>的实例，然后调用每个工厂的<code>createShape()</code>方法来获取相应的形状对象，并调用它们的<code>draw()</code>方法来验证是否正确创建并绘制出了圆形和正方形。</li>
+</ul>
+</li>
+</ol>
+<h2 id="使用场景："><a href="#使用场景：" class="headerlink" title="使用场景："></a>使用场景：</h2><ul>
+<li>当需要在运行时决定使用哪个具体产品类时。</li>
+<li>需要将产品的创建过程与产品的客户端代码分离，以提高代码可维护性和灵活性。</li>
+<li>避免类的爆炸问题（即大量的相似类），通过一个工厂类来管理类的选择和实例化。</li>
+</ul>
+<p>通过这种方式，工厂模式提供了一种灵活的方式来根据特定需求动态地生成不同类型的对象。在实际开发中，这种设计模式常用于UI组件、数据库连接器等场景，以提高代码的可扩展性和维护性。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>工厂模式为创建对象提供了极大的灵活性和封装性，并有助于降低耦合度和提高代码的可维护性。它通过提供一个统一的方式来实例化特定类型的对象或一组相关的对象，使得系统结构更加清晰、更易于调整和扩展。</p>
+<h3 id="工厂模式的缺点"><a href="#工厂模式的缺点" class="headerlink" title="工厂模式的缺点"></a>工厂模式的缺点</h3><p>虽然工厂模式在对象创建时提供了便利性和灵活性，但它同样存在一些潜在的局限和问题：</p>
+<ol>
+<li><p><strong>代码复杂性</strong>：随着功能的增加或需求的变化，工厂类可能会变得非常大且难以维护。每个产品都需要对应的创建方法或工厂实例，这可能导致代码结构混乱，尤其是在有大量相关产品的大型项目中。</p>
+</li>
+<li><p><strong>单一职责原则违背</strong>：在某些情况下，一个工厂类可能需要处理多个不同类的创建问题，这违反了单一职责原则（SRP）。理想的工厂应该只负责创建特定类型的产品，如果必须同时处理多种类型，则其职责会变得过于广泛。</p>
+</li>
+<li><p><strong>依赖增加</strong>：使用工厂模式引入了一个新的接口或抽象层，这可能导致代码中对工厂类的依赖增加。在某些情况下，这种依赖可能难以去除，尤其是当工厂类成为多个客户端组件之间的耦合点时。</p>
+</li>
+<li><p><strong>动态性限制</strong>：虽然工厂模式允许通过传递参数或配置文件来控制创建过程中的决策（如产品实例的选择），但这些设置往往需要在代码中硬编码。如果需要在运行时进行更复杂的自定义逻辑，可能需要更复杂的方法或额外的工厂类，这会增加系统的复杂性。</p>
+</li>
+<li><p><strong>调用链复杂</strong>：当一个工厂负责多个层次的对象创建时（例如，父工厂创建子工厂），可能会形成复杂的调用链。这种结构可能难以理解、测试和维护，尤其是在对象树非常深的情况下。</p>
+</li>
+<li><p><strong>资源管理问题</strong>：在处理大量或动态创建的对象时，工厂模式可能导致资源管理问题，如内存泄露或未正确关闭的资源（例如数据库连接）。如果产品实例需要特定生命周期管理，那么必须仔细考虑如何在工厂中实现这一点，以避免这些问题。</p>
+</li>
+<li><p><strong>非确定性创建过程</strong>：如果产品的创建过程依赖于外部因素（比如用户输入、配置文件、环境变量等），则工厂模式可能难以保证创建过程的确定性和可预测性。这可能会导致在某些情况下（如自动化测试）出现预期之外的结果或错误。</p>
+</li>
+<li><p><strong>对需求变化的适应性差</strong>：如果产品的需求或类型经常发生变化，那么需要频繁地修改工厂类以支持这些新需求。这可能导致代码库中大量重复的工作和维护负担。</p>
+</li>
+</ol>
 
         </div>
 
@@ -612,11 +609,7 @@
             <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
                 
                     <li class="tag-item mx-0.5">
-                        <a href="/tags/C-C/">#C/C++</a>&nbsp;
-                    </li>
-                
-                    <li class="tag-item mx-0.5">
-                        <a href="/tags/%E8%B0%83%E8%AF%95/">#调试</a>&nbsp;
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#设计模式</a>&nbsp;
                     </li>
                 
             </ul>
@@ -628,12 +621,12 @@
     <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
      <i aria-hidden="true"></i><span>推荐阅读</span>
     </div>
-    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/03/18/gdb-1/" title="GDB 使用指南-1" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB 使用指南-1" class="!max-w-none">
-  <span class="title">GDB 使用指南-1</span>
-</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
-  <span class="title">GDB使用指南-3</span>
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/13/builder/" title="建造者模式" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="建造者模式" class="!max-w-none">
+  <span class="title">建造者模式</span>
+</a><a class="recommended-article-item" href="/2024/07/10/cpp-pointer/" title="智能指针" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="智能指针" class="!max-w-none">
+  <span class="title">智能指针</span>
 </a><a class="recommended-article-item" href="/2024/04/22/C-Data-Type/" title="C++中的静态类型、动态类型、RTTI" rel="bookmark">
   <img src="/images/background_light.jpg" alt="C++中的静态类型、动态类型、RTTI" class="!max-w-none">
   <span class="title">C++中的静态类型、动态类型、RTTI</span>
@@ -643,12 +636,12 @@
    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
      <i aria-hidden="true"></i><span>推荐阅读</span>
    </div>
-   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/03/18/gdb-1/" title="GDB 使用指南-1" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB 使用指南-1" class="!max-w-none">
-  <span class="title">GDB 使用指南-1</span>
-</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
-  <span class="title">GDB使用指南-3</span>
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/13/builder/" title="建造者模式" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="建造者模式" class="!max-w-none">
+  <span class="title">建造者模式</span>
+</a><a class="recommended-article-item" href="/2024/07/10/cpp-pointer/" title="智能指针" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="智能指针" class="!max-w-none">
+  <span class="title">智能指针</span>
 </a></div>
    </div>
   </div>
@@ -659,13 +652,13 @@
                     <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="prev"
                         rel="prev"
-                        href="/2024/03/20/gdb-3/"
+                        href="/2024/07/13/builder/"
                         >
                             <span class="left arrow-icon flex justify-center items-center">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </span>
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">GDB使用指南-3</span>
+                                <span class="post-nav-title-item">建造者模式</span>
                                 <span class="post-nav-item">Prev posts</span>
                             </span>
                         </a>
@@ -675,10 +668,10 @@
                     <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="next"
                         rel="next"
-                        href="/2024/03/18/gdb-1/"
+                        href="/2024/07/10/cpp-pointer/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">GDB 使用指南-1</span>
+                                <span class="post-nav-title-item">智能指针</span>
                                 <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -699,8 +692,8 @@
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">GDB 使用指南-2</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95"><span class="nav-text">断点调试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%96%AD%E7%82%B9"><span class="nav-text">设置断点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%96%AD%E7%82%B9"><span class="nav-text">条件断点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%AD%E7%82%B9"><span class="nav-text">查看断点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E9%99%A4%E6%96%AD%E7%82%B9"><span class="nav-text">清除断点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E7%82%B9"><span class="nav-text">观察点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%95%E6%8D%89%E7%82%B9"><span class="nav-text">捕捉点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%80%BC"><span class="nav-text">显示表达式值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">查看数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8D%B0%E5%8F%98%E9%87%8F%E5%80%BC"><span class="nav-text">打印变量值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%8F%98%E9%87%8F%E5%80%BC"><span class="nav-text">修改变量值</span></a></li></ol></li></ol>
+        <div class="page-title">工厂模式</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E6%84%8F%E5%9B%BE%EF%BC%9A"><span class="nav-text">定义和意图：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BD%A2%E5%BC%8F"><span class="nav-text">常见形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%88%86%E6%9E%90%EF%BC%9A"><span class="nav-text">具体分析：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="nav-text">使用场景：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-text">工厂模式的缺点</span></a></li></ol></li></ol>
 
     </div>
 </div>
