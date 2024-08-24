@@ -13,25 +13,30 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/03/24/network-optimization/"/>
+    <link rel="canonical" href="http://example.com/2024/08/24/asio-ioservicepool/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="写这篇文章的原因是今天在打2042的时候丢包严重，一开始以为是Dice的服务器又爆了，后面跟同学对比了之后发现完全是路由器的问题。刚好拨号和主路由用的是R2S，可以学习一下linux内核的一些跟TCP, UDP有关的参数修改  下面的参数可以在&#x2F;etc&#x2F;sysctl.conf这个文件中修改  另外再多说一句，Turbo acc这个插件对这种500M一下的带宽基本没什么作用 最大队列大小优化在通过T">
+        <meta name="description" content="简介IOServicePool是一个用于管理多个io_context实例的多线程模型，每一个线程管理一个io_context，它的主要目的是在多线程环境中高效地分发和异步处理I&#x2F;O操作 单线程和多线程对比单线程模式图 多线程模式图 优点 每一个io_context跑在不同的线程里，所以同一个socket会被注册在同一个io_context里，它的回调函数也会被单独的一个线程回调，那么对于">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenWrt TCP UDP 网络性能优化">
-<meta property="og:url" content="http://example.com/2024/03/24/network-optimization/index.html">
+<meta property="og:title" content="asio-IOServicePool">
+<meta property="og:url" content="http://example.com/2024/08/24/asio-IOServicePool/index.html">
 <meta property="og:site_name" content="Raven&#39;s blog">
-<meta property="og:description" content="写这篇文章的原因是今天在打2042的时候丢包严重，一开始以为是Dice的服务器又爆了，后面跟同学对比了之后发现完全是路由器的问题。刚好拨号和主路由用的是R2S，可以学习一下linux内核的一些跟TCP, UDP有关的参数修改  下面的参数可以在&#x2F;etc&#x2F;sysctl.conf这个文件中修改  另外再多说一句，Turbo acc这个插件对这种500M一下的带宽基本没什么作用 最大队列大小优化在通过T">
+<meta property="og:description" content="简介IOServicePool是一个用于管理多个io_context实例的多线程模型，每一个线程管理一个io_context，它的主要目的是在多线程环境中高效地分发和异步处理I&#x2F;O操作 单线程和多线程对比单线程模式图 多线程模式图 优点 每一个io_context跑在不同的线程里，所以同一个socket会被注册在同一个io_context里，它的回调函数也会被单独的一个线程回调，那么对于">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-03-24T14:34:34.000Z">
-<meta property="article:modified_time" content="2024-07-26T20:37:00.000Z">
+<meta property="og:image" content="https://s2.loli.net/2024/08/24/1Kw5yAiT2DrJg3l.png">
+<meta property="og:image" content="https://s2.loli.net/2024/08/24/j9vaAPC8WMzpce3.png">
+<meta property="article:published_time" content="2024-08-24T14:51:44.000Z">
+<meta property="article:modified_time" content="2024-08-24T14:53:51.773Z">
 <meta property="article:author" content="Raven005">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="网络编程">
+<meta property="article:tag" content="socket">
 <meta property="article:tag" content="计算机网络">
 <meta property="article:tag" content="Linux">
-<meta property="article:tag" content="软路由">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/08/24/1Kw5yAiT2DrJg3l.png">
     
     
     <!--- Icon Part-->
@@ -43,7 +48,7 @@
     
     <title>
         
-            OpenWrt TCP UDP 网络性能优化 -
+            asio-IOServicePool -
         
         Raven&#39;s blog
     </title>
@@ -440,7 +445,7 @@
         <div class="article-title relative w-full">
             
                 <div class="w-full flex items-center pt-6 justify-start">
-                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">OpenWrt TCP UDP 网络性能优化</h1>
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">asio-IOServicePool</h1>
                 </div>
             
             </div>
@@ -461,15 +466,15 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-03-24 22:34:34</span>
-        <span class="mobile">2024-03-24 22:34:34</span>
+        <span class="desktop">2024-08-24 22:51:44</span>
+        <span class="mobile">2024-08-24 22:51:44</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-07-27 04:37</span>
-            <span class="mobile">2024-07-27 04:37</span>
+            <span class="desktop">2024-08-24 22:53:51</span>
+            <span class="mobile">2024-08-24 22:53:51</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -497,15 +502,23 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>&nbsp;
+                        <a href="/tags/C-C/">C/C++</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/socket/">socket</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>&nbsp;
                     </li>
                 
                     <li>
                         | <a href="/tags/Linux/">Linux</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/%E8%BD%AF%E8%B7%AF%E7%94%B1/">软路由</a>&nbsp;
                     </li>
                 
             </ul>
@@ -515,12 +528,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.6k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.6k Words</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fa-regular fa-clock"></i>&nbsp;<span>10 Mins</span>
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>6 Mins</span>
         </span>
     
     
@@ -539,111 +552,71 @@
 
 
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-            <p>写这篇文章的原因是今天在打2042的时候丢包严重，一开始以为是Dice的服务器又爆了，后面跟同学对比了之后发现完全是路由器的问题。<br>刚好拨号和主路由用的是R2S，可以学习一下linux内核的一些跟<code>TCP, UDP</code>有关的参数修改</p>
-<blockquote>
-<p>下面的参数可以在<code>/etc/sysctl.conf</code>这个文件中修改</p>
-</blockquote>
-<p>另外再多说一句，<code>Turbo acc</code>这个插件对这种500M一下的带宽基本没什么作用</p>
-<h1 id="最大队列大小优化"><a href="#最大队列大小优化" class="headerlink" title="最大队列大小优化"></a>最大队列大小优化</h1><p>在通过<code>TCP\UDP</code>层处理数据之前，系统会将数据放入内核队列中。<code>net.core.netdev_max_backlog</code>值指定在传递到上层之前要放入队列的最大数据包数。对于高负载的网络，默认值是不够的.因此，我们可以适当地增加该值可以解决内核导致的性能损失。默认值为1000，将其增加到3000以上足以阻止数据包在10Gbps网络中被丢弃</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认值</span></span><br><span class="line">$ sysctl net.core.netdev_max_backlog</span><br><span class="line">sysctl net.core.netdev_max_backlog = 1000</span><br><span class="line"></span><br><span class="line">net.core.netdev_max_backlog = 4096</span><br></pre></td></tr></table></figure></div>
-
-<p>还有一个类似的设置是<code>net.ipv4.tcp_max_syn_backlog</code>，这个指定的是记住的连接请求的最大数量，但仍未受到来自客户端的确认。对于内存超过128MB的系统，默认值为1024，对于低内存计算机，默认值为128。如果服务器过载，可以尝试增加该值</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认值</span></span><br><span class="line">$ sysctl net.ipv4.tcp_max_syn_backlog</span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 128</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 4096</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="最大挂起连接数优化"><a href="#最大挂起连接数优化" class="headerlink" title="最大挂起连接数优化"></a>最大挂起连接数优化</h1><p>应用程序可以在处理一个连接之前指定要放入队列的最大待处理请求数，当此值达到最大值时，进一步的连接开始退出。对于发布大量连接的Web服务器等应用程序，此值必须很高才能使这些连接正常工作</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 默认值</span><br><span class="line">$ sysctl net.core.somaxconn</span><br><span class="line">net.core.somaxconn = 128</span><br><span class="line"></span><br><span class="line">net.core.somaxconn = 4096</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="TCP-FIN超时优化"><a href="#TCP-FIN超时优化" class="headerlink" title="TCP FIN超时优化"></a>TCP FIN超时优化</h1><p>在TCP连接中，双方必须独立关闭连接。在Linux下，发送FIN数据包以关闭连接并等待<code>FINACK</code>知道定义超时值。这玩意的默认值是60，可以减少到20或者30使TCP关闭连接并释放资源以进行另一个连接</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.ipv4.tcp_fin_timeout</span><br><span class="line">sysctl net.ipv4.tcp_fin_timeout = 60</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_fin_timeout = 30</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="重用TIME-WAIT状态的套接字进行新连接"><a href="#重用TIME-WAIT状态的套接字进行新连接" class="headerlink" title="重用TIME_WAIT状态的套接字进行新连接"></a>重用TIME_WAIT状态的套接字进行新连接</h1><p>在处理必须处理<code>TIME_WAIT</code>状态下的许多短<code>TCP</code>连接的Web服务器时，或许会有用</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.ipv4.tcp_tw_reuse</span><br><span class="line">net.ipv4.tcp_tw_reuse = 0</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="tcp-keepalive-time优化"><a href="#tcp-keepalive-time优化" class="headerlink" title="tcp_keepalive_time优化"></a>tcp_keepalive_time优化</h1><p>TCP连接是由两个socket组成，每个socket在连接的两端。当一方想要终止连接时，它会发送另一方确认的<code>RST</code>数据包并关闭其socket</p>
-<p>然而，在此之前，双方将无期限地sochi其socket开放。这使得一方可能有意或者由于某些错误而关闭其插座，而无需通过<code>RST</code>通知另一端。为了检测此场景并关闭过时连接，可以使用<code>TCP Keep Alive</code>处理</p>
-<p>Linux中有三个可配置属性来确定<code>Keep-Alives</code>的属性:</p>
-<ul>
-<li>tcp_keepalive_time 默认是7200</li>
-<li>tcp_keepalive_probes 默认是9</li>
-<li>tcp_keepalive_intvl 默认是75</li>
-</ul>
-<p>具体过程如下:</p>
-<ol>
-<li>客户端打开TCP连接</li>
-<li>如果<code>tcp_keepalive_time</code>秒的连接是静默的，则发送一个空的<code>ACK</code>数据包</li>
-<li>服务器是否使用自己的相应的<code>ACK</code>进行响应<ul>
-<li>没有<ul>
-<li>等待tcp_keepalive_intvl秒，然后发送另一个<code>ACK</code></li>
-<li>重复，直到已发送的<code>ACk</code>探测数等于<code>tcp_keepalive_probes</code></li>
-<li>如果此时未收到响应，请发送<code>RST</code>并终止连接</li>
-</ul>
+            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><code>IOServicePool</code>是一个用于管理多个<code>io_context</code>实例的多线程模型，每一个线程管理一个<code>io_context</code>，它的主要目的是在多线程环境中高效地分发和异步处理I&#x2F;O操作</p>
+<h2 id="单线程和多线程对比"><a href="#单线程和多线程对比" class="headerlink" title="单线程和多线程对比"></a>单线程和多线程对比</h2><p>单线程模式图<br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://s2.loli.net/2024/08/24/1Kw5yAiT2DrJg3l.png"
+                      alt="单线程模型.png"
+                ></p>
+<p>多线程模式图<br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://s2.loli.net/2024/08/24/j9vaAPC8WMzpce3.png"
+                      alt="IOServicePool.png"
+                ></p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ol>
+<li><p>每一个<code>io_context</code>跑在不同的线程里，所以同一个<code>socket</code>会被注册在同一个<code>io_context</code>里，它的回调函数也会被单独的一个线程回调，那么对于同一个<code>socket</code>，他的回调函数每次触发都是在同一个线程里，就不会有线程安全问题，网络io层面上的并发是线程安全的。</p>
 </li>
-<li>有<ul>
-<li>返回第二步</li>
-</ul>
+<li><p>但是对于不同的<code>socket</code>，回调函数的触发可能是同一个线程(两个<code>socket</code>被分配到同一个<code>io_context</code>)，也可能不是同一个线程(两个<code>socket</code>被分配到不同的<code>io_context</code>里)。所以如果两个<code>socket</code>对应的上层逻辑处理，如果有交互或者访问共享区，会存在线程安全问题。比如<code>socket1</code>代表玩家1，<code>socket2</code>代表玩家2，玩家1和玩家2在逻辑层存在交互，比如两个玩家都在做工会任务，他们属于同一个工会，工会积分的增加就是共享区的数据，需要保证线程安全。可以通过加锁或者逻辑队列的方式解决安全问题，我们目前采取了后者。</p>
 </li>
-</ul>
+<li><p>多线程相比单线程，极大的提高了并发能力，因为单线程仅有一个<code>io_context</code>服务用来监听读写事件，就绪后回调函数在一个线程里串行调用, 如果一个回调函数的调用时间较长肯定会影响后续的函数调用，毕竟是穿行调用。而采用多线程方式，可以在一定程度上减少前一个逻辑调用影响下一个调用的情况，比如两个<code>socket</code>被部署到不同的<code>iocontext</code>上，但是当两个<code>socket</code>部署到同一个<code>iocontext</code>上时仍然存在调用时间影响的问题。不过我们已经通过逻辑队列的方式将网络线程和逻辑线程解耦合了，不会出现前一个调用时间影响下一个回调触发的问题。</p>
 </li>
 </ol>
-<p>默认情况下，在大多数操作系统上启动了此过程的处理，因此一旦另一端无响应2小时11分钟( 7200s + 75 * 9 ), 则会定期移除死TCP连接</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.ipv4.tcp_keepalive_time</span><br><span class="line">net.ipv4.tcp_keepalive_time = 7200</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_keepalive_time = 1200</span><br></pre></td></tr></table></figure></div>
+<h2 id="IOServicePool实现"><a href="#IOServicePool实现" class="headerlink" title="IOServicePool实现"></a>IOServicePool实现</h2><p>IOServicePool本质上是一个线程池，基本功能就是根据构造函数传入的数量创建n个线程和iocontext，然后每个线程跑一个iocontext，这样就可以并发处理不同iocontext读写事件了。<br>声明如下：</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"><span class="comment">// <span class="doctag">NOTE:</span></span></span><br><span class="line"><span class="comment">// 如果要使用这个线程池的话，</span></span><br><span class="line"><span class="comment">// 将CServer的io_context替换为AsioIOServicePool::GetInstance()-&gt;get_io_service()</span></span><br><span class="line"><span class="comment">// main函数需要给服务器创建一个io_context</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/asio.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Singleton.hpp&quot;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AsioIOServicePool</span> : <span class="keyword">public</span> Singleton&lt;AsioIOServicePool&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">Singleton</span>&lt;AsioIOServicePool&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">using</span> IOService = boost::asio::io_context;</span><br><span class="line">    <span class="keyword">using</span> Work      = boost::asio::io_context::work;</span><br><span class="line">    <span class="keyword">using</span> WorkPtr   = std::unique_ptr&lt;Work&gt;;</span><br><span class="line">    ~<span class="built_in">AsioIOServicePool</span>();</span><br><span class="line">    <span class="built_in">AsioIOServicePool</span>( <span class="type">const</span> AsioIOServicePool &amp; )            = <span class="keyword">delete</span>;</span><br><span class="line">    AsioIOServicePool &amp;<span class="keyword">operator</span>=( <span class="type">const</span> AsioIOServicePool &amp; ) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    boost::<span class="function">asio::io_context &amp;<span class="title">get_io_service</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Stop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">AsioIOServicePool</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="type">size_t</span> thread_size = std::thread::hardware_concurrency() )</span></span>;</span><br><span class="line">    std::vector&lt;IOService&gt; _ioServices;</span><br><span class="line">    std::vector&lt;WorkPtr&gt; _works;</span><br><span class="line">    std::vector&lt;std::thread&gt; _threads;</span><br><span class="line">    std::<span class="type">size_t</span> _nextIOservice; <span class="comment">// 轮询索引</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
-<h1 id="启用智能MTU黑同检测优化"><a href="#启用智能MTU黑同检测优化" class="headerlink" title="启用智能MTU黑同检测优化"></a>启用智能MTU黑同检测优化</h1><p>一旦启用，系统将尝试使用路径MTU发现机制在客户端和服务器之间找到MTU，可以通过<code>ip a</code>检查接口上的MTU:</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ip a | grep <span class="string">&#x27;mtu&#x27;</span></span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000</span><br><span class="line">3: ip6tnl0@NONE: &lt;NOARP&gt; mtu 1452 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">4: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br-lan state UP group default qlen 1000</span><br><span class="line">5: br-lan: &lt;BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">6: pppoe-wan: &lt;POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP&gt; mtu 1492 qdisc fq_codel state UNKNOWN group default qlen 3</span><br></pre></td></tr></table></figure></div>
+<p>实现如下：</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">AsioIOServicePool::<span class="built_in">AsioIOServicePool</span>(<span class="type">size_t</span> thread_size)</span><br><span class="line">    : _ioServices(thread_size), _works(thread_size), _nextIOservice(<span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; thread_size; ++i) &#123;</span><br><span class="line">        _works[i] = std::<span class="built_in">make_unique</span>&lt;Work&gt;(<span class="built_in">Work</span>(_ioServices[i]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;IOService : _ioServices) &#123;</span><br><span class="line">        _threads.<span class="built_in">emplace_back</span>([<span class="keyword">this</span>, &amp;IOService]() &#123; IOService.<span class="built_in">run</span>(); &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">boost::<span class="function">asio::io_context &amp;<span class="title">AsioIOServicePool::get_io_service</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> &amp;service = _ioServices[_nextIOservice++ % _ioServices.<span class="built_in">size</span>()];</span><br><span class="line">    <span class="keyword">return</span> service;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AsioIOServicePool::Stop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;work : _works) &#123;</span><br><span class="line">        work.<span class="built_in">reset</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;t : _threads) &#123;</span><br><span class="line">        t.<span class="built_in">join</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">AsioIOServicePool::~<span class="built_in">AsioIOServicePool</span>() &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;AsioIOServicePool destroyed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
-<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/360516704" >关于MTU <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>要在Linux上启用此功能，运行下面的命令：</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.ipv4.tcp_mtu_probing</span><br><span class="line">net.ipv4.tcp_mtu_probing = 0</span><br><span class="line">$ sysctl net.ipv4.tcp_base_mss</span><br><span class="line">net.ipv4.tcp_base_mss = 1024</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_mtu_probing = 1</span><br></pre></td></tr></table></figure></div>
+<p>这段代码实现了一个基于 <code>boost::asio</code> 的 I&#x2F;O 服务池（<code>AsioIOServicePool</code>），并使用了单例模式（通过 <code>Singleton&lt;AsioIOServicePool&gt;</code>）来确保全局只有一个实例。以下是对代码的详细解释：</p>
+<h4 id="类定义"><a href="#类定义" class="headerlink" title="类定义"></a>类定义</h4><div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AsioIOServicePool</span> : <span class="keyword">public</span> Singleton&lt;AsioIOServicePool&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">Singleton</span>&lt;AsioIOServicePool&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">using</span> IOService = boost::asio::io_context;</span><br><span class="line">    <span class="keyword">using</span> Work      = boost::asio::io_context::work;</span><br><span class="line">    <span class="keyword">using</span> WorkPtr   = std::unique_ptr&lt;Work&gt;;</span><br><span class="line">    ~<span class="built_in">AsioIOServicePool</span>();</span><br><span class="line">    <span class="built_in">AsioIOServicePool</span>( <span class="type">const</span> AsioIOServicePool &amp; )            = <span class="keyword">delete</span>;</span><br><span class="line">    AsioIOServicePool &amp;<span class="keyword">operator</span>=( <span class="type">const</span> AsioIOServicePool &amp; ) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    boost::<span class="function">asio::io_context &amp;<span class="title">get_io_service</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Stop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">AsioIOServicePool</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="type">size_t</span> thread_size = std::thread::hardware_concurrency() )</span></span>;</span><br><span class="line">    std::vector&lt;IOService&gt; _ioServices;</span><br><span class="line">    std::vector&lt;WorkPtr&gt; _works;</span><br><span class="line">    std::vector&lt;std::thread&gt; _threads;</span><br><span class="line">    std::<span class="type">size_t</span> _nextIOservice; <span class="comment">// 轮询索引</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
-<p><code>tcp_mtu_probing</code>，控制TCP分组化-层路径MTU发现，有三个可选值：</p>
 <ul>
-<li>0 已禁用</li>
-<li>1 默认情况下禁用，在检测到ICMP黑洞时起用</li>
-<li>2 始终启用，使用<code>tcp_base_mss</code>的初始MSS</li>
+<li><code>AsioIOServicePool</code> 继承自 <code>Singleton&lt;AsioIOServicePool&gt;</code>，确保它是单例的。</li>
+<li><code>friend class Singleton&lt;AsioIOServicePool&gt;;</code>：允许 <code>Singleton</code> 类访问 <code>AsioIOServicePool</code> 的私有成员。</li>
+<li>使用 <code>using</code> 别名定义了 <code>IOService</code>、<code>Work</code> 和 <code>WorkPtr</code>。</li>
+<li>删除了拷贝构造函数和赋值操作符，防止对象被复制。</li>
+<li><code>get_io_service()</code> 方法用于获取一个 <code>io_context</code> 实例。</li>
+<li><code>Stop()</code> 方法用于停止所有 <code>io_context</code> 并等待线程结束。</li>
+<li>私有构造函数 <code>AsioIOServicePool</code> 接受一个线程数量参数，默认为硬件并发数。</li>
+<li>成员变量包括 <code>_ioServices</code>（<code>io_context</code> 数组）、<code>_works</code>（工作对象数组）、<code>_threads</code>（线程数组）和 <code>_nextIOservice</code>（轮询索引）。</li>
 </ul>
-<h1 id="内核缓冲区优化"><a href="#内核缓冲区优化" class="headerlink" title="内核缓冲区优化"></a>内核缓冲区优化</h1><p>系统默认的socket缓冲区大小:</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.core.wmem_default</span><br><span class="line">net.core.wmem_default = 212992</span><br><span class="line">$ sysctl net.core.rmem_default</span><br><span class="line">net.core.rmem_default = 212992</span><br><span class="line">$ sysctl net.core.rmem_max</span><br><span class="line">sysctl net.core.rmem_max = 212992</span><br><span class="line">$ sysctl net.core.wmem_max</span><br><span class="line">net.core.wmem_max = 212992</span><br></pre></td></tr></table></figure></div>
+<h4 id="实现文件"><a href="#实现文件" class="headerlink" title="实现文件"></a>实现文件</h4><div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">AsioIOServicePool::<span class="built_in">AsioIOServicePool</span>(<span class="type">size_t</span> thread_size)</span><br><span class="line">    : _ioServices(thread_size), _works(thread_size), _nextIOservice(<span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; thread_size; ++i) &#123;</span><br><span class="line">        _works[i] = std::<span class="built_in">make_unique</span>&lt;Work&gt;(<span class="built_in">Work</span>(_ioServices[i]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;IOService : _ioServices) &#123;</span><br><span class="line">        _threads.<span class="built_in">emplace_back</span>([<span class="keyword">this</span>, &amp;IOService]() &#123; IOService.<span class="built_in">run</span>(); &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<p>这些参数显示分配给任何类型连接的默认和最大写入、读取缓冲区大小。 由于分配的空间来自RAM，因此默认值设置总是有点低。增加这一点可能会提高运行NFS等服务器的系统的性能。 将它们增加到256k &#x2F; 4MB将最有效，否则您必须对这些值进行基准测试，以找到系统配置的理想值</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 256 KB / 4 MB</span></span><br><span class="line">net.core.rmem_default = 262144</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.rmem_max = 4194304</span><br><span class="line">net.core.wmem_max = 4194304</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Or 256 Kb / 64 MB</span></span><br><span class="line">net.core.rmem_default = 262144</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.rmem_max = 67108864</span><br><span class="line">net.core.wmem_max = 67108864</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>构造函数初始化 <code>_ioServices</code>、<code>_works</code> 和 <code>_nextIOservice</code>。</li>
+<li>为每个 <code>io_context</code> 创建一个 <code>Work</code> 对象，防止 <code>io_context</code> 在没有工作时退出。</li>
+<li>为每个 <code>io_context</code> 创建一个线程，并在该线程中运行 <code>io_context</code>。</li>
+</ul>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">boost::<span class="function">asio::io_context &amp;<span class="title">AsioIOServicePool::get_io_service</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> &amp;service = _ioServices[_nextIOservice++ % _ioServices.<span class="built_in">size</span>()];</span><br><span class="line">    <span class="keyword">return</span> service;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="TCP缓冲区大小优化"><a href="#TCP缓冲区大小优化" class="headerlink" title="TCP缓冲区大小优化"></a>TCP缓冲区大小优化</h1><p>确认一下默认值:</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.ipv4.tcp_rmem</span><br><span class="line">net.ipv4.tcp_rmem = 4096        131072   6291456</span><br><span class="line">$ sysctl net.ipv4.tcp_wmem</span><br><span class="line">net.ipv4.tcp_wmem = 4096        16384   4194304</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>get_io_service()</code> 方法通过轮询方式返回一个 <code>io_context</code> 实例。</li>
+</ul>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AsioIOServicePool::Stop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;work : _works) &#123;</span><br><span class="line">        work.<span class="built_in">reset</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;t : _threads) &#123;</span><br><span class="line">        t.<span class="built_in">join</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<p>这些值是三个整数的数组，分别指定TCP读取和发送缓冲区的最小，平均和最大值</p>
-<blockquote>
-<p> [!WARNING]<br> 值要以页为单位。如果需要查看页面大小，可以使用<code>getconf PAGE_SIZE</code>来查看</p>
-</blockquote>
-<p>TCP缓冲区最大值修改：</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 64MB</span></span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 67108864</span><br><span class="line">net.ipv4.tcp_wmem = 4096 16384 67108864</span><br><span class="line"></span><br><span class="line"><span class="comment"># 12MB:</span></span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 12582912</span><br><span class="line">net.ipv4.tcp_wmem = 4096 16384 12582912</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4MB:</span></span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 4194304</span><br><span class="line">net.ipv4.tcp_wmem = 4096 16384 4194304</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>Stop()</code> 方法重置所有 <code>Work</code> 对象，使 <code>io_context</code> 可以退出。</li>
+<li>等待所有线程结束。</li>
+</ul>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AsioIOServicePool::~<span class="built_in">AsioIOServicePool</span>() &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;AsioIOServicePool destroyed&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="Time-Wait优化"><a href="#Time-Wait优化" class="headerlink" title="Time Wait优化"></a>Time Wait优化</h1><p><code>TIME WAIT TCP</code>套接字状态是套接字关闭但等待处理仍在网络中的数据包的状态。 参数tcp_max_tw_buckets是 TIME_WAIT 状态下的最大套接字数。 达到此数字后，系统将开始在此状态下销毁套接字</p>
-<p>此限制仅用于防止简单的DoS攻击，您不得人为地降低限制，而是增加它（可能在增加安装的内存之后），如果网络条件需要超过默认值</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sysctl net.ipv4.tcp_max_tw_buckets</span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 4096</span><br><span class="line"></span><br><span class="line">$ sudo vi /etc/sysctl.d/98-network-custom.conf</span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 5000</span><br></pre></td></tr></table></figure></div>
-
-<p>如果遇到大量的TCP 错误，如：</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__ratelimit: 33491 callbacks suppressed</span><br><span class="line">TCP: time <span class="built_in">wait</span> bucket table overflow</span><br></pre></td></tr></table></figure></div>
-
-<p>可以增加<code>net.ipv4.tcp_max_tw_buckets</code>的值，比如 654320，前提是拥有足够的内存</p>
-<p>请尝试以下命令来确定您是否有来自一个地址的大量连接，或者您是否受到分布式攻击</p>
-<p><code>netstat -nt | cut -c 40- | cut -d: -f1 | sort | uniq -c | sort -n netstat -nt | cut -d: -f2 | sort | uniq -c | sort -n</code></p>
-<p>如果您从几个IP地址获得高数字，则更容易限制连接。 然后，您可以向 iptables 添加拒绝规则或速率限制规则，以限制从这些地址访问</p>
-<p>经测试，优化此项可能造成上传文件至某些网站超时或错误</p>
-<h1 id="开启TCP时间戳"><a href="#开启TCP时间戳" class="headerlink" title="开启TCP时间戳"></a>开启TCP时间戳</h1><p>关于<a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/612010050" >tcp_timestamps <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>Linux 系统中的 tcp_timestamps 参数控制是否启用 TCP 时间戳。要启用该功能可以用下面的命令：</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_timestamps=1</span><br></pre></td></tr></table></figure></div>
-
-<p>通常，出于性能考虑，默认情况下，在现代操作系统上该参数会启用，除非有特定安全上的考虑需要关闭它。在某些情况下，为了提高安全性，可能会选择关闭时间戳功能，因为时间戳可以被恶意用户用来估算服务上次重启的时间，或者进行更精细的网络流量分析。</p>
-<h1 id="TCP-Sack"><a href="#TCP-Sack" class="headerlink" title="TCP Sack"></a>TCP Sack</h1><p><code>tcp_sack</code> 表示 TCP Selective Acknowledgment (选择性确认)，这是一个 TCP&#x2F;IP 的性能优化特性。在 TCP 通信中，数据是按顺序发送的，如果包丢失了，底层 TCP 协议需要进行重传。传统的 TCP 重传机制是累积确认的，也就是说，只有当所有的包按顺序全部接收时，接收端才会发送一个 ACK (确认)。<br>选择性确认允许接收方告诉发送方哪些数据包已经成功接收，即使它们不是按顺序到达的。这样，如果一些数据包丢失，发送方可以只重传那些未被确认接收的数据包，而不用从丢失的数据包或者先前已经被确认接收的部分开始重传整个数据流。这可以大大提高网络通信的效率，尤其是在丢包率较高或者网络延迟较大的环境下。</p>
-<p>要启用该功能:</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp.sack = 1</span><br></pre></td></tr></table></figure></div>
-
-
-<h1 id="TCP窗口大小"><a href="#TCP窗口大小" class="headerlink" title="TCP窗口大小"></a>TCP窗口大小</h1><p><code>tcp_window_scaling</code> 是 TCP 协议提供的一个特性，用于支持较大的窗口大小，从而使得在高延迟和高带宽的网络上可以有更好的性能。在TCP中，窗口大小决定了不需要等待确认应答就可以发送的数据的最大值。这个值也就是说，在任一时刻，可以无确认地发送在网络上未确认的数据的最大量。<br>正常情况下，TCP 窗口的大小由一个 16 位的字段控制，这限制了最大的窗口大小为 65,535 字节（64 KB）。随着网络的发展，这个大小变得不足以利用高速网络的潜力。通过启用窗口缩放选项，TCP 可以使用最多 14 位的移位计数来扩大这个值，从而扩大可能的窗口大小，最大可达 1GB。</p>
-<p>要启用该功能:</p>
-<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_window_scaling = 1</span><br></pre></td></tr></table></figure></div>
-
-<p>禁用 tcp_window_scaling 会限制 TCP 窗口的最大值为 64 KB，这可能会降低网络性能，尤其是在高速宽带连接上。因此，在不需要兼容老旧网络设备或特定网络配置的情况下，建议保持该选项为启用状态，以便能够充分利用网络带宽。</p>
+<ul>
+<li>析构函数输出一条消息，表示对象被销毁。</li>
+</ul>
+<h3 id="关于优雅退出"><a href="#关于优雅退出" class="headerlink" title="关于优雅退出"></a>关于优雅退出</h3><p>IOServicePool多线程服务器退出时，需要捕获退出信号如<code>SIGINT</code>、<code>SIGTERM</code>等，然后通知所有线程退出，然后等待线程结束，将退出信号和一个<code>io_context</code>绑定，当接收到退出信号时，我们将IOServicePool中的<code>io_context</code>退出，然后等待所有线程退出，最后销毁线程池。</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">auto</span> pool = AsioIOServicePool::<span class="built_in">GetInstance</span>();</span><br><span class="line">        boost::asio::io_context  io_context;</span><br><span class="line">        boost::<span class="function">asio::signal_set <span class="title">signals</span><span class="params">(io_context, SIGINT, SIGTERM)</span></span>;</span><br><span class="line">        signals.<span class="built_in">async_wait</span>([&amp;io_context,pool](<span class="keyword">auto</span>, <span class="keyword">auto</span>) &#123;</span><br><span class="line">            io_context.<span class="built_in">stop</span>();</span><br><span class="line">            pool-&gt;<span class="built_in">Stop</span>();</span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="function">CServer <span class="title">s</span><span class="params">(io_context, <span class="number">10086</span>)</span></span>;</span><br><span class="line">        io_context.<span class="built_in">run</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">catch</span> (std::exception&amp; e) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;Exception: &quot;</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
         </div>
 
@@ -653,15 +626,23 @@
             <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
                 
                     <li class="tag-item mx-0.5">
+                        <a href="/tags/C-C/">#C/C++</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">#网络编程</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/socket/">#socket</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
                         <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">#计算机网络</a>&nbsp;
                     </li>
                 
                     <li class="tag-item mx-0.5">
                         <a href="/tags/Linux/">#Linux</a>&nbsp;
-                    </li>
-                
-                    <li class="tag-item mx-0.5">
-                        <a href="/tags/%E8%BD%AF%E8%B7%AF%E7%94%B1/">#软路由</a>&nbsp;
                     </li>
                 
             </ul>
@@ -676,12 +657,12 @@
     <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/03/linux-socket-programming-2/" title="asio socket的创建和连接" rel="bookmark">
   <img src="/images/background_light.jpg" alt="asio socket的创建和连接" class="!max-w-none">
   <span class="title">asio socket的创建和连接</span>
-</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
-  <span class="title">GDB使用指南-3</span>
-</a><a class="recommended-article-item" href="/2024/06/30/linux-socket-programming-1/" title="socket的创建和连接" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="socket的创建和连接" class="!max-w-none">
-  <span class="title">socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/03/23/concurrency-programming-1/" title="并发编程-1" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-1" class="!max-w-none">
+  <span class="title">并发编程-1</span>
+</a><a class="recommended-article-item" href="/2024/03/26/concurrency-programming-3/" title="并发编程-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-3" class="!max-w-none">
+  <span class="title">并发编程-3</span>
 </a></div>
    </div>
    <div class="recommended-mobile">
@@ -691,9 +672,9 @@
    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/03/linux-socket-programming-2/" title="asio socket的创建和连接" rel="bookmark">
   <img src="/images/background_light.jpg" alt="asio socket的创建和连接" class="!max-w-none">
   <span class="title">asio socket的创建和连接</span>
-</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
-  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
-  <span class="title">GDB使用指南-3</span>
+</a><a class="recommended-article-item" href="/2024/03/23/concurrency-programming-1/" title="并发编程-1" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-1" class="!max-w-none">
+  <span class="title">并发编程-1</span>
 </a></div>
    </div>
   </div>
@@ -701,29 +682,14 @@
         
             <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
                 
-                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-                        <a class="prev"
-                        rel="prev"
-                        href="/2024/03/26/concurrency-programming-3/"
-                        >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">并发编程-3</span>
-                                <span class="post-nav-item">Prev posts</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="next"
                         rel="next"
-                        href="/2024/03/23/concurrency-programming-2/"
+                        href="/2024/08/01/protobuf-configuration/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">并发编程-2</span>
+                                <span class="post-nav-title-item">protobuf的配置和使用</span>
                                 <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -744,8 +710,8 @@
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">OpenWrt TCP UDP 网络性能优化</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E9%98%9F%E5%88%97%E5%A4%A7%E5%B0%8F%E4%BC%98%E5%8C%96"><span class="nav-text">最大队列大小优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E6%8C%82%E8%B5%B7%E8%BF%9E%E6%8E%A5%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-text">最大挂起连接数优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-FIN%E8%B6%85%E6%97%B6%E4%BC%98%E5%8C%96"><span class="nav-text">TCP FIN超时优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E7%94%A8TIME-WAIT%E7%8A%B6%E6%80%81%E7%9A%84%E5%A5%97%E6%8E%A5%E5%AD%97%E8%BF%9B%E8%A1%8C%E6%96%B0%E8%BF%9E%E6%8E%A5"><span class="nav-text">重用TIME_WAIT状态的套接字进行新连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tcp-keepalive-time%E4%BC%98%E5%8C%96"><span class="nav-text">tcp_keepalive_time优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E7%94%A8%E6%99%BA%E8%83%BDMTU%E9%BB%91%E5%90%8C%E6%A3%80%E6%B5%8B%E4%BC%98%E5%8C%96"><span class="nav-text">启用智能MTU黑同检测优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BC%93%E5%86%B2%E5%8C%BA%E4%BC%98%E5%8C%96"><span class="nav-text">内核缓冲区优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E7%BC%93%E5%86%B2%E5%8C%BA%E5%A4%A7%E5%B0%8F%E4%BC%98%E5%8C%96"><span class="nav-text">TCP缓冲区大小优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Time-Wait%E4%BC%98%E5%8C%96"><span class="nav-text">Time Wait优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E5%90%AFTCP%E6%97%B6%E9%97%B4%E6%88%B3"><span class="nav-text">开启TCP时间戳</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-Sack"><span class="nav-text">TCP Sack</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E7%AA%97%E5%8F%A3%E5%A4%A7%E5%B0%8F"><span class="nav-text">TCP窗口大小</span></a></li></ol>
+        <div class="page-title">asio-IOServicePool</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AF%B9%E6%AF%94"><span class="nav-text">单线程和多线程对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-text">优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOServicePool%E5%AE%9E%E7%8E%B0"><span class="nav-text">IOServicePool实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E4%BC%98%E9%9B%85%E9%80%80%E5%87%BA"><span class="nav-text">关于优雅退出</span></a></li></ol></li></ol>
 
     </div>
 </div>
