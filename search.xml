@@ -50,6 +50,317 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库设计规范</title>
+    <url>/2024/09/15/DataBaseDesign/</url>
+    <content><![CDATA[<h2 id="数据库范式"><a href="#数据库范式" class="headerlink" title="数据库范式"></a>数据库范式</h2><p>数据库范式是一套用于设计关系数据库的规范化标准，其目的是减少数据冗余并提高数据的完整性和一致性。范式化是一种将数据库表设计成符合一定级别的过程，每个级别称为一个范式。通过范式化，可以减少数据存储中的冗余，同时避免潜在的数据不一致问题。</p>
+<p>数据库范式通常分为六个级别，其中最常用的是前三范式（1NF、2NF、3NF）：</p>
+<h3 id="1-第一范式-1NF"><a href="#1-第一范式-1NF" class="headerlink" title="1. 第一范式 (1NF)"></a>1. 第一范式 (1NF)</h3><p>   第一范式要求表中的每一列都是不可分割的原子值，即每个单元格中只包含一个值。这确保了表中的每一列都是单一的事实，而不是列表或集合。例如，如果有一个“联系方式”列包含了电话号码和电子邮件地址，则这样的设计就不符合第一范式。</p>
+<h4 id="不符合1NF的例子："><a href="#不符合1NF的例子：" class="headerlink" title="不符合1NF的例子："></a>不符合1NF的例子：</h4><p>假设我们有一个<code>学生</code>表，记录学生的姓名和他们所选的课程：</p>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>课程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S001</td>
+<td>张三</td>
+<td>数学, 物理</td>
+</tr>
+<tr>
+<td>S002</td>
+<td>李四</td>
+<td>英语</td>
+</tr>
+</tbody></table>
+<p>这个表不是1NF，因为“课程”这一列包含了多个值（数学和物理），而1NF要求每一列都应该是原子的，即不可再分。</p>
+<h4 id="符合1NF的例子："><a href="#符合1NF的例子：" class="headerlink" title="符合1NF的例子："></a>符合1NF的例子：</h4><p>为了使上述表符合1NF，我们可以将其拆分成两个表：</p>
+<ul>
+<li><strong>学生表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S001</td>
+<td>张三</td>
+</tr>
+<tr>
+<td>S002</td>
+<td>李四</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>选课表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>课程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S001</td>
+<td>数学</td>
+</tr>
+<tr>
+<td>S001</td>
+<td>物理</td>
+</tr>
+<tr>
+<td>S002</td>
+<td>英语</td>
+</tr>
+</tbody></table>
+<h3 id="2-第二范式-2NF"><a href="#2-第二范式-2NF" class="headerlink" title="2. 第二范式 (2NF)"></a>2. 第二范式 (2NF)</h3><p>   第二范式建立在第一范式的基础上，要求所有的非主键字段完全依赖于主键。这意味着表中的非主键字段不能部分依赖于主键的一部分。例如，如果主键是一个复合键，那么所有非主键字段都必须依赖于整个复合键，而不仅仅是部分主键。</p>
+<h4 id="不符合2NF的例子："><a href="#不符合2NF的例子：" class="headerlink" title="不符合2NF的例子："></a>不符合2NF的例子：</h4><p>假设我们有一个<code>员工</code>表，记录员工的基本信息以及部门信息：</p>
+<table>
+<thead>
+<tr>
+<th>员工ID</th>
+<th>名字</th>
+<th>部门名称</th>
+<th>部门地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E001</td>
+<td>王五</td>
+<td>销售</td>
+<td>北京</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>赵六</td>
+<td>技术</td>
+<td>上海</td>
+</tr>
+</tbody></table>
+<p>这里的问题在于，部门名称和部门地址是依赖于部门的，而不是单独依赖于员工ID。如果部门信息发生变化，就需要在每个员工记录中更新，这样容易导致数据不一致。</p>
+<h4 id="符合2NF的例子："><a href="#符合2NF的例子：" class="headerlink" title="符合2NF的例子："></a>符合2NF的例子：</h4><p>为了使上述表符合2NF，我们需要将部门信息提取出来：</p>
+<ul>
+<li><strong>员工表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>员工ID</th>
+<th>名字</th>
+<th>部门ID</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E001</td>
+<td>王五</td>
+<td>D001</td>
+</tr>
+<tr>
+<td>E002</td>
+<td>赵六</td>
+<td>D002</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>部门表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>部门ID</th>
+<th>部门名称</th>
+<th>部门地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D001</td>
+<td>销售</td>
+<td>北京</td>
+</tr>
+<tr>
+<td>D002</td>
+<td>技术</td>
+<td>上海</td>
+</tr>
+</tbody></table>
+<h3 id="3-第三范式-3NF"><a href="#3-第三范式-3NF" class="headerlink" title="3. 第三范式 (3NF)"></a>3. 第三范式 (3NF)</h3><p>   第三范式进一步加强了第二范式的要求，它要求所有非主键字段直接依赖于主键，而不是通过另一个非主键字段间接依赖于主键（即避免传递依赖）。例如，如果存在一个表，其中一个非主键字段依赖于另一个非主键字段，那么就需要将它们分离到不同的表中。</p>
+<h4 id="不符合3NF的例子："><a href="#不符合3NF的例子：" class="headerlink" title="不符合3NF的例子："></a>不符合3NF的例子：</h4><p>考虑以下一个学生-课程-教师的示例：</p>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>课程编号</th>
+<th>教师编号</th>
+<th>教师姓名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S001</td>
+<td>C001</td>
+<td>T001</td>
+<td>刘老师</td>
+</tr>
+<tr>
+<td>S002</td>
+<td>C002</td>
+<td>T002</td>
+<td>陈老师</td>
+</tr>
+</tbody></table>
+<p>在这个表中，教师姓名直接与学生关联，而没有直接依赖于主键（学号），而是依赖于教师编号。这是一个传递依赖的例子，因此不符合3NF。</p>
+<h4 id="符合3NF的例子："><a href="#符合3NF的例子：" class="headerlink" title="符合3NF的例子："></a>符合3NF的例子：</h4><p>为了使上述表符合3NF，我们需要创建一个新的教师表：</p>
+<ul>
+<li><strong>学生表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>课程编号</th>
+<th>教师编号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S001</td>
+<td>C001</td>
+<td>T001</td>
+</tr>
+<tr>
+<td>S002</td>
+<td>C002</td>
+<td>T002</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>教师表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>教师编号</th>
+<th>教师姓名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T001</td>
+<td>刘老师</td>
+</tr>
+<tr>
+<td>T002</td>
+<td>陈老师</td>
+</tr>
+</tbody></table>
+<p>除了这三个主要的范式之外，还有更高层次的范式：</p>
+<h3 id="4-BCNF-Boys-Codd范式"><a href="#4-BCNF-Boys-Codd范式" class="headerlink" title="4. BCNF (Boys-Codd范式)"></a>4. BCNF (Boys-Codd范式)</h3><p>   BCNF范式要求每个决定因素都是一个超键。这意味着除了主键之外，没有任何其他字段可以决定任何非键字段。</p>
+<h4 id="不符合BCNF的例子："><a href="#不符合BCNF的例子：" class="headerlink" title="不符合BCNF的例子："></a>不符合BCNF的例子：</h4><p>假设我们有一个<code>图书作者</code>表，记录书籍的信息以及作者的信息：</p>
+<table>
+<thead>
+<tr>
+<th>图书ID</th>
+<th>书名</th>
+<th>作者ID</th>
+<th>作者名</th>
+<th>作者国籍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B001</td>
+<td>梦幻森林</td>
+<td>A001</td>
+<td>小明</td>
+<td>中国</td>
+</tr>
+<tr>
+<td>B002</td>
+<td>星际旅行</td>
+<td>A002</td>
+<td>小红</td>
+<td>美国</td>
+</tr>
+<tr>
+<td>B003</td>
+<td>梦幻森林</td>
+<td>A001</td>
+<td>小明</td>
+<td>中国</td>
+</tr>
+</tbody></table>
+<p>在这个表中，<code>作者名</code>和<code>作者国籍</code>依赖于<code>作者ID</code>，而不是直接依赖于<code>图书ID</code>。此外，如果我们只改变某本书的作者信息，那么所有包含该作者的记录都需要更新。这表明存在部分依赖（<code>作者名</code>和<code>作者国籍</code>依赖于<code>作者ID</code>）和传递依赖（<code>作者国籍</code>依赖于<code>作者ID</code>），这使得该表不符合BCNF的要求。</p>
+<h4 id="符合BCNF的例子："><a href="#符合BCNF的例子：" class="headerlink" title="符合BCNF的例子："></a>符合BCNF的例子：</h4><p>为了使上述表符合BCNF，我们需要将作者信息分离到另一个表中：</p>
+<ul>
+<li><strong>图书表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>图书ID</th>
+<th>书名</th>
+<th>作者ID</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B001</td>
+<td>梦幻森林</td>
+<td>A001</td>
+</tr>
+<tr>
+<td>B002</td>
+<td>星际旅行</td>
+<td>A002</td>
+</tr>
+<tr>
+<td>B003</td>
+<td>梦幻森林</td>
+<td>A001</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>作者表</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>作者ID</th>
+<th>作者名</th>
+<th>作者国籍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A001</td>
+<td>小明</td>
+<td>中国</td>
+</tr>
+<tr>
+<td>A002</td>
+<td>小红</td>
+<td>美国</td>
+</tr>
+</tbody></table>
+<p>现在，<code>图书表</code>中的每一项都是基于<code>图书ID</code>和<code>作者ID</code>这两个组合键，而<code>作者表</code>中的每一项都是基于<code>作者ID</code>。在这种情况下，没有任何非平凡函数依赖涉及非候选键的情况，因此这两个表都符合BCNF的要求。</p>
+<h3 id="5-第四范式-4NF"><a href="#5-第四范式-4NF" class="headerlink" title="5. 第四范式 (4NF)"></a>5. 第四范式 (4NF)</h3><p>   第四范式是在BCNF的基础上进一步消除非平凡的多值依赖。</p>
+<h3 id="6-第五范式-5NF-："><a href="#6-第五范式-5NF-：" class="headerlink" title="6. 第五范式 (5NF)："></a>6. 第五范式 (5NF)：</h3><p>   第五范式，也被称为完美范式或PJ范式，关注的是关系模式在连接操作后的数据一致性。</p>
+<p>范式化的过程通常涉及到将数据分解成多个相互关联的表，以确保每个表都有一个明确的主题或目的，并且表中的每个字段都直接依赖于主键。虽然遵循范式可以带来许多好处，但在实际应用中，有时候为了提高查询性能或其他原因，可能会选择不完全遵循这些范式，而是采用一定程度的反范式化（denormalization）。</p>
+<h2 id="关于键"><a href="#关于键" class="headerlink" title="关于键:"></a>关于键:</h2><ul>
+<li>超键(super key): 在关系中能唯一标识元组的属性集称为关系模式的超键<br>只要含有“学号”或者“身份证号”两个属性的集合就叫超键，例如R1（学号 性别）、R2（身份证号 身高）、R3（学号 身份证号）等等都可以称为超键！</li>
+<li>候选键(candidate key): 不含有多余属性的超键称为候选键。也就是在候选键中，若再删除属性，就不是键了！<br>不含有多余的属性的超键，比如（学号）、（身份证号）都是候选键，又比如R1中学号这一个属性就可以唯一标识元组了，而有没有性别这一属性对是否唯一标识元组没有任何的影响！</li>
+<li>主键(primary key): 用户选作元组标识的一个候选键程序主键<br>就是用户从很多候选键选出来的一个键就是主键，比如你要求学号是主键，那么身份证号就不可以是主键了</li>
+<li>外键(foreign key)：如果关系模式R中属性K是其它模式的主键，那么k在模式R中称为外键。<br> 宿舍号就是学生信息表的外键</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>QT信号和槽</title>
     <url>/2024/08/27/QT-Signal/</url>
     <content><![CDATA[<h2 id="信号和槽"><a href="#信号和槽" class="headerlink" title="信号和槽"></a>信号和槽</h2><p>当我们需要一个界面通知另一个界面时，可以采用信号和槽机制。通过链接信号和槽，当一个界面发送信号时，链接该信号的槽会被响应，从而达到消息传递的目的。</p>
@@ -1089,6 +1400,81 @@
       </tags>
   </entry>
   <entry>
+    <title>GDB 使用指南-2</title>
+    <url>/2024/03/18/gdb-2/</url>
+    <content><![CDATA[<p>本文主要描述了GDB中断点调试和数据命令的使用方法</p>
+<h1 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h1><h2 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h2><p>要设置断点时，使用<code>break</code>或<code>b</code>来设置断点</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="条件断点"><a href="#条件断点" class="headerlink" title="条件断点"></a>条件断点</h2><p>有时，我们只想在满足特定条件时暂停程序</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5 if i == 5</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png"
+                     
+                ></p>
+<h2 id="查看断点"><a href="#查看断点" class="headerlink" title="查看断点"></a>查看断点</h2><p>如果需要查看所有断点所在的位置信息，使用<code>info breakpoints</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">info breakpoints</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="清除断点"><a href="#清除断点" class="headerlink" title="清除断点"></a>清除断点</h2><p>有些断点我们不再需要，可以直接清除</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 清理第5行的断点</span><br><span class="line">clear main.cpp:5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h2><p>观察点允许我们监视变量的值，并在其值发生变化时暂停程序。这对于跟踪变量的变化非常有用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">watch variable_name</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="捕捉点"><a href="#捕捉点" class="headerlink" title="捕捉点"></a>捕捉点</h2><p>捕捉点是一种特殊类型的断点，它允许我们在发生特定事件，如抛出异常时暂停程序。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置捕捉点</span><br><span class="line">catch throw</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec15c8.png"
+                     
+                ></p>
+<p>这将设置一个捕捉点，当程序抛出异常时，它将暂停。</p>
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="显示表达式值"><a href="#显示表达式值" class="headerlink" title="显示表达式值"></a>显示表达式值</h2><p>在GDB中，可以通过<code>print</code>来评估表达式并显示其值</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">print variable_name</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="查看数据类型"><a href="#查看数据类型" class="headerlink" title="查看数据类型"></a>查看数据类型</h2><p>当我们需要查看一个变量的类型，（例如类型推断的变量），需要使用<code>whatis</code>命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">whatis variable_name</span><br></pre></td></tr></table></figure></div>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1c4e.png"
+                     
+                ></p>
+<h2 id="打印变量值"><a href="#打印变量值" class="headerlink" title="打印变量值"></a>打印变量值</h2><p><code>display</code>命令可以自动显示表达式的值，每次程序停止时都会显示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">display x</span><br></pre></td></tr></table></figure></div>
+
+<p>每次程序停止时，都会显示变量x的值</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec185b.png"
+                     
+                ></p>
+<h2 id="修改变量值"><a href="#修改变量值" class="headerlink" title="修改变量值"></a>修改变量值</h2><p>在某些情况下，需要在调试过程中修改变量值。假设要将变量x的值设置为5，使用<code>set</code>命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">set variable x = 5</span><br></pre></td></tr></table></figure></div>
+
+<p>这将立即更改变量x的值，而不需要重新编译或重新启动程序。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1ad6.png"
+                     
+                ></p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>GDB 使用指南-1</title>
     <url>/2024/03/18/gdb-1/</url>
     <content><![CDATA[<p>本文主要描述了GDB的基础命令使用</p>
@@ -1163,81 +1549,6 @@
                      data-src="https://ooo.0x0.ooo/2024/03/18/Ogk8yI.png"
                       alt="Ogk8yI.png"
                 ></a></p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>调试</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GDB 使用指南-2</title>
-    <url>/2024/03/18/gdb-2/</url>
-    <content><![CDATA[<p>本文主要描述了GDB中断点调试和数据命令的使用方法</p>
-<h1 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h1><h2 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h2><p>要设置断点时，使用<code>break</code>或<code>b</code>来设置断点</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="条件断点"><a href="#条件断点" class="headerlink" title="条件断点"></a>条件断点</h2><p>有时，我们只想在满足特定条件时暂停程序</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5 if i == 5</span><br></pre></td></tr></table></figure></div>
-
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png"
-                     
-                ></p>
-<h2 id="查看断点"><a href="#查看断点" class="headerlink" title="查看断点"></a>查看断点</h2><p>如果需要查看所有断点所在的位置信息，使用<code>info breakpoints</code></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">info breakpoints</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="清除断点"><a href="#清除断点" class="headerlink" title="清除断点"></a>清除断点</h2><p>有些断点我们不再需要，可以直接清除</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 清理第5行的断点</span><br><span class="line">clear main.cpp:5</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h2><p>观察点允许我们监视变量的值，并在其值发生变化时暂停程序。这对于跟踪变量的变化非常有用</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">watch variable_name</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="捕捉点"><a href="#捕捉点" class="headerlink" title="捕捉点"></a>捕捉点</h2><p>捕捉点是一种特殊类型的断点，它允许我们在发生特定事件，如抛出异常时暂停程序。</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置捕捉点</span><br><span class="line">catch throw</span><br></pre></td></tr></table></figure></div>
-
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec15c8.png"
-                     
-                ></p>
-<p>这将设置一个捕捉点，当程序抛出异常时，它将暂停。</p>
-<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="显示表达式值"><a href="#显示表达式值" class="headerlink" title="显示表达式值"></a>显示表达式值</h2><p>在GDB中，可以通过<code>print</code>来评估表达式并显示其值</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">print variable_name</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="查看数据类型"><a href="#查看数据类型" class="headerlink" title="查看数据类型"></a>查看数据类型</h2><p>当我们需要查看一个变量的类型，（例如类型推断的变量），需要使用<code>whatis</code>命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">whatis variable_name</span><br></pre></td></tr></table></figure></div>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1c4e.png"
-                     
-                ></p>
-<h2 id="打印变量值"><a href="#打印变量值" class="headerlink" title="打印变量值"></a>打印变量值</h2><p><code>display</code>命令可以自动显示表达式的值，每次程序停止时都会显示</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">display x</span><br></pre></td></tr></table></figure></div>
-
-<p>每次程序停止时，都会显示变量x的值</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec185b.png"
-                     
-                ></p>
-<h2 id="修改变量值"><a href="#修改变量值" class="headerlink" title="修改变量值"></a>修改变量值</h2><p>在某些情况下，需要在调试过程中修改变量值。假设要将变量x的值设置为5，使用<code>set</code>命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">set variable x = 5</span><br></pre></td></tr></table></figure></div>
-
-<p>这将立即更改变量x的值，而不需要重新编译或重新启动程序。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1ad6.png"
-                     
-                ></p>
 ]]></content>
       <categories>
         <category>工具</category>
@@ -2064,6 +2375,72 @@
       </tags>
   </entry>
   <entry>
+    <title>asio socket的创建和连接</title>
+    <url>/2024/07/03/linux-socket-programming-2/</url>
+    <content><![CDATA[<h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
+<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
+<li>创建上下文<code>io_context</code></li>
+<li>选择协议</li>
+<li>生成<code>socket</code></li>
+<li>打开<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
+<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
+<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
+<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
+<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
+<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
+<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
+<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
+<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
+<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>将”Hello World”转换成这种类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>网络编程</tag>
+        <tag>socket</tag>
+        <tag>计算机网络</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>socket的创建和连接</title>
     <url>/2024/06/30/linux-socket-programming-1/</url>
     <content><![CDATA[<h1 id="socket编程"><a href="#socket编程" class="headerlink" title="socket编程"></a>socket编程</h1><h2 id="socket的概念"><a href="#socket的概念" class="headerlink" title="socket的概念"></a>socket的概念</h2><p>Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。</p>
@@ -2221,72 +2598,6 @@
 <li>关闭<code>socket</code></li>
 </ol>
 <div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 创建套接字并返回其文件描述符</span></span><br><span class="line"><span class="comment"> * 如果创建失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> sock_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sock_fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket创建失败&quot;</span>); <span class="comment">// 使用perror提供更多的错误信息</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;socket create successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> sock_fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 初始化服务器地址结构的函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = inet_addr(<span class="string">&quot;192.168.5.120&quot;</span>); <span class="comment">// 服务器IP</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 建立到服务器的连接</span></span><br><span class="line"><span class="comment"> * 如果连接失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">connect_to_server</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (connect(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;connection failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;connection successful\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 客户端程序开始的主函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_fd = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化服务器详细信息</span></span><br><span class="line"></span><br><span class="line">    connect_to_server(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 连接到服务器</span></span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于发送数据的缓冲区</span></span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于接收数据的缓冲区</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 持续从用户获取输入并发送到服务器，直到从服务器接收到&quot;bye!!!&quot;</span></span><br><span class="line">    <span class="keyword">while</span> (fgets(send_buf, BUFFLEN, <span class="built_in">stdin</span>)) &#123;</span><br><span class="line">        <span class="comment">// 向服务器写入用户输入</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_fd, send_buf, strnlen(send_buf, BUFFLEN)) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Client):%s&quot;</span>, send_buf); <span class="comment">// 打印用户输入</span></span><br><span class="line">        <span class="built_in">memset</span>(send_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除发送缓冲区</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (read(socket_fd, recv_buf, BUFFLEN) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Server:%s&quot;</span>, recv_buf); <span class="comment">// 打印服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(recv_buf, <span class="string">&quot;bye!!!&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除接收缓冲区</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(socket_fd); <span class="comment">// 关闭套接字</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>网络编程</tag>
-        <tag>socket</tag>
-        <tag>计算机网络</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>asio socket的创建和连接</title>
-    <url>/2024/07/03/linux-socket-programming-2/</url>
-    <content><![CDATA[<h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
-<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
-<li>创建上下文<code>io_context</code></li>
-<li>选择协议</li>
-<li>生成<code>socket</code></li>
-<li>打开<code>socket</code></li>
-</ol>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
-<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
-<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
-<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
-<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
-<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
-<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
-<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
-<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
-<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
-
-<p>将”Hello World”转换成这种类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
 ]]></content>
       <categories>
         <category>技术</category>
