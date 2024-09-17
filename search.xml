@@ -6,7 +6,7 @@
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本文介绍了C++中的静态类型、动态类型、RTTI。</p>
 <h2 id="静态类型"><a href="#静态类型" class="headerlink" title="静态类型"></a>静态类型</h2><p>C++ 是一种静态类型语言（static typing），这意味着类型检查是在编译时进行而非运行时。换句话说，每个变量、对象、函数返回值等在编译时都必须明确其类型。这种类型系统的主要优点是能够在程序运行之前发现类型不匹配等错误，从而提高代码的安全性和稳定性。</p>
 <p>举一个例子</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">42</span>;        <span class="comment">// &#x27;num&#x27; 静态类型为int</span></span><br><span class="line">    <span class="type">double</span> pi = <span class="number">3.14159</span>; <span class="comment">// &#x27;pi&#x27; 静态类型为double</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// FIX: num = pi; 这种写法会造成编译错误，因为类型不匹配</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;The value of num is: &quot;</span> &lt;&lt; num &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;The value of pi is: &quot;</span> &lt;&lt; pi &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">42</span>;        <span class="comment">// &#x27;num&#x27; 静态类型为int</span></span><br><span class="line">    <span class="type">double</span> pi = <span class="number">3.14159</span>; <span class="comment">// &#x27;pi&#x27; 静态类型为double</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// FIX: num = pi; 这种写法会造成编译错误，因为类型不匹配</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;The value of num is: &quot;</span> &lt;&lt; num &lt;&lt; std::endl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;The value of pi is: &quot;</span> &lt;&lt; pi &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <h2 id="动态类型"><a href="#动态类型" class="headerlink" title="动态类型"></a>动态类型</h2><p>在C++这种静态类型语言中，通常所说的”dynamic typing”（动态类型）并不是内置的语言特性，因为C++要求变量在编译时就明确其类型。相对的，”dynamic typing”通常指的是在运行时能够处理多种不同类型的数据。在C++中实现类似动态类型的行为，通常是通过以下几种方式：</p>
 <ol>
@@ -18,7 +18,7 @@
 </li>
 </ol>
 <p>举点例子：</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;any&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_void_pointer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">42</span>;</span><br><span class="line">    <span class="type">float</span> y = <span class="number">3.14f</span>;</span><br><span class="line">    std::string z = <span class="string">&quot;hello world\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">void</span>* void_ptr;</span><br><span class="line"></span><br><span class="line">    void_ptr = &amp;x;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;int_value: &quot;</span> &lt;&lt; *(<span class="built_in">static_cast</span>&lt;<span class="type">int</span>*&gt;(void_ptr)) &lt;&lt; std::endl;</span><br><span class="line">    void_ptr = &amp;y;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;double_value: &quot;</span> &lt;&lt; *(<span class="built_in">static_cast</span>&lt;<span class="type">double</span>*&gt;(void_ptr)) &lt;&lt; std::endl;</span><br><span class="line">    void_ptr = &amp;z;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;string_value: &quot;</span> &lt;&lt; *(<span class="built_in">static_cast</span>&lt;std::string*&gt;(void_ptr)) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_any</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::any any_value;</span><br><span class="line">    any_value = <span class="number">42</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;int_value: &quot;</span> &lt;&lt; std::<span class="built_in">any_cast</span>&lt;<span class="type">int</span>&gt;(any_value) &lt;&lt; std::endl;</span><br><span class="line">    any_value = <span class="number">3.14</span>;</span><br><span class="line">    std::cout &lt;&lt;<span class="string">&quot;double_value: &quot;</span> &lt;&lt; std::<span class="built_in">any_cast</span>&lt;<span class="type">double</span>&gt;(any_value) &lt;&lt; std::endl;</span><br><span class="line">    any_value = std::<span class="built_in">string</span>( <span class="string">&quot;awdawda&quot;</span> );</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;string_value: &quot;</span> &lt;&lt; std::<span class="built_in">any_cast</span>&lt;std::string&gt;(any_value) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">test_void_pointer</span>();</span><br><span class="line">    <span class="built_in">test_any</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;any&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_void_pointer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">42</span>;</span><br><span class="line">    <span class="type">float</span> y = <span class="number">3.14f</span>;</span><br><span class="line">    std::string z = <span class="string">&quot;hello world\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">void</span>* void_ptr;</span><br><span class="line"></span><br><span class="line">    void_ptr = &amp;x;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;int_value: &quot;</span> &lt;&lt; *(<span class="built_in">static_cast</span>&lt;<span class="type">int</span>*&gt;(void_ptr)) &lt;&lt; std::endl;</span><br><span class="line">    void_ptr = &amp;y;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;double_value: &quot;</span> &lt;&lt; *(<span class="built_in">static_cast</span>&lt;<span class="type">double</span>*&gt;(void_ptr)) &lt;&lt; std::endl;</span><br><span class="line">    void_ptr = &amp;z;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;string_value: &quot;</span> &lt;&lt; *(<span class="built_in">static_cast</span>&lt;std::string*&gt;(void_ptr)) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_any</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::any any_value;</span><br><span class="line">    any_value = <span class="number">42</span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;int_value: &quot;</span> &lt;&lt; std::<span class="built_in">any_cast</span>&lt;<span class="type">int</span>&gt;(any_value) &lt;&lt; std::endl;</span><br><span class="line">    any_value = <span class="number">3.14</span>;</span><br><span class="line">    std::cout &lt;&lt;<span class="string">&quot;double_value: &quot;</span> &lt;&lt; std::<span class="built_in">any_cast</span>&lt;<span class="type">double</span>&gt;(any_value) &lt;&lt; std::endl;</span><br><span class="line">    any_value = std::<span class="built_in">string</span>( <span class="string">&quot;awdawda&quot;</span> );</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;string_value: &quot;</span> &lt;&lt; std::<span class="built_in">any_cast</span>&lt;std::string&gt;(any_value) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">test_void_pointer</span>();</span><br><span class="line">    <span class="built_in">test_any</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>需要注意的是，上面实例中的<code>void*</code>和<code>std::any</code>由于额外的类型检查和转换，会在运行时导致额外的性能开销。</p>
 <h2 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h2><p>RTTI，即运行时类型信息（Run-Time Type Identification），是C++语言中的一个机制，它允许在程序运行时获取对象的类型信息。RTTI是面向对象编程中多态性的一个重要特性，它能够让我们在程序运行时确定对象的实际派生类型。</p>
@@ -502,6 +502,356 @@
         <tag>socket</tag>
         <tag>计算机网络</tag>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SQL语句</title>
+    <url>/2024/09/17/SQLGRammar/</url>
+    <content><![CDATA[<h2 id="数据库定义语言-DDL"><a href="#数据库定义语言-DDL" class="headerlink" title="数据库定义语言(DDL)"></a>数据库定义语言(DDL)</h2><h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> database <span class="operator">&lt;</span>database_name<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>为了支持中文，我们需要在创建的时候可以修改编码格式</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="operator">&lt;</span>database_name<span class="operator">&gt;</span> <span class="keyword">DEFAULT</span> CHARSET utf8 <span class="keyword">COLLATE</span> utf8_general_ci</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span>(列名 数据类型[列级约束条件],</span><br><span class="line">                          列名 数据类型[列级约束条件],</span><br><span class="line">                          ...</span><br><span class="line">                          [, 表级约束条件])</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="SQL数据类型"><a href="#SQL数据类型" class="headerlink" title="SQL数据类型"></a>SQL数据类型</h3><h4 id="数值类型-Numeric-Types"><a href="#数值类型-Numeric-Types" class="headerlink" title="数值类型 (Numeric Types)"></a>数值类型 (Numeric Types)</h4><ol>
+<li><p><strong>整数类型</strong>：</p>
+<ul>
+<li><code>TINYINT</code>: 存储很小的整数，通常范围是 <code>-128</code> 到 <code>127</code>。</li>
+<li><code>SMALLINT</code>: 存储较小的整数，通常范围是 <code>-32768</code> 到 <code>32767</code>。</li>
+<li><code>MEDIUMINT</code>: MySQL 特有的类型，适合存储中等大小的整数。</li>
+<li><code>INT</code> 或 <code>INTEGER</code>: 存储普通大小的整数，通常范围是 <code>-2147483648</code> 到 <code>2147483647</code>。</li>
+<li><code>BIGINT</code>: 存储非常大的整数，通常范围是 <code>-9223372036854775808</code> 到 <code>9223372036854775807</code>。</li>
+<li><code>UNSIGNED</code>: 以上整数类型可以加上此属性以存储非负整数，范围从 <code>0</code> 开始。</li>
+</ul>
+</li>
+<li><p><strong>小数类型</strong>：</p>
+<ul>
+<li><code>DECIMAL</code> 或 <code>NUMERIC</code>: 用于存储精确的小数，格式为 <code>DECIMAL(M, D)</code>，其中 <code>M</code> 是数字总长度，<code>D</code> 是小数点后的位数。</li>
+<li><code>FLOAT</code>: 用于存储浮点数，可能丢失精度。</li>
+<li><code>DOUBLE</code> 或 <code>REAL</code>: 用于存储更高精度的浮点数。</li>
+</ul>
+</li>
+<li><p><strong>位类型</strong>：</p>
+<ul>
+<li><code>BIT</code>: 用于存储位字段值。</li>
+</ul>
+</li>
+</ol>
+<h4 id="字符串类型-String-Types"><a href="#字符串类型-String-Types" class="headerlink" title="字符串类型 (String Types)"></a>字符串类型 (String Types)</h4><ol>
+<li><p><strong>定长字符串</strong>：</p>
+<ul>
+<li><code>CHAR(n)</code>: 存储定长的字符串，其中 <code>n</code> 是字符串的最大长度。如果输入的字符串长度不够，会用空格填充。</li>
+</ul>
+</li>
+<li><p><strong>变长字符串</strong>：</p>
+<ul>
+<li><code>VARCHAR(n)</code>: 存储变长的字符串，其中 <code>n</code> 是字符串的最大长度。</li>
+<li><code>BINARY(n)</code> 和 <code>VARBINARY(n)</code>: 分别存储定长和变长的二进制字符串。</li>
+</ul>
+</li>
+<li><p><strong>大对象类型</strong>：</p>
+<ul>
+<li><code>TEXT</code>: 用于存储较大的文本数据。</li>
+<li><code>BLOB</code>: 用于存储较大的二进制数据。</li>
+<li><code>MEDIUMTEXT</code> 和 <code>MEDIUMBLOB</code>: MySQL 特有的类型，用于存储中等大小的文本或二进制数据。</li>
+<li><code>LONGTEXT</code> 和 <code>LONGBLOB</code>: MySQL 特有的类型，用于存储非常大的文本或二进制数据。</li>
+</ul>
+</li>
+</ol>
+<h4 id="日期-时间类型-Date-Time-Types"><a href="#日期-时间类型-Date-Time-Types" class="headerlink" title="日期&#x2F;时间类型 (Date&#x2F;Time Types)"></a>日期&#x2F;时间类型 (Date&#x2F;Time Types)</h4><ol>
+<li><p><strong>日期类型</strong>：</p>
+<ul>
+<li><code>DATE</code>: 存储日期值。</li>
+<li><code>TIME</code>: 存储时间值。</li>
+<li><code>YEAR</code>: MySQL 特有的类型，用于存储四位数的年份。</li>
+</ul>
+</li>
+<li><p><strong>日期时间类型</strong>：</p>
+<ul>
+<li><code>DATETIME</code>: 存储日期和时间值，支持的范围通常是 <code>1000-01-01 00:00:00</code> 至 <code>9999-12-31 23:59:59</code>。</li>
+<li><code>TIMESTAMP</code>: 存储日期和时间值，并且在插入或更新时可以自动设置为当前的日期和时间。</li>
+<li><code>INTERVAL</code>: PostgreSQL 特有的类型，用于存储时间间隔。</li>
+</ul>
+</li>
+</ol>
+<h4 id="其他类型"><a href="#其他类型" class="headerlink" title="其他类型"></a>其他类型</h4><ol>
+<li><p><strong>枚举类型</strong>：</p>
+<ul>
+<li><code>ENUM(&#39;value1&#39;, &#39;value2&#39;, ... )</code>: 存储一系列预先定义的值中的一个。</li>
+</ul>
+</li>
+<li><p><strong>集合类型</strong>：</p>
+<ul>
+<li><code>SET(&#39;value1&#39;, &#39;value2&#39;, ... )</code>: 存储一系列预先定义的值中的一个或多个值。</li>
+</ul>
+</li>
+<li><p><strong>JSON 类型</strong>：</p>
+<ul>
+<li><code>JSON</code>: MySQL 8.0 之后支持的类型，用于存储 JSON 文档。</li>
+</ul>
+</li>
+<li><p><strong>空间类型</strong>：</p>
+<ul>
+<li><code>POINT</code>, <code>LINESTRING</code>, <code>POLYGON</code>, <code>MULTIPOINT</code>, <code>MULTILINESTRING</code>, <code>MULTIPOLYGON</code>, <code>GEOMETRYCOLLECTION</code>: 用于存储地理空间数据。</li>
+</ul>
+</li>
+</ol>
+<h3 id="列级约束条件"><a href="#列级约束条件" class="headerlink" title="列级约束条件"></a>列级约束条件</h3><p>有六种:主键(Primary Key),非空(NotNull)&#x2F;空值null, 默认(Default),外键(外键约束),唯一键(Unique Key),检查约束(Check)(MySql不支持)、默认Default。</p>
+<h3 id="表级约束条件"><a href="#表级约束条件" class="headerlink" title="表级约束条件"></a>表级约束条件</h3><p>有四种：主键、外键、唯一、检查</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line">[<span class="keyword">CONSTRAINT</span> <span class="operator">&lt;</span>外键名<span class="operator">&gt;</span>] <span class="keyword">FOREIGN</span> KEY 字段名 [..., 字段名<span class="number">2</span>, ...] <span class="keyword">REFERENCES</span> <span class="operator">&lt;</span>主表名<span class="operator">&gt;</span> 主键列<span class="number">1</span> [, 主键列<span class="number">2</span>, ...]</span><br></pre></td></tr></table></figure></div>
+
+<p>现在来创建三个表</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> study(sid <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> name <span class="type">VARCHAR</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> sex ENUM(<span class="string">&#x27;male&#x27;</span>, <span class="string">&#x27;female&#x27;</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;male&#x27;</span>);</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> teacher(tid <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> name <span class="type">VARCHAR</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> teach (</span><br><span class="line">    tid <span class="type">INT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    sid <span class="type">INT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">CONSTRAINT</span> f_tid <span class="keyword">FOREIGN</span> KEY (tid) <span class="keyword">REFERENCES</span> teacher(tid)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- mysql&gt; CREATE TABLE teach(tid int not null, sid int not null);</span></span><br><span class="line"><span class="comment">-- mysql&gt; ALTER TABLE teach</span></span><br><span class="line"><span class="comment">--     -&gt; ADD CONSTRAINT f_tid</span></span><br><span class="line"><span class="comment">--     -&gt; FOREIGN KEY(tid)</span></span><br><span class="line"><span class="comment">--     -&gt; REFERENCES teacher(tid);</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h3><p>如果我们想要修改表结构，可以通过<code>alter table</code>进行修改</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名[<span class="keyword">ADD</span> 新列名 数据类型[列级约束条件]]</span><br><span class="line">                [<span class="keyword">DROP</span> <span class="keyword">COLUMN</span> 列名[restrict<span class="operator">|</span>cascade]]</span><br><span class="line">                [<span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> 列名 数据类型]</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> 表名[restrict<span class="operator">|</span>cascade]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="数据库操作语言-DML"><a href="#数据库操作语言-DML" class="headerlink" title="数据库操作语言(DML)"></a>数据库操作语言(DML)</h2><h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名 <span class="keyword">VALUES</span>(值<span class="number">1</span>, 值<span class="number">2</span>, ...)</span><br></pre></td></tr></table></figure></div>
+
+<p>如果插入的数据与列一一对应，那么可以省略列名，但是如果希望向指定列上插入数据，就需要给出列名</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名(列名<span class="number">1</span>, 列名<span class="number">2</span>, ...) <span class="keyword">VALUES</span>(值<span class="number">1</span>, 值<span class="number">2</span>, ...)</span><br></pre></td></tr></table></figure></div>
+
+<p>也可以一次性向数据库中插入多条数据</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名(列名<span class="number">1</span>, 列名<span class="number">2</span>, ...) <span class="keyword">VALUES</span>(值<span class="number">1</span>, 值<span class="number">2</span>, ...), (值<span class="number">1</span>, 值<span class="number">2</span>, ...)</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> 表名 <span class="keyword">SET</span> 列名 <span class="operator">=</span> 值, 列名 <span class="operator">=</span> 值, ... <span class="keyword">WHERE</span> 条件</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注意，SQL语句中等于判断是<code>=</code></p>
+</blockquote>
+<pre><code>如果忘记加where来限定条件，那么将使得整个表的数据都被修改
+</code></pre>
+<h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><p>删除全部数据</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> 表名</span><br></pre></td></tr></table></figure></div>
+
+<p>删除指定数据</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 条件</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="数据库查询语言DQL"><a href="#数据库查询语言DQL" class="headerlink" title="数据库查询语言DQL"></a>数据库查询语言DQL</h2><h3 id="单表查询"><a href="#单表查询" class="headerlink" title="单表查询"></a>单表查询</h3><p>只需要在一张表中查找数据，使用<code>select</code>语句即可</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">-- 指定查询某一列数据</span></span><br><span class="line"><span class="keyword">SELECT</span> 列名[, 列名] <span class="keyword">FROM</span> 表名</span><br><span class="line"><span class="comment">-- 会以别名来显示此列</span></span><br><span class="line"><span class="keyword">SELECT</span> 列名 <span class="keyword">AS</span> 别名 <span class="keyword">FROM</span> 表名</span><br><span class="line"><span class="comment">-- 查询所有列的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名</span><br><span class="line"><span class="comment">-- 只查询不重复的值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> 列名 <span class="keyword">FROM</span> 表名</span><br><span class="line"><span class="comment">-- 使用where来限定条件</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 条件</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="常用查询条件"><a href="#常用查询条件" class="headerlink" title="常用查询条件"></a>常用查询条件</h3><ul>
+<li>一般的比较运算符<code>=, &gt;, &lt;, &lt;=, &gt;=, !=</code></li>
+<li>是否会在集合中<code>in, not in</code></li>
+<li>字符模糊匹配<code>like, not like</code></li>
+<li>多重条件连接查询<code>and, or, not</code></li>
+</ul>
+<h3 id="排序查询"><a href="#排序查询" class="headerlink" title="排序查询"></a>排序查询</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 条件 <span class="keyword">ORDER</span> <span class="keyword">BY</span> 列名 <span class="keyword">ASC</span><span class="operator">|</span><span class="keyword">DESC</span></span><br></pre></td></tr></table></figure></div>
+
+<p>ASC 升序 DESC 降序 默认为升序</p>
+<p>添加多个排序</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 条件 <span class="keyword">ORDER</span> <span class="keyword">BY</span> 列名<span class="number">1</span> <span class="keyword">ASC</span><span class="operator">|</span><span class="keyword">DESC</span>, 列名<span class="number">2</span> <span class="keyword">ASC</span><span class="operator">|</span><span class="keyword">DESC</span></span><br></pre></td></tr></table></figure></div>
+
+<p>会先按照列名1进行排序，再按照列名2进行排序</p>
+<h3 id="聚集函数"><a href="#聚集函数" class="headerlink" title="聚集函数"></a>聚集函数</h3><p>SQL 中的聚集函数（Aggregate Functions）用于对一组值执行计算，并返回单个值。这些函数通常用于对表中的数据进行汇总和分析。以下是一些常见的 SQL 聚集函数：</p>
+<h4 id="1-COUNT"><a href="#1-COUNT" class="headerlink" title="1. COUNT()"></a>1. <code>COUNT()</code></h4><ul>
+<li><strong>用途</strong>：计算表中行的数量或满足特定条件的行的数量。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> employees;  <span class="comment">-- 计算 employees 表中的总行数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> department) <span class="keyword">FROM</span> employees;  <span class="comment">-- 计算 employees 表中不同部门的数量</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="2-SUM"><a href="#2-SUM" class="headerlink" title="2. SUM()"></a>2. <code>SUM()</code></h4><ul>
+<li><strong>用途</strong>：计算某一列值的总和。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">SUM</span>(salary) <span class="keyword">FROM</span> employees;  <span class="comment">-- 计算 employees 表中所有员工的总工资</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="3-AVG"><a href="#3-AVG" class="headerlink" title="3. AVG()"></a>3. <code>AVG()</code></h4><ul>
+<li><strong>用途</strong>：计算某一列值的平均值。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">AVG</span>(salary) <span class="keyword">FROM</span> employees;  <span class="comment">-- 计算 employees 表中所有员工的平均工资</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="4-MIN"><a href="#4-MIN" class="headerlink" title="4. MIN()"></a>4. <code>MIN()</code></h4><ul>
+<li><strong>用途</strong>：返回某一列的最小值。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">MIN</span>(salary) <span class="keyword">FROM</span> employees;  <span class="comment">-- 返回 employees 表中最低的工资</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="5-MAX"><a href="#5-MAX" class="headerlink" title="5. MAX()"></a>5. <code>MAX()</code></h4><ul>
+<li><strong>用途</strong>：返回某一列的最大值。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">MAX</span>(salary) <span class="keyword">FROM</span> employees;  <span class="comment">-- 返回 employees 表中最高的工资</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="6-GROUP-CONCAT"><a href="#6-GROUP-CONCAT" class="headerlink" title="6. GROUP_CONCAT()"></a>6. <code>GROUP_CONCAT()</code></h4><ul>
+<li><strong>用途</strong>：将某一列的值连接成一个字符串，通常用于将分组后的值合并。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department, GROUP_CONCAT(name) <span class="keyword">FROM</span> employees <span class="keyword">GROUP</span> <span class="keyword">BY</span> department;  <span class="comment">-- 将每个部门的员工名字连接成一个字符串</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="7-VARIANCE-和-STDDEV"><a href="#7-VARIANCE-和-STDDEV" class="headerlink" title="7. VARIANCE() 和 STDDEV()"></a>7. <code>VARIANCE()</code> 和 <code>STDDEV()</code></h4><ul>
+<li><strong>用途</strong>：计算某一列值的方差和标准差。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> VARIANCE(salary) <span class="keyword">FROM</span> employees;  <span class="comment">-- 计算 employees 表中工资的方差</span></span><br><span class="line"><span class="keyword">SELECT</span> STDDEV(salary) <span class="keyword">FROM</span> employees;  <span class="comment">-- 计算 employees 表中工资的标准差</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="8-BIT-AND-BIT-OR-BIT-XOR"><a href="#8-BIT-AND-BIT-OR-BIT-XOR" class="headerlink" title="8. BIT_AND(), BIT_OR(), BIT_XOR()"></a>8. <code>BIT_AND()</code>, <code>BIT_OR()</code>, <code>BIT_XOR()</code></h4><ul>
+<li><strong>用途</strong>：对某一列的值执行按位与、按位或、按位异或操作。</li>
+<li><strong>示例</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> BIT_AND(flags) <span class="keyword">FROM</span> employees;  <span class="comment">-- 对 employees 表中的 flags 列执行按位与操作</span></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="使用聚集函数的注意事项："><a href="#使用聚集函数的注意事项：" class="headerlink" title="使用聚集函数的注意事项："></a>使用聚集函数的注意事项：</h4><ul>
+<li><strong>NULL 值</strong>：聚集函数通常会忽略 <code>NULL</code> 值。例如，<code>SUM()</code> 函数不会将 <code>NULL</code> 值计入总和。</li>
+<li><strong>GROUP BY 子句</strong>：聚集函数通常与 <code>GROUP BY</code> 子句一起使用，以便对数据进行分组并计算每个组的汇总值。</li>
+<li><strong>HAVING 子句</strong>：用于过滤分组后的结果，通常与 <code>GROUP BY</code> 子句一起使用。</li>
+</ul>
+<h4 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department, <span class="built_in">AVG</span>(salary) <span class="keyword">AS</span> avg_salary</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> department</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">AVG</span>(salary) <span class="operator">&gt;</span> <span class="number">50000</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>这个查询会计算每个部门的平均工资，并只返回平均工资大于 50000 的部门。</p>
+<h3 id="分组分页查询"><a href="#分组分页查询" class="headerlink" title="分组分页查询"></a>分组分页查询</h3><p>通过<code>group by</code>来对查询结果进行分组，需要结合聚集函数一起使用</p>
+<p>在 MySQL 中，分组分页查询通常涉及使用 <code>GROUP BY</code> 子句对数据进行分组，然后使用 <code>LIMIT</code> 子句对结果进行分页。以下是详细解释和示例：</p>
+<h4 id="1-GROUP-BY-子句"><a href="#1-GROUP-BY-子句" class="headerlink" title="1. GROUP BY 子句"></a>1. <code>GROUP BY</code> 子句</h4><p><code>GROUP BY</code> 子句用于将数据按照一个或多个列进行分组。通常与聚集函数（如 <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code> 等）一起使用，以便对每个组进行汇总计算。</p>
+<h4 id="2-LIMIT-子句"><a href="#2-LIMIT-子句" class="headerlink" title="2. LIMIT 子句"></a>2. <code>LIMIT</code> 子句</h4><p><code>LIMIT</code> 子句用于限制查询结果的行数。通常用于分页查询，通过指定起始行和返回的行数来实现分页。</p>
+<h4 id="示例：分组分页查询"><a href="#示例：分组分页查询" class="headerlink" title="示例：分组分页查询"></a>示例：分组分页查询</h4><p>假设我们有一个 <code>orders</code> 表，结构如下：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (</span><br><span class="line">    order_id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    customer_id <span class="type">INT</span>,</span><br><span class="line">    order_date <span class="type">DATE</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">10</span>, <span class="number">2</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<p>我们希望按 <code>customer_id</code> 分组，并计算每个客户的订单总金额，然后对结果进行分页。</p>
+<h4 id="查询每个客户的订单总金额"><a href="#查询每个客户的订单总金额" class="headerlink" title="查询每个客户的订单总金额"></a>查询每个客户的订单总金额</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> customer_id, <span class="built_in">SUM</span>(amount) <span class="keyword">AS</span> total_amount</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> customer_id;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="分页查询每个客户的订单总金额"><a href="#分页查询每个客户的订单总金额" class="headerlink" title="分页查询每个客户的订单总金额"></a>分页查询每个客户的订单总金额</h4><p>假设我们希望每页显示 10 个客户，查询第 2 页的数据（即第 11 到第 20 个客户）：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> customer_id, <span class="built_in">SUM</span>(amount) <span class="keyword">AS</span> total_amount</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> customer_id</span><br><span class="line">LIMIT <span class="number">10</span> <span class="keyword">OFFSET</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="解释："><a href="#解释：" class="headerlink" title="解释："></a>解释：</h4><ul>
+<li>**<code>LIMIT 10 OFFSET 10</code>**：<ul>
+<li><code>LIMIT 10</code> 表示每页显示 10 行。</li>
+<li><code>OFFSET 10</code> 表示从第 11 行开始（因为 <code>OFFSET</code> 是从 0 开始计数的）。</li>
+<li><code>LIMIT 起始位置, 数量</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="使用变量进行分页"><a href="#使用变量进行分页" class="headerlink" title="使用变量进行分页"></a>使用变量进行分页</h4><p>如果你希望动态地指定页码和每页的行数，可以使用变量：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="variable">@page_number</span> <span class="operator">=</span> <span class="number">2</span>;  <span class="comment">-- 页码，从 1 开始</span></span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@page_size</span> <span class="operator">=</span> <span class="number">10</span>;   <span class="comment">-- 每页的行数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> customer_id, <span class="built_in">SUM</span>(amount) <span class="keyword">AS</span> total_amount</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> customer_id</span><br><span class="line">LIMIT <span class="variable">@page_size</span> <span class="keyword">OFFSET</span> ((<span class="variable">@page_number</span> <span class="operator">-</span> <span class="number">1</span>) <span class="operator">*</span> <span class="variable">@page_size</span>);</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h4><ol>
+<li><strong>性能问题</strong>：分组和分页查询可能会影响性能，尤其是在处理大量数据时。可以考虑使用索引来优化查询。</li>
+<li><strong><code>HAVING</code> 子句</strong>：如果你需要在分组后对结果进行过滤，可以使用 <code>HAVING</code> 子句。例如，只显示订单总金额大于 1000 的客户：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> customer_id, <span class="built_in">SUM</span>(amount) <span class="keyword">AS</span> total_amount</span><br><span class="line"><span class="keyword">FROM</span> orders</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> customer_id</span><br><span class="line"><span class="keyword">HAVING</span> total_amount <span class="operator">&gt;</span> <span class="number">1000</span></span><br><span class="line">LIMIT <span class="number">10</span> <span class="keyword">OFFSET</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure></div></li>
+</ol>
+<h3 id="多表查询"><a href="#多表查询" class="headerlink" title="多表查询"></a>多表查询</h3><p>多表查询是同时查询两个或两个以上的表，多表查询会通过连接转换为单表查询</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表<span class="number">1</span>, 表<span class="number">2</span></span><br></pre></td></tr></table></figure></div>
+
+<p>直接这样查询会得到两张笛卡尔积，也就是每一项数据和另一张表的每一项数据都结合一次，会产生庞大的数据</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表<span class="number">1</span>, 表<span class="number">2</span> <span class="keyword">WHERE</span> 条件</span><br></pre></td></tr></table></figure></div>
+
+<p>这样只会从笛卡尔积的结果中得到满足条件的数据</p>
+<h3 id="自身连接查询"><a href="#自身连接查询" class="headerlink" title="自身连接查询"></a>自身连接查询</h3><p>自身连接就是将表自身和表进行笛卡尔积计算，得到结果，但是由于表名相同，因此要先起一个别名</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表<span class="number">1</span> <span class="keyword">AS</span> t1, 表<span class="number">1</span> <span class="keyword">AS</span> t2</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="外连接查询"><a href="#外连接查询" class="headerlink" title="外连接查询"></a>外连接查询</h3><p>SQL 中的外连接（Outer Join）用于从两个或多个表中获取数据，即使某些行在连接条件中没有匹配的行。外连接分为三种类型：左外连接（Left Outer Join）、右外连接（Right Outer Join）和全外连接（Full Outer Join）。  </p>
+<p>假设我们现在有一张存储所有用户的表，还有一张用户详细信息的表，我们希望将这两张表结合到一起来查看完整数据</p>
+<h4 id="1-左外连接（Left-Outer-Join）"><a href="#1-左外连接（Left-Outer-Join）" class="headerlink" title="1. 左外连接（Left Outer Join）"></a>1. 左外连接（Left Outer Join）</h4><p>左外连接返回左表中的所有行，即使右表中没有匹配的行。如果右表中没有匹配的行，结果集中对应右表的列将为 <code>NULL</code>。</p>
+<h5 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> columns</span><br><span class="line"><span class="keyword">FROM</span> left_table</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> right_table</span><br><span class="line"><span class="keyword">ON</span> left_table.column <span class="operator">=</span> right_table.column;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="示例：-1"><a href="#示例：-1" class="headerlink" title="示例："></a>示例：</h5><p>假设有两个表 <code>employees</code> 和 <code>departments</code>：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> employees (</span><br><span class="line">    employee_id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    employee_name <span class="type">VARCHAR</span>(<span class="number">100</span>),</span><br><span class="line">    department_id <span class="type">INT</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> departments (</span><br><span class="line">    department_id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    department_name <span class="type">VARCHAR</span>(<span class="number">100</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<p>我们希望获取所有员工及其所属部门的信息，包括那些没有部门的员工：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employees.employee_name, departments.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> departments</span><br><span class="line"><span class="keyword">ON</span> employees.department_id <span class="operator">=</span> departments.department_id;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="2-右外连接（Right-Outer-Join）"><a href="#2-右外连接（Right-Outer-Join）" class="headerlink" title="2. 右外连接（Right Outer Join）"></a>2. 右外连接（Right Outer Join）</h4><p>右外连接返回右表中的所有行，即使左表中没有匹配的行。如果左表中没有匹配的行，结果集中对应左表的列将为 <code>NULL</code>。</p>
+<h5 id="语法：-1"><a href="#语法：-1" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> columns</span><br><span class="line"><span class="keyword">FROM</span> left_table</span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> right_table</span><br><span class="line"><span class="keyword">ON</span> left_table.column <span class="operator">=</span> right_table.column;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="示例：-2"><a href="#示例：-2" class="headerlink" title="示例："></a>示例：</h5><p>我们希望获取所有部门及其员工的信息，包括那些没有员工的部门：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employees.employee_name, departments.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> departments</span><br><span class="line"><span class="keyword">ON</span> employees.department_id <span class="operator">=</span> departments.department_id;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="3-全外连接（Full-Outer-Join）"><a href="#3-全外连接（Full-Outer-Join）" class="headerlink" title="3. 全外连接（Full Outer Join）"></a>3. 全外连接（Full Outer Join）</h4><p>全外连接返回左表和右表中的所有行，即使它们在连接条件中没有匹配的行。如果某个表中没有匹配的行，结果集中对应另一个表的列将为 <code>NULL</code>。</p>
+<h5 id="语法：-2"><a href="#语法：-2" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> columns</span><br><span class="line"><span class="keyword">FROM</span> left_table</span><br><span class="line"><span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> right_table</span><br><span class="line"><span class="keyword">ON</span> left_table.column <span class="operator">=</span> right_table.column;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="示例：-3"><a href="#示例：-3" class="headerlink" title="示例："></a>示例：</h5><p>我们希望获取所有员工和所有部门的信息，包括那些没有部门或没有员工的记录：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employees.employee_name, departments.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> departments</span><br><span class="line"><span class="keyword">ON</span> employees.department_id <span class="operator">=</span> departments.department_id;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="注意事项：-1"><a href="#注意事项：-1" class="headerlink" title="注意事项："></a>注意事项：</h4><ul>
+<li><strong>MySQL 不支持全外连接</strong>：MySQL 不直接支持 <code>FULL OUTER JOIN</code>，但可以通过 <code>UNION</code> 操作符来模拟全外连接。</li>
+<li><strong>模拟全外连接</strong>：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employees.employee_name, departments.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> departments</span><br><span class="line"><span class="keyword">ON</span> employees.department_id <span class="operator">=</span> departments.department_id</span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> employees.employee_name, departments.department_name</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> departments</span><br><span class="line"><span class="keyword">ON</span> employees.department_id <span class="operator">=</span> departments.department_id;</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>外连接允许你从两个或多个表中获取数据，即使某些行在连接条件中没有匹配的行。左外连接返回左表中的所有行，右外连接返回右表中的所有行，全外连接返回两个表中的所有行。通过合理使用外连接，你可以更灵活地处理数据关联和缺失情况。</p>
+<h3 id="嵌套查询"><a href="#嵌套查询" class="headerlink" title="嵌套查询"></a>嵌套查询</h3><p>可以将查询的结果作为另一个查询的条件</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 列名 <span class="keyword">IN</span> (<span class="keyword">SELECT</span> 列名 <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 条件);</span><br></pre></td></tr></table></figure></div>
+
+
+<p>SQL 中的嵌套查询（Nested Query），也称为子查询（Subquery），是指在一个查询语句中嵌套另一个查询语句。子查询可以出现在 <code>SELECT</code>、<code>FROM</code>、<code>WHERE</code>、<code>HAVING</code> 等子句中，用于从数据库中获取更复杂的数据。</p>
+<h4 id="1-子查询的基本概念"><a href="#1-子查询的基本概念" class="headerlink" title="1. 子查询的基本概念"></a>1. 子查询的基本概念</h4><p>子查询是一个完整的 <code>SELECT</code> 语句，它可以返回一个标量值（单个值）、一个行、一个列或一个表。子查询通常用括号 <code>()</code> 括起来，并且可以嵌套在主查询的各个部分。</p>
+<h4 id="2-子查询的类型"><a href="#2-子查询的类型" class="headerlink" title="2. 子查询的类型"></a>2. 子查询的类型</h4><p>根据子查询返回的结果类型，子查询可以分为以下几种类型：</p>
+<h5 id="2-1-标量子查询（Scalar-Subquery）"><a href="#2-1-标量子查询（Scalar-Subquery）" class="headerlink" title="2.1 标量子查询（Scalar Subquery）"></a>2.1 标量子查询（Scalar Subquery）</h5><p>标量子查询返回单个值（即一行一列）。它通常用于 <code>SELECT</code> 子句、<code>WHERE</code> 子句或 <code>HAVING</code> 子句中。</p>
+<h6 id="示例：-4"><a href="#示例：-4" class="headerlink" title="示例："></a>示例：</h6><p>假设我们有一个 <code>employees</code> 表和一个 <code>departments</code> 表，我们希望查询每个员工的姓名及其所属部门的名称：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_name,</span><br><span class="line">       (<span class="keyword">SELECT</span> department_name</span><br><span class="line">        <span class="keyword">FROM</span> departments</span><br><span class="line">        <span class="keyword">WHERE</span> departments.department_id <span class="operator">=</span> employees.department_id) <span class="keyword">AS</span> department_name</span><br><span class="line"><span class="keyword">FROM</span> employees;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="2-2-行子查询（Row-Subquery）"><a href="#2-2-行子查询（Row-Subquery）" class="headerlink" title="2.2 行子查询（Row Subquery）"></a>2.2 行子查询（Row Subquery）</h5><p>行子查询返回一行数据（即多列）。它通常用于 <code>WHERE</code> 子句中。</p>
+<h6 id="示例：-5"><a href="#示例：-5" class="headerlink" title="示例："></a>示例：</h6><p>假设我们希望查询工资最高的员工的姓名和工资：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_name, salary</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">WHERE</span> (salary, employee_id) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">MAX</span>(salary), employee_id</span><br><span class="line">                               <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="2-3-列子查询（Column-Subquery）"><a href="#2-3-列子查询（Column-Subquery）" class="headerlink" title="2.3 列子查询（Column Subquery）"></a>2.3 列子查询（Column Subquery）</h5><p>列子查询返回一列数据（即多行一列）。它通常用于 <code>WHERE</code> 子句中。</p>
+<h6 id="示例：-6"><a href="#示例：-6" class="headerlink" title="示例："></a>示例：</h6><p>假设我们希望查询所有工资高于平均工资的员工：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_name, salary</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">WHERE</span> salary <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(salary) <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="2-4-表子查询（Table-Subquery）"><a href="#2-4-表子查询（Table-Subquery）" class="headerlink" title="2.4 表子查询（Table Subquery）"></a>2.4 表子查询（Table Subquery）</h5><p>表子查询返回一个表（即多行多列）。它通常用于 <code>FROM</code> 子句中。</p>
+<h6 id="示例：-7"><a href="#示例：-7" class="headerlink" title="示例："></a>示例：</h6><p>假设我们希望查询每个部门的平均工资，并按平均工资排序：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department_name, avg_salary</span><br><span class="line"><span class="keyword">FROM</span> (<span class="keyword">SELECT</span> department_id, <span class="built_in">AVG</span>(salary) <span class="keyword">AS</span> avg_salary</span><br><span class="line">      <span class="keyword">FROM</span> employees</span><br><span class="line">      <span class="keyword">GROUP</span> <span class="keyword">BY</span> department_id) <span class="keyword">AS</span> dept_avg</span><br><span class="line"><span class="keyword">JOIN</span> departments <span class="keyword">ON</span> dept_avg.department_id <span class="operator">=</span> departments.department_id</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> avg_salary <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="3-子查询的位置"><a href="#3-子查询的位置" class="headerlink" title="3. 子查询的位置"></a>3. 子查询的位置</h4><p>子查询可以出现在以下位置：</p>
+<h5 id="3-1-SELECT-子句"><a href="#3-1-SELECT-子句" class="headerlink" title="3.1 SELECT 子句"></a>3.1 <code>SELECT</code> 子句</h5><p>子查询可以出现在 <code>SELECT</code> 子句中，用于计算每个行的特定值。</p>
+<h6 id="示例：-8"><a href="#示例：-8" class="headerlink" title="示例："></a>示例：</h6><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_name,</span><br><span class="line">       salary,</span><br><span class="line">       (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(salary) <span class="keyword">FROM</span> employees) <span class="keyword">AS</span> avg_salary</span><br><span class="line"><span class="keyword">FROM</span> employees;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="3-2-FROM-子句"><a href="#3-2-FROM-子句" class="headerlink" title="3.2 FROM 子句"></a>3.2 <code>FROM</code> 子句</h5><p>子查询可以出现在 <code>FROM</code> 子句中，用于生成一个临时表，供主查询使用。</p>
+<h6 id="示例：-9"><a href="#示例：-9" class="headerlink" title="示例："></a>示例：</h6><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department_name, avg_salary</span><br><span class="line"><span class="keyword">FROM</span> (<span class="keyword">SELECT</span> department_id, <span class="built_in">AVG</span>(salary) <span class="keyword">AS</span> avg_salary</span><br><span class="line">      <span class="keyword">FROM</span> employees</span><br><span class="line">      <span class="keyword">GROUP</span> <span class="keyword">BY</span> department_id) <span class="keyword">AS</span> dept_avg</span><br><span class="line"><span class="keyword">JOIN</span> departments <span class="keyword">ON</span> dept_avg.department_id <span class="operator">=</span> departments.department_id;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="3-3-WHERE-子句"><a href="#3-3-WHERE-子句" class="headerlink" title="3.3 WHERE 子句"></a>3.3 <code>WHERE</code> 子句</h5><p>子查询可以出现在 <code>WHERE</code> 子句中，用于过滤数据。</p>
+<h6 id="示例：-10"><a href="#示例：-10" class="headerlink" title="示例："></a>示例：</h6><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> employee_name, salary</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">WHERE</span> salary <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(salary) <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="3-4-HAVING-子句"><a href="#3-4-HAVING-子句" class="headerlink" title="3.4 HAVING 子句"></a>3.4 <code>HAVING</code> 子句</h5><p>子查询可以出现在 <code>HAVING</code> 子句中，用于过滤分组后的数据。</p>
+<h6 id="示例：-11"><a href="#示例：-11" class="headerlink" title="示例："></a>示例：</h6><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> department_id, <span class="built_in">AVG</span>(salary) <span class="keyword">AS</span> avg_salary</span><br><span class="line"><span class="keyword">FROM</span> employees</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> department_id</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">AVG</span>(salary) <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(salary) <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a>4. 注意事项</h4><ul>
+<li><strong>性能问题</strong>：嵌套查询可能会影响性能，尤其是在处理大量数据时。可以考虑使用连接（Join）或其他优化方法来替代嵌套查询。</li>
+<li><strong>相关子查询</strong>：相关子查询是指子查询依赖于外部查询的值。相关子查询通常会导致性能问题，因为它们会对外部查询的每一行执行一次子查询。</li>
+</ul>
+<h3 id="数据库控制语言DCL"><a href="#数据库控制语言DCL" class="headerlink" title="数据库控制语言DCL"></a>数据库控制语言DCL</h3><h4 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="operator">&lt;</span>username<span class="operator">&gt;</span> IDENTIFIED <span class="keyword">BY</span> <span class="operator">&lt;</span>password<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>也可以不带密码</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="operator">&lt;</span>username<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<h4 id="登录用户"><a href="#登录用户" class="headerlink" title="登录用户"></a>登录用户</h4><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -u &lt;username&gt; -p &lt;password&gt;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="用户授权"><a href="#用户授权" class="headerlink" title="用户授权"></a>用户授权</h3><h4 id="1-GRANT"><a href="#1-GRANT" class="headerlink" title="1. GRANT"></a>1. <code>GRANT</code></h4><p><code>GRANT</code> 命令用于授予用户或角色对数据库对象（如表、视图、存储过程等）的访问权限。</p>
+<h5 id="语法：-3"><a href="#语法：-3" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> privileges <span class="keyword">ON</span> object <span class="keyword">TO</span> user_or_role;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="参数说明："><a href="#参数说明：" class="headerlink" title="参数说明："></a>参数说明：</h5><ul>
+<li>**<code>privileges</code>**：要授予的权限，可以是 <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>ALL PRIVILEGES</code> 等。</li>
+<li>**<code>object</code>**：要授予权限的数据库对象，如表、视图、存储过程等。</li>
+<li>**<code>user_or_role</code>**：要授予权限的用户或角色。</li>
+</ul>
+<h5 id="示例：-12"><a href="#示例：-12" class="headerlink" title="示例："></a>示例：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 授予用户 &#x27;alice&#x27; 对表 &#x27;employees&#x27; 的 SELECT 权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span> <span class="keyword">ON</span> employees <span class="keyword">TO</span> alice;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 授予用户 &#x27;bob&#x27; 对表 &#x27;employees&#x27; 的所有权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> employees <span class="keyword">TO</span> bob;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 授予角色 &#x27;developers&#x27; 对数据库 &#x27;mydb&#x27; 的所有权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> DATABASE mydb <span class="keyword">TO</span> developers;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="2-REVOKE"><a href="#2-REVOKE" class="headerlink" title="2. REVOKE"></a>2. <code>REVOKE</code></h4><p><code>REVOKE</code> 命令用于撤销用户或角色对数据库对象的访问权限。</p>
+<h5 id="语法：-4"><a href="#语法：-4" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> privileges <span class="keyword">ON</span> object <span class="keyword">FROM</span> user_or_role;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="参数说明：-1"><a href="#参数说明：-1" class="headerlink" title="参数说明："></a>参数说明：</h5><ul>
+<li>**<code>privileges</code>**：要撤销的权限，可以是 <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>ALL PRIVILEGES</code> 等。</li>
+<li>**<code>object</code>**：要撤销权限的数据库对象，如表、视图、存储过程等。</li>
+<li>**<code>user_or_role</code>**：要撤销权限的用户或角色。</li>
+</ul>
+<h5 id="示例：-13"><a href="#示例：-13" class="headerlink" title="示例："></a>示例：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 撤销用户 &#x27;alice&#x27; 对表 &#x27;employees&#x27; 的 SELECT 权限</span></span><br><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">SELECT</span> <span class="keyword">ON</span> employees <span class="keyword">FROM</span> alice;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 撤销用户 &#x27;bob&#x27; 对表 &#x27;employees&#x27; 的所有权限</span></span><br><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> employees <span class="keyword">FROM</span> bob;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 撤销角色 &#x27;developers&#x27; 对数据库 &#x27;mydb&#x27; 的所有权限</span></span><br><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> DATABASE mydb <span class="keyword">FROM</span> developers;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="3-DENY"><a href="#3-DENY" class="headerlink" title="3. DENY"></a>3. <code>DENY</code></h4><p><code>DENY</code> 命令用于显式拒绝用户或角色对数据库对象的访问权限。与 <code>REVOKE</code> 不同，<code>DENY</code> 会阻止用户通过角色或其他方式继承权限。</p>
+<h5 id="语法：-5"><a href="#语法：-5" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line">DENY privileges <span class="keyword">ON</span> object <span class="keyword">TO</span> user_or_role;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="参数说明：-2"><a href="#参数说明：-2" class="headerlink" title="参数说明："></a>参数说明：</h5><ul>
+<li>**<code>privileges</code>**：要拒绝的权限，可以是 <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>ALL PRIVILEGES</code> 等。</li>
+<li>**<code>object</code>**：要拒绝权限的数据库对象，如表、视图、存储过程等。</li>
+<li>**<code>user_or_role</code>**：要拒绝权限的用户或角色。</li>
+</ul>
+<h5 id="示例：-14"><a href="#示例：-14" class="headerlink" title="示例："></a>示例：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 拒绝用户 &#x27;alice&#x27; 对表 &#x27;employees&#x27; 的 SELECT 权限</span></span><br><span class="line">DENY <span class="keyword">SELECT</span> <span class="keyword">ON</span> employees <span class="keyword">TO</span> alice;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 拒绝用户 &#x27;bob&#x27; 对表 &#x27;employees&#x27; 的所有权限</span></span><br><span class="line">DENY <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> employees <span class="keyword">TO</span> bob;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 拒绝角色 &#x27;developers&#x27; 对数据库 &#x27;mydb&#x27; 的所有权限</span></span><br><span class="line">DENY <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> DATABASE mydb <span class="keyword">TO</span> developers;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="4-CREATE-ROLE-和-DROP-ROLE"><a href="#4-CREATE-ROLE-和-DROP-ROLE" class="headerlink" title="4. CREATE ROLE 和 DROP ROLE"></a>4. <code>CREATE ROLE</code> 和 <code>DROP ROLE</code></h4><p><code>CREATE ROLE</code> 和 <code>DROP ROLE</code> 命令用于创建和删除角色。角色是一组权限的集合，可以授予用户或其他角色。</p>
+<h5 id="语法：-6"><a href="#语法：-6" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> ROLE role_name;</span><br><span class="line"><span class="keyword">DROP</span> ROLE role_name;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="示例：-15"><a href="#示例：-15" class="headerlink" title="示例："></a>示例：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建一个名为 &#x27;developers&#x27; 的角色</span></span><br><span class="line"><span class="keyword">CREATE</span> ROLE developers;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除名为 &#x27;developers&#x27; 的角色</span></span><br><span class="line"><span class="keyword">DROP</span> ROLE developers;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="5-ALTER-ROLE"><a href="#5-ALTER-ROLE" class="headerlink" title="5. ALTER ROLE"></a>5. <code>ALTER ROLE</code></h4><p><code>ALTER ROLE</code> 命令用于修改角色的属性，如重命名角色、修改角色的默认配置等。</p>
+<h5 id="语法：-7"><a href="#语法：-7" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> ROLE role_name <span class="keyword">WITH</span> options;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="示例：-16"><a href="#示例：-16" class="headerlink" title="示例："></a>示例：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 重命名角色 &#x27;developers&#x27; 为 &#x27;devs&#x27;</span></span><br><span class="line"><span class="keyword">ALTER</span> ROLE developers RENAME <span class="keyword">TO</span> devs;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改角色 &#x27;devs&#x27; 的默认配置</span></span><br><span class="line"><span class="keyword">ALTER</span> ROLE devs <span class="keyword">WITH</span> LOGIN;</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="6-SET-ROLE"><a href="#6-SET-ROLE" class="headerlink" title="6. SET ROLE"></a>6. <code>SET ROLE</code></h4><p><code>SET ROLE</code> 命令用于在当前会话中切换角色。</p>
+<h5 id="语法：-8"><a href="#语法：-8" class="headerlink" title="语法："></a>语法：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SET</span> ROLE role_name;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="示例：-17"><a href="#示例：-17" class="headerlink" title="示例："></a>示例：</h5><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 在当前会话中切换到角色 &#x27;developers&#x27;</span></span><br><span class="line"><span class="keyword">SET</span> ROLE developers;</span><br></pre></td></tr></table></figure></div>
+
+
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -1400,81 +1750,6 @@
       </tags>
   </entry>
   <entry>
-    <title>GDB 使用指南-2</title>
-    <url>/2024/03/18/gdb-2/</url>
-    <content><![CDATA[<p>本文主要描述了GDB中断点调试和数据命令的使用方法</p>
-<h1 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h1><h2 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h2><p>要设置断点时，使用<code>break</code>或<code>b</code>来设置断点</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="条件断点"><a href="#条件断点" class="headerlink" title="条件断点"></a>条件断点</h2><p>有时，我们只想在满足特定条件时暂停程序</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5 if i == 5</span><br></pre></td></tr></table></figure></div>
-
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png"
-                     
-                ></p>
-<h2 id="查看断点"><a href="#查看断点" class="headerlink" title="查看断点"></a>查看断点</h2><p>如果需要查看所有断点所在的位置信息，使用<code>info breakpoints</code></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">info breakpoints</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="清除断点"><a href="#清除断点" class="headerlink" title="清除断点"></a>清除断点</h2><p>有些断点我们不再需要，可以直接清除</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 清理第5行的断点</span><br><span class="line">clear main.cpp:5</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h2><p>观察点允许我们监视变量的值，并在其值发生变化时暂停程序。这对于跟踪变量的变化非常有用</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">watch variable_name</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="捕捉点"><a href="#捕捉点" class="headerlink" title="捕捉点"></a>捕捉点</h2><p>捕捉点是一种特殊类型的断点，它允许我们在发生特定事件，如抛出异常时暂停程序。</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置捕捉点</span><br><span class="line">catch throw</span><br></pre></td></tr></table></figure></div>
-
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec15c8.png"
-                     
-                ></p>
-<p>这将设置一个捕捉点，当程序抛出异常时，它将暂停。</p>
-<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="显示表达式值"><a href="#显示表达式值" class="headerlink" title="显示表达式值"></a>显示表达式值</h2><p>在GDB中，可以通过<code>print</code>来评估表达式并显示其值</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">print variable_name</span><br></pre></td></tr></table></figure></div>
-
-<h2 id="查看数据类型"><a href="#查看数据类型" class="headerlink" title="查看数据类型"></a>查看数据类型</h2><p>当我们需要查看一个变量的类型，（例如类型推断的变量），需要使用<code>whatis</code>命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">whatis variable_name</span><br></pre></td></tr></table></figure></div>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1c4e.png"
-                     
-                ></p>
-<h2 id="打印变量值"><a href="#打印变量值" class="headerlink" title="打印变量值"></a>打印变量值</h2><p><code>display</code>命令可以自动显示表达式的值，每次程序停止时都会显示</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">display x</span><br></pre></td></tr></table></figure></div>
-
-<p>每次程序停止时，都会显示变量x的值</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec185b.png"
-                     
-                ></p>
-<h2 id="修改变量值"><a href="#修改变量值" class="headerlink" title="修改变量值"></a>修改变量值</h2><p>在某些情况下，需要在调试过程中修改变量值。假设要将变量x的值设置为5，使用<code>set</code>命令</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">set variable x = 5</span><br></pre></td></tr></table></figure></div>
-
-<p>这将立即更改变量x的值，而不需要重新编译或重新启动程序。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1ad6.png"
-                     
-                ></p>
-]]></content>
-      <categories>
-        <category>工具</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>调试</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>GDB 使用指南-1</title>
     <url>/2024/03/18/gdb-1/</url>
     <content><![CDATA[<p>本文主要描述了GDB的基础命令使用</p>
@@ -1549,6 +1824,81 @@
                      data-src="https://ooo.0x0.ooo/2024/03/18/Ogk8yI.png"
                       alt="Ogk8yI.png"
                 ></a></p>
+]]></content>
+      <categories>
+        <category>工具</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>调试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GDB 使用指南-2</title>
+    <url>/2024/03/18/gdb-2/</url>
+    <content><![CDATA[<p>本文主要描述了GDB中断点调试和数据命令的使用方法</p>
+<h1 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h1><h2 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h2><p>要设置断点时，使用<code>break</code>或<code>b</code>来设置断点</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="条件断点"><a href="#条件断点" class="headerlink" title="条件断点"></a>条件断点</h2><p>有时，我们只想在满足特定条件时暂停程序</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">b main.cpp:5 if i == 5</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de09f345e8d03ec1444.png"
+                     
+                ></p>
+<h2 id="查看断点"><a href="#查看断点" class="headerlink" title="查看断点"></a>查看断点</h2><p>如果需要查看所有断点所在的位置信息，使用<code>info breakpoints</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">info breakpoints</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="清除断点"><a href="#清除断点" class="headerlink" title="清除断点"></a>清除断点</h2><p>有些断点我们不再需要，可以直接清除</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 清理第5行的断点</span><br><span class="line">clear main.cpp:5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="观察点"><a href="#观察点" class="headerlink" title="观察点"></a>观察点</h2><p>观察点允许我们监视变量的值，并在其值发生变化时暂停程序。这对于跟踪变量的变化非常有用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">watch variable_name</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="捕捉点"><a href="#捕捉点" class="headerlink" title="捕捉点"></a>捕捉点</h2><p>捕捉点是一种特殊类型的断点，它允许我们在发生特定事件，如抛出异常时暂停程序。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置捕捉点</span><br><span class="line">catch throw</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec15c8.png"
+                     
+                ></p>
+<p>这将设置一个捕捉点，当程序抛出异常时，它将暂停。</p>
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="显示表达式值"><a href="#显示表达式值" class="headerlink" title="显示表达式值"></a>显示表达式值</h2><p>在GDB中，可以通过<code>print</code>来评估表达式并显示其值</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">print variable_name</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="查看数据类型"><a href="#查看数据类型" class="headerlink" title="查看数据类型"></a>查看数据类型</h2><p>当我们需要查看一个变量的类型，（例如类型推断的变量），需要使用<code>whatis</code>命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">whatis variable_name</span><br></pre></td></tr></table></figure></div>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1c4e.png"
+                     
+                ></p>
+<h2 id="打印变量值"><a href="#打印变量值" class="headerlink" title="打印变量值"></a>打印变量值</h2><p><code>display</code>命令可以自动显示表达式的值，每次程序停止时都会显示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">display x</span><br></pre></td></tr></table></figure></div>
+
+<p>每次程序停止时，都会显示变量x的值</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec185b.png"
+                     
+                ></p>
+<h2 id="修改变量值"><a href="#修改变量值" class="headerlink" title="修改变量值"></a>修改变量值</h2><p>在某些情况下，需要在调试过程中修改变量值。假设要将变量x的值设置为5，使用<code>set</code>命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">set variable x = 5</span><br></pre></td></tr></table></figure></div>
+
+<p>这将立即更改变量x的值，而不需要重新编译或重新启动程序。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://pic.imgdb.cn/item/65f84de19f345e8d03ec1ad6.png"
+                     
+                ></p>
 ]]></content>
       <categories>
         <category>工具</category>
@@ -2375,72 +2725,6 @@
       </tags>
   </entry>
   <entry>
-    <title>asio socket的创建和连接</title>
-    <url>/2024/07/03/linux-socket-programming-2/</url>
-    <content><![CDATA[<h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
-<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
-<li>创建上下文<code>io_context</code></li>
-<li>选择协议</li>
-<li>生成<code>socket</code></li>
-<li>打开<code>socket</code></li>
-</ol>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
-<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
-<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
-<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
-<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
-<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
-<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
-<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
-<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
-<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
-
-<p>将”Hello World”转换成这种类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>网络编程</tag>
-        <tag>socket</tag>
-        <tag>计算机网络</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>socket的创建和连接</title>
     <url>/2024/06/30/linux-socket-programming-1/</url>
     <content><![CDATA[<h1 id="socket编程"><a href="#socket编程" class="headerlink" title="socket编程"></a>socket编程</h1><h2 id="socket的概念"><a href="#socket的概念" class="headerlink" title="socket的概念"></a>socket的概念</h2><p>Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。</p>
@@ -2611,6 +2895,72 @@
       </tags>
   </entry>
   <entry>
+    <title>asio socket的创建和连接</title>
+    <url>/2024/07/03/linux-socket-programming-2/</url>
+    <content><![CDATA[<h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
+<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
+<li>创建上下文<code>io_context</code></li>
+<li>选择协议</li>
+<li>生成<code>socket</code></li>
+<li>打开<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
+<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
+<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
+<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
+<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
+<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
+<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
+<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
+<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
+<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>将”Hello World”转换成这种类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>网络编程</tag>
+        <tag>socket</tag>
+        <tag>计算机网络</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenWrt TCP UDP 网络性能优化</title>
     <url>/2024/03/24/network-optimization/</url>
     <content><![CDATA[<p>写这篇文章的原因是今天在打2042的时候丢包严重，一开始以为是Dice的服务器又爆了，后面跟同学对比了之后发现完全是路由器的问题。<br>刚好拨号和主路由用的是R2S，可以学习一下linux内核的一些跟<code>TCP, UDP</code>有关的参数修改</p>
@@ -2726,6 +3076,76 @@
         <tag>计算机网络</tag>
         <tag>Linux</tag>
         <tag>软路由</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>protobuf的配置和使用</title>
+    <url>/2024/08/01/protobuf-configuration/</url>
+    <content><![CDATA[<h1 id="protobuf简介"><a href="#protobuf简介" class="headerlink" title="protobuf简介"></a>protobuf简介</h1><p>Protocol Buffers（简称 protobuf）是 Google 开发的一种数据交换格式。它是一种灵活、高效且自动化的结构化数据序列化方法，类似于 XML、JSON 和其他配置文件格式，但更小、更快、更简单。我们的逻辑是有类等抽象数据构成的，而tcp是面向字节流的，我们需要将类结构序列化为字符串来传输。</p>
+<p>主要特点：</p>
+<ol>
+<li>语言无关：protobuf 支持多种编程语言，包括 C++、Java、Python 等，并且可以轻松地在不同语言之间进行通信。</li>
+<li>平台无关：可以跨多个平台使用，无论是在 32 位还是 64 位系统上。</li>
+<li>效率高：相比于 XML 或 JSON，protobuf 在序列化和反序列化时的性能更好，生成的数据也更紧凑。</li>
+</ol>
+<h1 id="编译protobuf"><a href="#编译protobuf" class="headerlink" title="编译protobuf"></a>编译protobuf</h1><p>如果是linux系统，可以直接从自己的包管理器下载protobuf</p>
+<p>例如<code>archlinux</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S protobuf</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是windows系统，我们需要从<a class="link"   href="https://github.com/protocolbuffers/protobuf/releases" >官网 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>下载源代码进行编译</p>
+<p><a class="link"   href="https://blog.csdn.net/weixin_42968757/article/details/120033598" >具体教程 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>当protobuf编译完成后，我们可以通过<code>protobuf --version</code>来检查是否安装成功</p>
+<h1 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h1><ul>
+<li>定义消息格式：首先需要定义消息的结构，这通常是通过 .proto 文件完成的。这些文件描述了你想要交换的数据的结构。</li>
+</ul>
+<p>我们先创建一个<code>msg.proto</code>文件，并且写入如下内容</p>
+<div class="highlight-container" data-rel="Proto"><figure class="iseeu highlight proto"><table><tr><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">message </span><span class="title class_">Book</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="type">string</span> name = <span class="number">1</span>;</span><br><span class="line">   <span class="type">int32</span> pages = <span class="number">2</span>;</span><br><span class="line">   <span class="type">float</span> price = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这个文件用来定义我们需要发送的信息</p>
+<ul>
+<li>编译 .proto 文件：使用 Protocol Buffers 编译器（protoc），根据 .proto 文件生成特定语言的源代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">protoc --cpp_out=. ./msg.proto</span><br></pre></td></tr></table></figure></div>
+
+<p>.&#x2F;msg.proto 表示msg.proto所在的位置，因为我们是在msg.proto所在文件夹中执行的protoc命令,所以是当前路径即可。<br>执行后，会看到当前目录生成了msg.pb.h和msg.pb.cc两个文件，这两个文件就是我们要用到的头文件和cpp文件。</p>
+<ul>
+<li>序列化与反序列化：使用生成的类来创建消息对象，并将这些对象序列化为字节流，或者从字节流中反序列化为对象。</li>
+</ul>
+<p>这里我们写一个测试函数</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_protobuf</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Book book;</span><br><span class="line">    book.<span class="built_in">set_name</span>(<span class="string">&quot;CPP programing&quot;</span>);</span><br><span class="line">    book.<span class="built_in">set_pages</span>(<span class="number">100</span>);</span><br><span class="line">    book.<span class="built_in">set_price</span>(<span class="number">200</span>);</span><br><span class="line">    std::string bookstr;</span><br><span class="line">    book.<span class="built_in">SerializeToString</span>(&amp;bookstr);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;serialize str is &quot;</span> &lt;&lt; bookstr &lt;&lt; std::endl;</span><br><span class="line">    Book book2;</span><br><span class="line">    book2.<span class="built_in">ParseFromString</span>(bookstr);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;book2 name is &quot;</span> &lt;&lt; book2.<span class="built_in">name</span>() &lt;&lt; <span class="string">&quot; price is &quot;</span></span><br><span class="line">        &lt;&lt; book2.<span class="built_in">price</span>() &lt;&lt; <span class="string">&quot; pages is &quot;</span> &lt;&lt; book2.<span class="built_in">pages</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>输出如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">serialize str is</span><br><span class="line">CPP programingdHC</span><br><span class="line">book2 name is CPP programing price is 200 pages is 100</span><br></pre></td></tr></table></figure></div>
+
+<p>上面的demo中将book对象先序列化为字符串，再将字符串反序列化为book2对象。</p>
+<h1 id="在网络中的应用"><a href="#在网络中的应用" class="headerlink" title="在网络中的应用"></a>在网络中的应用</h1><p>先为服务器定义一个用来通信的protobuf</p>
+<div class="highlight-container" data-rel="Proto"><figure class="iseeu highlight proto"><table><tr><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">message </span><span class="title class_">MsgData</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int32</span> id = <span class="number">1</span>;</span><br><span class="line">    <span class="type">string</span> data = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>id代表消息的编号，data代表消息的内容</p>
+<p>接着修改服务器接收和发送数据的逻辑<br>当服务器收到数据并完成切包处理，将信息反序列化为具体要使用的结构，打印相关信息，然后再发送给客户端</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line">Data msgdata;</span><br><span class="line">std::string receive_data;</span><br><span class="line">msgdata.<span class="built_in">ParseFromString</span>( std::<span class="built_in">string</span>(</span><br><span class="line">    _recv_msg_node-&gt;_msg, _recv_msg_node-&gt;_total_len ) );</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Recv msg is: &quot;</span> &lt;&lt; msgdata.<span class="built_in">data</span>() &lt;&lt; std::endl;</span><br><span class="line">std::string return_str =</span><br><span class="line">    <span class="string">&quot;server has receive msg, msg data is  &quot;</span> + msgdata.<span class="built_in">data</span>();</span><br><span class="line">Data msgreturn;</span><br><span class="line">msgreturn.<span class="built_in">set_id</span>( msgdata.<span class="built_in">id</span>() );</span><br><span class="line">msgreturn.<span class="built_in">set_data</span>( msgdata.<span class="built_in">data</span>() );</span><br><span class="line">msgreturn.<span class="built_in">SerializeToString</span>( &amp;return_str );</span><br><span class="line"><span class="built_in">Send</span>( return_str );</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>同样，客户端在发送的时候也利用protobu进行消息序列化，然后发送给服务器</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line">Data msgdata;</span><br><span class="line">msgdata.<span class="built_in">set_id</span>( <span class="number">1001</span> );</span><br><span class="line">msgdata.<span class="built_in">set_data</span>( <span class="string">&quot;Hello world!&quot;</span> );</span><br><span class="line">std::string request;</span><br><span class="line">msgdata.<span class="built_in">SerializeToString</span>( &amp;request );</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;message id: &quot;</span> &lt;&lt; msgdata.<span class="built_in">id</span>()</span><br><span class="line">          &lt;&lt; <span class="string">&quot; content: &quot;</span> &lt;&lt; msgdata.<span class="built_in">data</span>() &lt;&lt; std::endl;</span><br><span class="line">boost::asio::<span class="built_in">write</span>(</span><br><span class="line">    sock, boost::asio::<span class="built_in">buffer</span>( request, request.<span class="built_in">length</span>() ) );</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="关于protbuf在CMake中的配置"><a href="#关于protbuf在CMake中的配置" class="headerlink" title="关于protbuf在CMake中的配置"></a>关于protbuf在CMake中的配置</h1><blockquote>
+<p>注意一定要在编译参数中加入<code>-Wl,--copy-dt-needed-entries</code>，否则会报<a class="link"   href="https://linuxpip.org/how-to-fix-dso-missing-from-command-line" >DSO missing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<div class="highlight-container" data-rel="Cmake"><figure class="iseeu highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS</span><br><span class="line">    <span class="string">&quot;$&#123;CMAKE_CXX_FLAGS&#125; -g -O2  -Wall -Wextra -Weffc++ -Werror=uninitialized  -Werror=return-type -Wconversion -Wsign-compare -Werror=unused-result -Werror=suggest-override -Wzero-as-null-pointer-constant -Wmissing-declarations -Wold-style-cast -Wnon-virtual-dtor -Wl,--copy-dt-needed-entries&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>关于对proto文件的配置，可以参考这个</p>
+<div class="highlight-container" data-rel="Cmake"><figure class="iseeu highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取编译器</span></span><br><span class="line"><span class="keyword">find_program</span>(</span><br><span class="line">    PROTOC_CXX</span><br><span class="line">    protoc</span><br><span class="line">    DOC <span class="string">&quot;Protobuf Compiler (protoc)&quot;</span></span><br><span class="line">    REQUIRED</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要编译的 proto 文件</span></span><br><span class="line"><span class="keyword">file</span> (GLOB PROTO_SOURCE_FILES</span><br><span class="line">    <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/*.proto&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(PROTO_PATH    <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(PROTO_CXX_OUT <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/gen_cxx&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">file</span>(<span class="keyword">MAKE_DIRECTORY</span> <span class="variable">$&#123;PROTO_CXX_OUT&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 protoc 处理 proto 文件</span></span><br><span class="line"><span class="keyword">foreach</span>(input_proto <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span>)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(DIR <span class="variable">$&#123;input_proto&#125;</span> DIRECTORY)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(FILE_NAME <span class="variable">$&#123;input_proto&#125;</span> NAME_WE)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">set</span>(OUTPUT_CXX_HEADER   <span class="string">&quot;$&#123;PROTO_CXX_OUT&#125;/$&#123;FILE_NAME&#125;.pb.h&quot;</span>)</span><br><span class="line">    <span class="keyword">set</span>(OUTPUT_CXX_SOURCE   <span class="string">&quot;$&#123;PROTO_CXX_OUT&#125;/$&#123;FILE_NAME&#125;.pb.cc&quot;</span>)</span><br><span class="line">    <span class="keyword">list</span>(APPEND OUTPUT_SOURCES_CXX</span><br><span class="line">        <span class="variable">$&#123;OUTPUT_CXX_HEADER&#125;</span> <span class="variable">$&#123;OUTPUT_CXX_SOURCE&#125;</span>)</span><br><span class="line"><span class="keyword">endforeach</span>()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_custom_command</span>(</span><br><span class="line">    OUTPUT  <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span></span><br><span class="line">    <span class="keyword">COMMAND</span> <span class="variable">$&#123;PROTOC_CXX&#125;</span> --cpp_out=<span class="variable">$&#123;PROTO_CXX_OUT&#125;</span> --proto_path=<span class="variable">$&#123;PROTO_PATH&#125;</span> <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span></span><br><span class="line">    DEPENDS <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span></span><br><span class="line">    WORKING_DIRECTORY <span class="variable">$&#123;PROTO_PATH&#125;</span></span><br><span class="line">    COMMENT <span class="string">&quot;Generate Cpp Protobuf Source Files&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_custom_target</span>(</span><br><span class="line">    compile_cxx_protos</span><br><span class="line">    DEPENDS <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置生成源文件包含目录变量供上层引用</span></span><br><span class="line"><span class="keyword">set</span>(PROTO_GEN_CXX_INCLUDE_DIRS <span class="variable">$&#123;PROTO_CXX_OUT&#125;</span> PARENT_SCOPE)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将生成的文件打包为库 proto_gen_cxx</span></span><br><span class="line"><span class="comment"># 程序可以链接到该库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(proto_gen_cxx <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span>)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(proto_gen_cxx protobuf)</span><br><span class="line"><span class="keyword">add_dependencies</span>(proto_gen_cxx compile_cxx_protos)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>网络编程</tag>
+        <tag>socket</tag>
+        <tag>计算机网络</tag>
+        <tag>Linux</tag>
+        <tag>protobuf</tag>
       </tags>
   </entry>
   <entry>
@@ -3017,76 +3437,6 @@
       <tags>
         <tag>408</tag>
         <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>protobuf的配置和使用</title>
-    <url>/2024/08/01/protobuf-configuration/</url>
-    <content><![CDATA[<h1 id="protobuf简介"><a href="#protobuf简介" class="headerlink" title="protobuf简介"></a>protobuf简介</h1><p>Protocol Buffers（简称 protobuf）是 Google 开发的一种数据交换格式。它是一种灵活、高效且自动化的结构化数据序列化方法，类似于 XML、JSON 和其他配置文件格式，但更小、更快、更简单。我们的逻辑是有类等抽象数据构成的，而tcp是面向字节流的，我们需要将类结构序列化为字符串来传输。</p>
-<p>主要特点：</p>
-<ol>
-<li>语言无关：protobuf 支持多种编程语言，包括 C++、Java、Python 等，并且可以轻松地在不同语言之间进行通信。</li>
-<li>平台无关：可以跨多个平台使用，无论是在 32 位还是 64 位系统上。</li>
-<li>效率高：相比于 XML 或 JSON，protobuf 在序列化和反序列化时的性能更好，生成的数据也更紧凑。</li>
-</ol>
-<h1 id="编译protobuf"><a href="#编译protobuf" class="headerlink" title="编译protobuf"></a>编译protobuf</h1><p>如果是linux系统，可以直接从自己的包管理器下载protobuf</p>
-<p>例如<code>archlinux</code></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S protobuf</span><br></pre></td></tr></table></figure></div>
-
-<p>如果是windows系统，我们需要从<a class="link"   href="https://github.com/protocolbuffers/protobuf/releases" >官网 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>下载源代码进行编译</p>
-<p><a class="link"   href="https://blog.csdn.net/weixin_42968757/article/details/120033598" >具体教程 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>当protobuf编译完成后，我们可以通过<code>protobuf --version</code>来检查是否安装成功</p>
-<h1 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h1><ul>
-<li>定义消息格式：首先需要定义消息的结构，这通常是通过 .proto 文件完成的。这些文件描述了你想要交换的数据的结构。</li>
-</ul>
-<p>我们先创建一个<code>msg.proto</code>文件，并且写入如下内容</p>
-<div class="highlight-container" data-rel="Proto"><figure class="iseeu highlight proto"><table><tr><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">message </span><span class="title class_">Book</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="type">string</span> name = <span class="number">1</span>;</span><br><span class="line">   <span class="type">int32</span> pages = <span class="number">2</span>;</span><br><span class="line">   <span class="type">float</span> price = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>这个文件用来定义我们需要发送的信息</p>
-<ul>
-<li>编译 .proto 文件：使用 Protocol Buffers 编译器（protoc），根据 .proto 文件生成特定语言的源代码</li>
-</ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">protoc --cpp_out=. ./msg.proto</span><br></pre></td></tr></table></figure></div>
-
-<p>.&#x2F;msg.proto 表示msg.proto所在的位置，因为我们是在msg.proto所在文件夹中执行的protoc命令,所以是当前路径即可。<br>执行后，会看到当前目录生成了msg.pb.h和msg.pb.cc两个文件，这两个文件就是我们要用到的头文件和cpp文件。</p>
-<ul>
-<li>序列化与反序列化：使用生成的类来创建消息对象，并将这些对象序列化为字节流，或者从字节流中反序列化为对象。</li>
-</ul>
-<p>这里我们写一个测试函数</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_protobuf</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Book book;</span><br><span class="line">    book.<span class="built_in">set_name</span>(<span class="string">&quot;CPP programing&quot;</span>);</span><br><span class="line">    book.<span class="built_in">set_pages</span>(<span class="number">100</span>);</span><br><span class="line">    book.<span class="built_in">set_price</span>(<span class="number">200</span>);</span><br><span class="line">    std::string bookstr;</span><br><span class="line">    book.<span class="built_in">SerializeToString</span>(&amp;bookstr);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;serialize str is &quot;</span> &lt;&lt; bookstr &lt;&lt; std::endl;</span><br><span class="line">    Book book2;</span><br><span class="line">    book2.<span class="built_in">ParseFromString</span>(bookstr);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;book2 name is &quot;</span> &lt;&lt; book2.<span class="built_in">name</span>() &lt;&lt; <span class="string">&quot; price is &quot;</span></span><br><span class="line">        &lt;&lt; book2.<span class="built_in">price</span>() &lt;&lt; <span class="string">&quot; pages is &quot;</span> &lt;&lt; book2.<span class="built_in">pages</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>输出如下：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">serialize str is</span><br><span class="line">CPP programingdHC</span><br><span class="line">book2 name is CPP programing price is 200 pages is 100</span><br></pre></td></tr></table></figure></div>
-
-<p>上面的demo中将book对象先序列化为字符串，再将字符串反序列化为book2对象。</p>
-<h1 id="在网络中的应用"><a href="#在网络中的应用" class="headerlink" title="在网络中的应用"></a>在网络中的应用</h1><p>先为服务器定义一个用来通信的protobuf</p>
-<div class="highlight-container" data-rel="Proto"><figure class="iseeu highlight proto"><table><tr><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">message </span><span class="title class_">MsgData</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int32</span> id = <span class="number">1</span>;</span><br><span class="line">    <span class="type">string</span> data = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>id代表消息的编号，data代表消息的内容</p>
-<p>接着修改服务器接收和发送数据的逻辑<br>当服务器收到数据并完成切包处理，将信息反序列化为具体要使用的结构，打印相关信息，然后再发送给客户端</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line">Data msgdata;</span><br><span class="line">std::string receive_data;</span><br><span class="line">msgdata.<span class="built_in">ParseFromString</span>( std::<span class="built_in">string</span>(</span><br><span class="line">    _recv_msg_node-&gt;_msg, _recv_msg_node-&gt;_total_len ) );</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Recv msg is: &quot;</span> &lt;&lt; msgdata.<span class="built_in">data</span>() &lt;&lt; std::endl;</span><br><span class="line">std::string return_str =</span><br><span class="line">    <span class="string">&quot;server has receive msg, msg data is  &quot;</span> + msgdata.<span class="built_in">data</span>();</span><br><span class="line">Data msgreturn;</span><br><span class="line">msgreturn.<span class="built_in">set_id</span>( msgdata.<span class="built_in">id</span>() );</span><br><span class="line">msgreturn.<span class="built_in">set_data</span>( msgdata.<span class="built_in">data</span>() );</span><br><span class="line">msgreturn.<span class="built_in">SerializeToString</span>( &amp;return_str );</span><br><span class="line"><span class="built_in">Send</span>( return_str );</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>同样，客户端在发送的时候也利用protobu进行消息序列化，然后发送给服务器</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line">Data msgdata;</span><br><span class="line">msgdata.<span class="built_in">set_id</span>( <span class="number">1001</span> );</span><br><span class="line">msgdata.<span class="built_in">set_data</span>( <span class="string">&quot;Hello world!&quot;</span> );</span><br><span class="line">std::string request;</span><br><span class="line">msgdata.<span class="built_in">SerializeToString</span>( &amp;request );</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;message id: &quot;</span> &lt;&lt; msgdata.<span class="built_in">id</span>()</span><br><span class="line">          &lt;&lt; <span class="string">&quot; content: &quot;</span> &lt;&lt; msgdata.<span class="built_in">data</span>() &lt;&lt; std::endl;</span><br><span class="line">boost::asio::<span class="built_in">write</span>(</span><br><span class="line">    sock, boost::asio::<span class="built_in">buffer</span>( request, request.<span class="built_in">length</span>() ) );</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<h1 id="关于protbuf在CMake中的配置"><a href="#关于protbuf在CMake中的配置" class="headerlink" title="关于protbuf在CMake中的配置"></a>关于protbuf在CMake中的配置</h1><blockquote>
-<p>注意一定要在编译参数中加入<code>-Wl,--copy-dt-needed-entries</code>，否则会报<a class="link"   href="https://linuxpip.org/how-to-fix-dso-missing-from-command-line" >DSO missing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-</blockquote>
-<div class="highlight-container" data-rel="Cmake"><figure class="iseeu highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS</span><br><span class="line">    <span class="string">&quot;$&#123;CMAKE_CXX_FLAGS&#125; -g -O2  -Wall -Wextra -Weffc++ -Werror=uninitialized  -Werror=return-type -Wconversion -Wsign-compare -Werror=unused-result -Werror=suggest-override -Wzero-as-null-pointer-constant -Wmissing-declarations -Wold-style-cast -Wnon-virtual-dtor -Wl,--copy-dt-needed-entries&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>关于对proto文件的配置，可以参考这个</p>
-<div class="highlight-container" data-rel="Cmake"><figure class="iseeu highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取编译器</span></span><br><span class="line"><span class="keyword">find_program</span>(</span><br><span class="line">    PROTOC_CXX</span><br><span class="line">    protoc</span><br><span class="line">    DOC <span class="string">&quot;Protobuf Compiler (protoc)&quot;</span></span><br><span class="line">    REQUIRED</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要编译的 proto 文件</span></span><br><span class="line"><span class="keyword">file</span> (GLOB PROTO_SOURCE_FILES</span><br><span class="line">    <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/*.proto&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(PROTO_PATH    <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(PROTO_CXX_OUT <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/gen_cxx&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">file</span>(<span class="keyword">MAKE_DIRECTORY</span> <span class="variable">$&#123;PROTO_CXX_OUT&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 protoc 处理 proto 文件</span></span><br><span class="line"><span class="keyword">foreach</span>(input_proto <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span>)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(DIR <span class="variable">$&#123;input_proto&#125;</span> DIRECTORY)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(FILE_NAME <span class="variable">$&#123;input_proto&#125;</span> NAME_WE)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">set</span>(OUTPUT_CXX_HEADER   <span class="string">&quot;$&#123;PROTO_CXX_OUT&#125;/$&#123;FILE_NAME&#125;.pb.h&quot;</span>)</span><br><span class="line">    <span class="keyword">set</span>(OUTPUT_CXX_SOURCE   <span class="string">&quot;$&#123;PROTO_CXX_OUT&#125;/$&#123;FILE_NAME&#125;.pb.cc&quot;</span>)</span><br><span class="line">    <span class="keyword">list</span>(APPEND OUTPUT_SOURCES_CXX</span><br><span class="line">        <span class="variable">$&#123;OUTPUT_CXX_HEADER&#125;</span> <span class="variable">$&#123;OUTPUT_CXX_SOURCE&#125;</span>)</span><br><span class="line"><span class="keyword">endforeach</span>()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_custom_command</span>(</span><br><span class="line">    OUTPUT  <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span></span><br><span class="line">    <span class="keyword">COMMAND</span> <span class="variable">$&#123;PROTOC_CXX&#125;</span> --cpp_out=<span class="variable">$&#123;PROTO_CXX_OUT&#125;</span> --proto_path=<span class="variable">$&#123;PROTO_PATH&#125;</span> <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span></span><br><span class="line">    DEPENDS <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span></span><br><span class="line">    WORKING_DIRECTORY <span class="variable">$&#123;PROTO_PATH&#125;</span></span><br><span class="line">    COMMENT <span class="string">&quot;Generate Cpp Protobuf Source Files&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_custom_target</span>(</span><br><span class="line">    compile_cxx_protos</span><br><span class="line">    DEPENDS <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置生成源文件包含目录变量供上层引用</span></span><br><span class="line"><span class="keyword">set</span>(PROTO_GEN_CXX_INCLUDE_DIRS <span class="variable">$&#123;PROTO_CXX_OUT&#125;</span> PARENT_SCOPE)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将生成的文件打包为库 proto_gen_cxx</span></span><br><span class="line"><span class="comment"># 程序可以链接到该库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(proto_gen_cxx <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span>)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(proto_gen_cxx protobuf)</span><br><span class="line"><span class="keyword">add_dependencies</span>(proto_gen_cxx compile_cxx_protos)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>网络编程</tag>
-        <tag>socket</tag>
-        <tag>计算机网络</tag>
-        <tag>Linux</tag>
-        <tag>protobuf</tag>
       </tags>
   </entry>
   <entry>
