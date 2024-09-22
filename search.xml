@@ -425,6 +425,73 @@
       </tags>
   </entry>
   <entry>
+    <title>SQL事务</title>
+    <url>/2024/09/22/SQLEvent/</url>
+    <content><![CDATA[<p>在SQL中，事务（Transaction）是一组数据库操作的逻辑单元，这些操作要么全部成功执行，要么全部不执行。事务的主要目的是确保数据库的一致性和完整性，尤其是在并发访问和系统故障的情况下。</p>
+<h3 id="事务的基本概念"><a href="#事务的基本概念" class="headerlink" title="事务的基本概念"></a>事务的基本概念</h3><ol>
+<li><p><strong>事务的特性（ACID）</strong>:</p>
+<ul>
+<li><strong>原子性（Atomicity）</strong>: 事务中的所有操作要么全部成功执行，要么全部不执行。如果事务中的任何一个操作失败，整个事务都会回滚到初始状态。</li>
+<li><strong>一致性（Consistency）</strong>: 事务执行前后，数据库必须保持一致性状态。事务不能违反数据库的完整性约束。</li>
+<li><strong>隔离性（Isolation）</strong>: 并发执行的多个事务之间是相互隔离的，一个事务的执行不能被其他事务干扰。</li>
+<li><strong>持久性（Durability）</strong>: 一旦事务成功提交，其结果将永久保存在数据库中，即使系统发生故障也不会丢失。</li>
+</ul>
+</li>
+<li><p><strong>事务的控制语句</strong>:</p>
+<ul>
+<li><strong>BEGIN TRANSACTION</strong>: 开始一个事务。</li>
+<li><strong>COMMIT</strong>: 提交事务，将所有操作永久保存到数据库中。</li>
+<li><strong>ROLLBACK</strong>: 回滚事务，撤销所有未提交的操作。</li>
+<li><strong>SAVEPOINT</strong>: 在事务中设置保存点，可以在回滚时只回滚到保存点。</li>
+</ul>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">BEGIN</span>; #开始事务</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"><span class="keyword">ROLLBACK</span>; #回滚事务</span><br><span class="line"><span class="keyword">SAVEPOINT</span> 回滚点; #添加回滚点</span><br><span class="line"><span class="keyword">ROLLBACK</span> <span class="keyword">TO</span> 回滚点; # 回到指定回滚点</span><br><span class="line">...</span><br><span class="line"><span class="keyword">COMMIT</span>; #提交事务</span><br><span class="line"><span class="comment">-- 一旦提交，就无法进行回滚</span></span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="事务的实例"><a href="#事务的实例" class="headerlink" title="事务的实例"></a>事务的实例</h3><p>假设我们有一个银行账户表 <code>accounts</code>，我们希望实现一个转账操作，从一个账户转钱到另一个账户。为了确保转账操作的原子性和一致性，我们需要使用事务。</p>
+<h4 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> accounts (</span><br><span class="line">    account_id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    balance <span class="type">DECIMAL</span>(<span class="number">10</span>, <span class="number">2</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="插入初始数据"><a href="#插入初始数据" class="headerlink" title="插入初始数据"></a>插入初始数据</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> accounts (account_id, balance) <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="number">1000.00</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> accounts (account_id, balance) <span class="keyword">VALUES</span> (<span class="number">2</span>, <span class="number">500.00</span>);</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="转账操作"><a href="#转账操作" class="headerlink" title="转账操作"></a>转账操作</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span> TRANSACTION;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 从账户1转出500元</span></span><br><span class="line"><span class="keyword">UPDATE</span> accounts <span class="keyword">SET</span> balance <span class="operator">=</span> balance <span class="operator">-</span> <span class="number">500.00</span> <span class="keyword">WHERE</span> account_id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 向账户2转入500元</span></span><br><span class="line"><span class="keyword">UPDATE</span> accounts <span class="keyword">SET</span> balance <span class="operator">=</span> balance <span class="operator">+</span> <span class="number">500.00</span> <span class="keyword">WHERE</span> account_id <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 检查账户1的余额是否足够</span></span><br><span class="line">IF (<span class="keyword">SELECT</span> balance <span class="keyword">FROM</span> accounts <span class="keyword">WHERE</span> account_id <span class="operator">=</span> <span class="number">1</span>) <span class="operator">&lt;</span> <span class="number">0</span> <span class="keyword">THEN</span></span><br><span class="line">    <span class="keyword">ROLLBACK</span>;  <span class="comment">-- 如果余额不足，回滚事务</span></span><br><span class="line"><span class="keyword">ELSE</span></span><br><span class="line">    <span class="keyword">COMMIT</span>;    <span class="comment">-- 否则，提交事务</span></span><br><span class="line"><span class="keyword">END</span> IF;</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个例子中，我们使用事务来确保转账操作的原子性。如果账户1的余额不足，事务将回滚，撤销所有的操作；否则，事务将提交，转账操作成功完成。</p>
+<h3 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h3><p>SQL标准定义了四种事务隔离级别，用于控制并发事务之间的相互影响：</p>
+<ol>
+<li><strong>读未提交（Read Uncommitted）</strong>: 允许一个事务读取另一个事务未提交的数据。可能会导致脏读、不可重复读和幻读。</li>
+<li><strong>读已提交（Read Committed）</strong>: 允许一个事务读取另一个事务已提交的数据。可以避免脏读，但可能会导致不可重复读和幻读。</li>
+<li><strong>可重复读（Repeatable Read）</strong>: 确保一个事务在执行期间多次读取同一数据时，结果是一致的。可以避免脏读和不可重复读，但可能会导致幻读。</li>
+<li><strong>串行化（Serializable）</strong>: 最高的隔离级别，确保事务串行执行，完全避免脏读、不可重复读和幻读。</li>
+</ol>
+<h4 id="设置隔离级别"><a href="#设置隔离级别" class="headerlink" title="设置隔离级别"></a>设置隔离级别</h4><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SET</span> TRANSACTION ISOLATION LEVEL READ COMMITTED;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="事务的使用场景"><a href="#事务的使用场景" class="headerlink" title="事务的使用场景"></a>事务的使用场景</h3><ol>
+<li><p><strong>银行转账</strong>:</p>
+<ul>
+<li>确保从一个账户转钱到另一个账户的操作是原子的，要么全部成功，要么全部失败。</li>
+</ul>
+</li>
+<li><p><strong>订单处理</strong>:</p>
+<ul>
+<li>确保订单的创建、库存的更新和支付的处理是原子的，避免出现订单创建成功但库存未更新的情况。</li>
+</ul>
+</li>
+<li><p><strong>数据一致性</strong>:</p>
+<ul>
+<li>确保多个相关操作的一致性，例如在插入新记录时，同时更新相关统计信息。</li>
+</ul>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SQL语句</title>
     <url>/2024/09/17/SQLGRammar/</url>
     <content><![CDATA[<h2 id="数据库定义语言-DDL"><a href="#数据库定义语言-DDL" class="headerlink" title="数据库定义语言(DDL)"></a>数据库定义语言(DDL)</h2><h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> database <span class="operator">&lt;</span>database_name<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></div>
@@ -845,6 +912,92 @@
 <ul>
 <li>如果不再需要某个索引，可以将其删除以节省存储空间。</li>
 <li>例如：<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX idx_name <span class="keyword">ON</span> table_name;</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SQL触发器</title>
+    <url>/2024/09/22/SQLTrigger/</url>
+    <content><![CDATA[<p>在SQL中，触发器（Trigger）是一种特殊的存储过程，它在特定的数据库操作（如插入、更新或删除）发生时自动执行。触发器通常用于维护数据完整性、执行审计跟踪、记录日志等任务。触发器可以在表级别定义，并且可以与 <code>INSERT</code>、<code>UPDATE</code> 和 <code>DELETE</code> 操作相关联。</p>
+<p>触发器所依附的表为基本表，当触发器表上发生<code>select/update/delete</code>操作时，会自动生成两个临时的表(<code>new/old</code>，只能由触发器使用)</p>
+<p>比如:</p>
+<ul>
+<li>在<code>insert</code>操作时，会生成<code>new</code>表，记录插入的数据，<code>old</code>表则为空。</li>
+<li>在<code>delete</code>操作时，会生成<code>new</code>表，记录删除的数据，<code>old</code>表记录被删除的数据。</li>
+<li>在<code>update</code>操作时，会生成<code>new</code>表，记录更新的数据，<code>old</code>表记录更新前的数据。</li>
+</ul>
+<p>创建触发器</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> <span class="operator">&lt;</span>trigger_name<span class="operator">&gt;</span> [BEFORE<span class="operator">|</span>AFTER] [<span class="keyword">INSERT</span><span class="operator">|</span><span class="keyword">UPDATE</span><span class="operator">|</span><span class="keyword">DELETE</span>] <span class="keyword">ON</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span><span class="operator">/</span><span class="operator">&lt;</span>view_name<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="type">ROW</span> [<span class="keyword">INSERT</span><span class="operator">|</span><span class="keyword">UPDATE</span><span class="operator">|</span><span class="keyword">DELETE</span> ] <span class="keyword">FROM</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span> <span class="keyword">WHERE</span> <span class="operator">&lt;</span><span class="keyword">condition</span><span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>FOR EACH ROW</code> 表示针对每一行都会生效，无论哪行进行指定操作都会执行触发器</p>
+<p>查看触发器</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> TRIGGERS;</span><br></pre></td></tr></table></figure></div>
+
+<p>删除触发器</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TRIGGER</span> <span class="operator">&lt;</span>trigger_name<span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="触发器的基本概念"><a href="#触发器的基本概念" class="headerlink" title="触发器的基本概念"></a>触发器的基本概念</h3><ol>
+<li><p><strong>触发器的类型</strong>:</p>
+<ul>
+<li><strong>BEFORE 触发器</strong>: 在触发操作（如插入、更新或删除）之前执行。</li>
+<li><strong>AFTER 触发器</strong>: 在触发操作之后执行。</li>
+<li><strong>INSTEAD OF 触发器</strong>: 用于视图，替代触发操作执行。</li>
+</ul>
+</li>
+<li><p><strong>触发器的创建</strong>:</p>
+<ul>
+<li>使用 <code>CREATE TRIGGER</code> 语句创建触发器。</li>
+<li>触发器可以与 <code>INSERT</code>、<code>UPDATE</code> 和 <code>DELETE</code> 操作相关联。</li>
+</ul>
+</li>
+<li><p><strong>触发器的优点</strong>:</p>
+<ul>
+<li><strong>自动执行</strong>: 触发器在特定事件发生时自动执行，无需手动调用。</li>
+<li><strong>维护数据完整性</strong>: 触发器可以用于强制执行复杂的业务规则和约束。</li>
+<li><strong>审计跟踪</strong>: 触发器可以用于记录对数据的修改，便于审计和追踪。</li>
+</ul>
+</li>
+<li><p><strong>触发器的缺点</strong>:</p>
+<ul>
+<li><strong>性能开销</strong>: 触发器的执行会增加数据库操作的开销，尤其是在频繁操作的情况下。</li>
+<li><strong>复杂性</strong>: 触发器的逻辑可能变得复杂，难以维护和调试。</li>
+</ul>
+</li>
+</ol>
+<h3 id="触发器的实例"><a href="#触发器的实例" class="headerlink" title="触发器的实例"></a>触发器的实例</h3><h4 id="实例1：插入操作触发器"><a href="#实例1：插入操作触发器" class="headerlink" title="实例1：插入操作触发器"></a>实例1：插入操作触发器</h4><p>假设我们有一个 <code>employees</code> 表，我们希望在每次插入新员工时，自动记录插入操作的时间。</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> employees (</span><br><span class="line">    id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">100</span>),</span><br><span class="line">    hire_date DATETIME</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> audit_log (</span><br><span class="line">    log_id <span class="type">INT</span> AUTO_INCREMENT <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    action <span class="type">VARCHAR</span>(<span class="number">10</span>),</span><br><span class="line">    log_date DATETIME</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> trg_employees_insert</span><br><span class="line">AFTER <span class="keyword">INSERT</span> <span class="keyword">ON</span> employees</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="type">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> audit_log (action, log_date)</span><br><span class="line">    <span class="keyword">VALUES</span> (<span class="string">&#x27;INSERT&#x27;</span>, NOW());</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个例子中，<code>trg_employees_insert</code> 触发器在每次向 <code>employees</code> 表插入新记录时自动执行，并将插入操作记录到 <code>audit_log</code> 表中。</p>
+<h4 id="实例2：更新操作触发器"><a href="#实例2：更新操作触发器" class="headerlink" title="实例2：更新操作触发器"></a>实例2：更新操作触发器</h4><p>假设我们希望在每次更新 <code>employees</code> 表中的 <code>hire_date</code> 字段时，自动记录更新前后的值。</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> trg_employees_update</span><br><span class="line">BEFORE <span class="keyword">UPDATE</span> <span class="keyword">ON</span> employees</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="type">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> audit_log (action, log_date)</span><br><span class="line">    <span class="keyword">VALUES</span> (<span class="string">&#x27;UPDATE&#x27;</span>, NOW());</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个例子中，<code>trg_employees_update</code> 触发器在每次更新 <code>employees</code> 表中的记录时自动执行，并将更新操作记录到 <code>audit_log</code> 表中。</p>
+<h4 id="实例3：删除操作触发器"><a href="#实例3：删除操作触发器" class="headerlink" title="实例3：删除操作触发器"></a>实例3：删除操作触发器</h4><p>假设我们希望在每次删除 <code>employees</code> 表中的记录时，自动记录删除操作。</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="code"><pre><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> trg_employees_delete</span><br><span class="line">AFTER <span class="keyword">DELETE</span> <span class="keyword">ON</span> employees</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="type">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> audit_log (action, log_date)</span><br><span class="line">    <span class="keyword">VALUES</span> (<span class="string">&#x27;DELETE&#x27;</span>, NOW());</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个例子中，<code>trg_employees_delete</code> 触发器在每次删除 <code>employees</code> 表中的记录时自动执行，并将删除操作记录到 <code>audit_log</code> 表中。</p>
+<h3 id="触发器的使用场景"><a href="#触发器的使用场景" class="headerlink" title="触发器的使用场景"></a>触发器的使用场景</h3><ol>
+<li><p><strong>数据完整性</strong>:</p>
+<ul>
+<li>触发器可以用于强制执行复杂的业务规则和约束，例如在插入或更新数据时检查数据的合法性。</li>
+</ul>
+</li>
+<li><p><strong>审计跟踪</strong>:</p>
+<ul>
+<li>触发器可以用于记录对数据的修改，便于审计和追踪。</li>
+</ul>
+</li>
+<li><p><strong>自动更新</strong>:</p>
+<ul>
+<li>触发器可以用于自动更新相关表中的数据，例如在插入新订单时自动更新库存表。</li>
 </ul>
 </li>
 </ol>
@@ -2166,6 +2319,242 @@
       </tags>
   </entry>
   <entry>
+    <title>socket的创建和连接</title>
+    <url>/2024/06/30/linux-socket-programming-1/</url>
+    <content><![CDATA[<h1 id="socket编程"><a href="#socket编程" class="headerlink" title="socket编程"></a>socket编程</h1><h2 id="socket的概念"><a href="#socket的概念" class="headerlink" title="socket的概念"></a>socket的概念</h2><p>Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。</p>
+<p>Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上的主机，而端口号则用于区分同一台主机上的不同服务。</p>
+<h2 id="socket的类型"><a href="#socket的类型" class="headerlink" title="socket的类型"></a>socket的类型</h2><p>socket 可以分为几种类型，主要依据它们支持的协议和通信模式：</p>
+<ul>
+<li><strong>流式 Socket (SOCK_STREAM)：</strong> 基于 TCP 协议，提供面向连接的服务，保证数据的顺序传输，且不会丢失数据。</li>
+<li><strong>数据报 Socket (SOCK_DGRAM)：</strong> 基于 UDP 协议，提供无连接服务，数据报文独立传输，不保证数据的顺序和完整性，但传输效率较高。</li>
+<li><strong>原始 Socket (SOCK_RAW)：</strong> 直接访问 IP 层，允许应用程序直接处理 IP 数据包，常用于网络分析或特殊用途的软件。</li>
+</ul>
+<h2 id="socket提供的函数"><a href="#socket提供的函数" class="headerlink" title="socket提供的函数"></a>socket提供的函数</h2><ul>
+<li><code>socket()</code> 创建一个新的确定类型的套接字，类型用一个整型数值标识，并为它分配系统资源。</li>
+<li><code>bind()</code> 一般用于服务器端，将一个套接字与一个套接字地址结构相关联，比如，一个指定的本地端口和IP地址。</li>
+<li><code>listen()</code> 用于服务器端，使一个绑定的TCP套接字进入监听状态。</li>
+<li><code>connect()</code>用于客户端，为一个套接字分配一个自由的本地端口号。 如果是TCP套接字的话，它会试图获得一个新的TCP连接。</li>
+<li><code>accept()</code>用于服务器端。 它接受一个从远端客户端发出的创建一个新的TCP连接的接入请求，创建一个新的套接字，与该连接相应的套接字地址相关联。</li>
+<li><code>send()</code>和<code>recv()</code>,或者<code>write()</code>和<code>read()</code>,或者<code>recvfrom()</code>和<code>sendto()</code>,用于往&#x2F;从远程套接字发送和接受数据。</li>
+<li><code>close()</code>用于系统释放分配给一个套接字的资源。 如果是TCP，连接会被中断。</li>
+<li><code>gethostbyname()</code>和&#96;gethostbyaddr()</li>
+<li><code>select()</code>用于修整有如下情况的套接字列表： 准备读，准备写或者是有错误。</li>
+<li><code>poll()</code>用于检查套接字的状态。 套接字可以被测试，看是否可以写入、读取或是有错误。</li>
+<li><code>getsockopt()</code>用于查询指定的套接字一个特定的套接字选项的当前值。</li>
+<li><code>setsockopt()</code>用于为指定的套接字设定一个特定的套接字选项。</li>
+</ul>
+<h3 id="1-socket"><a href="#1-socket" class="headerlink" title="1. socket()"></a>1. <code>socket()</code></h3><ul>
+<li><strong>作用</strong>：创建一个新的 Socket。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int domain</code>：地址族，如 <code>AF_INET</code>（IPv4）或 <code>AF_INET6</code>（IPv6）。</li>
+<li><code>int type</code>：Socket 类型，如 <code>SOCK_STREAM</code>（面向连接，流式）或 <code>SOCK_DGRAM</code>（无连接，数据报）。</li>
+<li><code>int protocol</code>：协议，通常是 <code>0</code>，表示使用与 <code>type</code> 关联的默认协议。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-bind"><a href="#2-bind" class="headerlink" title="2. bind()"></a>2. <code>bind()</code></h3><ul>
+<li><strong>作用</strong>：将 Socket 与本地地址（IP 地址和端口号）相关联。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>const struct sockaddr *addr</code>：指向包含地址信息的 <code>sockaddr</code> 结构体的指针。</li>
+<li><code>socklen_t addrlen</code>：<code>sockaddr</code> 结构体的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-listen"><a href="#3-listen" class="headerlink" title="3. listen()"></a>3. <code>listen()</code></h3><ul>
+<li><strong>作用</strong>：使 Socket 准备接收连接，通常用于服务器端。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>int backlog</code>：待处理连接请求的最大队列长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-accept"><a href="#4-accept" class="headerlink" title="4. accept()"></a>4. <code>accept()</code></h3><ul>
+<li><strong>作用</strong>：接受传入的连接请求，并返回一个新的 Socket 文件描述符用于通信。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：监听的 Socket 文件描述符。</li>
+<li><code>struct sockaddr *addr</code>：可选参数，用于存储客户端的地址信息。</li>
+<li><code>socklen_t *addrlen</code>：可选参数，用于存储地址信息的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-connect"><a href="#5-connect" class="headerlink" title="5. connect()"></a>5. <code>connect()</code></h3><ul>
+<li><strong>作用</strong>：初始化与远程主机的连接，通常用于客户端。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>const struct sockaddr *addr</code>：指向包含远程主机地址信息的 <code>sockaddr</code> 结构体的指针。</li>
+<li><code>socklen_t addrlen</code>：<code>sockaddr</code> 结构体的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-send"><a href="#6-send" class="headerlink" title="6. send()"></a>6. <code>send()</code></h3><ul>
+<li><strong>作用</strong>：发送数据到已连接的 Socket。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>const void *buf</code>：指向要发送数据的缓冲区的指针。</li>
+<li><code>size_t len</code>：要发送的数据长度。</li>
+<li><code>int flags</code>：发送标志，如 <code>MSG_DONTROUTE</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-recv"><a href="#7-recv" class="headerlink" title="7. recv()"></a>7. <code>recv()</code></h3><ul>
+<li><strong>作用</strong>：从 Socket 接收数据。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>void *buf</code>：接收数据的缓冲区。</li>
+<li><code>size_t len</code>：缓冲区的大小。</li>
+<li><code>int flags</code>：接收标志，如 <code>MSG_PEEK</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-sendto"><a href="#8-sendto" class="headerlink" title="8. sendto()"></a>8. <code>sendto()</code></h3><ul>
+<li><strong>作用</strong>：向特定地址发送数据，通常用于无连接的 Socket（如 UDP）。</li>
+<li><strong>参数</strong>：与 <code>send()</code> 类似，额外包括目标地址和地址长度。</li>
+</ul>
+<h3 id="9-recvfrom"><a href="#9-recvfrom" class="headerlink" title="9. recvfrom()"></a>9. <code>recvfrom()</code></h3><ul>
+<li><strong>作用</strong>：接收数据并返回源地址信息，通常用于无连接的 Socket（如 UDP）。</li>
+<li><strong>参数</strong>：与 <code>recv()</code> 类似，额外包括源地址信息和地址长度。</li>
+</ul>
+<h3 id="10-close"><a href="#10-close" class="headerlink" title="10. close()"></a>10. <code>close()</code></h3><ul>
+<li><strong>作用</strong>：关闭 Socket 文件描述符，释放资源。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：要关闭的 Socket 文件描述符。</li>
+</ul>
+</li>
+</ul>
+<h3 id="11-setsockopt"><a href="#11-setsockopt" class="headerlink" title="11. setsockopt()"></a>11. <code>setsockopt()</code></h3><ul>
+<li><strong>作用</strong>：设置 Socket 的选项，如超时、重用地址等。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>int level</code>：设置选项的级别，如 <code>SOL_SOCKET</code> 或 <code>IPPROTO_TCP</code>。</li>
+<li><code>int optname</code>：选项名称。</li>
+<li><code>const void *optval</code>：指向选项值的指针。</li>
+<li><code>socklen_t optlen</code>：选项值的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="12-getsockopt"><a href="#12-getsockopt" class="headerlink" title="12. getsockopt()"></a>12. <code>getsockopt()</code></h3><ul>
+<li><strong>作用</strong>：获取 Socket 的选项。</li>
+<li><strong>参数</strong>：与 <code>setsockopt()</code> 类似。</li>
+</ul>
+<h3 id="13-shutdown"><a href="#13-shutdown" class="headerlink" title="13. shutdown()"></a>13. <code>shutdown()</code></h3><ul>
+<li><strong>作用</strong>：关闭 Socket 的读取或写入方向。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>int how</code>：关闭的方向，如 <code>SHUT_RD</code>（读取方向）或 <code>SHUT_WR</code>（写入方向）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li>使用 Socket 编程时，应确保正确处理错误情况，检查每个函数的返回值，并适当地处理任何错误代码。</li>
+<li>对于某些函数，如 <code>send()</code> 和 <code>recv()</code>，如果在非阻塞模式下使用，可能需要处理 EAGAIN 或 EWOULDBLOCK 错误码，这表明操作无法立即完成。</li>
+<li>在实际编程中，根据具体需求，可能还需要使用到其他函数，例如 <code>select()</code> 或 <code>poll()</code> 用于多路复用，或者 <code>fork()</code> 和 <code>exec()</code> 用于创建子进程处理连接。</li>
+</ul>
+<h2 id="TCP-socket通信流程"><a href="#TCP-socket通信流程" class="headerlink" title="TCP socket通信流程"></a>TCP socket通信流程</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://s2.loli.net/2024/06/30/SPcvUQlrHe3F9ZI.png"
+                      alt="tcp-socket.png"
+                ></p>
+<p>服务器端流程如下：</p>
+<ol>
+<li>创建服务器的<code>socket</code></li>
+<li>初始化<code>sever_addr</code>(服务器地址)</li>
+<li>将<code>socket</code>和<code>server_addr</code>绑定 bind</li>
+<li>开始监听<code>listen</code></li>
+<li>开一个循环保证服务器不会结束，不断的<code>accept</code>接入的客户端请求，进行读写操作<code>write</code>和<code>read</code> (send()和recv()也行)</li>
+<li>关闭<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BACLOG 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建新的socket，返回文件描述符</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> res = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> 如果想要使用UDP协议，只需要将SOCK_STREAM改为SOCK_DGRAM即可</span></span><br><span class="line">    <span class="keyword">if</span> (res &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;create socket failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;create socket successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化服务器地址信息</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    <span class="comment">// 监听所有可用地址</span></span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = htons(INADDR_ANY);</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定socket到指定的地址</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">try_bind</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (bind(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;bind failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;bind successfully&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理客户端请求</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">process_client_request</span><span class="params">(<span class="type">int</span> socket_client)</span> &#123;</span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送的消息，以方便日后添加或修改</span></span><br><span class="line">    <span class="built_in">snprintf</span>(send_buf, BUFFLEN, <span class="string">&quot;Hello, this is the server&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">ssize_t</span> num_read = read(socket_client, recv_buf, BUFFLEN);</span><br><span class="line">        <span class="comment">// 客户端断开连接，或读取失败</span></span><br><span class="line">        <span class="keyword">if</span> (num_read &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num_read == <span class="number">0</span>)</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;Client closed connection&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                perror(<span class="string">&quot;read failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        recv_buf[num_read] = <span class="string">&#x27;\0&#x27;</span>; <span class="comment">// 为接收的字符串添加结束字符</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;From Client: %s\n&quot;</span>, recv_buf);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strncmp</span>(recv_buf, <span class="string">&quot;exit&quot;</span>, <span class="number">4</span>) == <span class="number">0</span>) &#123; <span class="comment">// 客户端请求退出</span></span><br><span class="line">            <span class="comment">// 修改发送的消息</span></span><br><span class="line">            <span class="built_in">strcpy</span>(send_buf, <span class="string">&quot;bye!!!&quot;</span>);</span><br><span class="line">            <span class="comment">// 返回消息给客户端</span></span><br><span class="line">            write(socket_client, send_buf, <span class="built_in">strlen</span>(send_buf));</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Me(Server)：%s\n&quot;</span>, send_buf);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 向客户端写入发送缓冲区的内容</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_client, send_buf, <span class="built_in">strlen</span>(send_buf)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Server): %s\n&quot;</span>, send_buf);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 清空接收缓冲区，准备下一次读取</span></span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_server = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span> <span class="comment">// 声明地址结构</span></span><br><span class="line"></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化地址结构</span></span><br><span class="line">    try_bind(socket_server, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 绑定地址到socket</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始监听连接请求，设定最大等待连接数量为BACLOG</span></span><br><span class="line">    <span class="keyword">if</span> (listen(socket_server, BACLOG) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;listen failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;start listening&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">client_addr</span>;</span></span><br><span class="line">    <span class="type">socklen_t</span> client_addr_size = <span class="keyword">sizeof</span>(client_addr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 初始化客户端地址结构</span></span><br><span class="line">        <span class="built_in">memset</span>(&amp;client_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(client_addr));</span><br><span class="line">        <span class="comment">// 接受新的连接请求</span></span><br><span class="line">        <span class="type">int</span> socket_client = accept(socket_server, (<span class="keyword">struct</span> sockaddr*)&amp;client_addr, &amp;client_addr_size);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Client %s:%d connected\n&quot;</span>,</span><br><span class="line">            inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));</span><br><span class="line">        <span class="keyword">if</span> (socket_client &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 尝试接受另一个连接</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 满足要求后开始处理客户端请求</span></span><br><span class="line">        process_client_request(socket_client);</span><br><span class="line">        close(socket_client); <span class="comment">// 关闭客户端连接</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 正常情况下不会执行到这一步</span></span><br><span class="line">    close(socket_server);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>客户端流程如下：</p>
+<ol>
+<li>创建客户端<code>socket</code></li>
+<li>初始化<code>server_addr</code></li>
+<li>连接到服务器<code>connect</code></li>
+<li>利用<code>write</code>和<code>read</code>进行读写操作 (send()和recv()也行)</li>
+<li>关闭<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 创建套接字并返回其文件描述符</span></span><br><span class="line"><span class="comment"> * 如果创建失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> sock_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sock_fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket创建失败&quot;</span>); <span class="comment">// 使用perror提供更多的错误信息</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;socket create successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> sock_fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 初始化服务器地址结构的函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = inet_addr(<span class="string">&quot;192.168.5.120&quot;</span>); <span class="comment">// 服务器IP</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 建立到服务器的连接</span></span><br><span class="line"><span class="comment"> * 如果连接失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">connect_to_server</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (connect(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;connection failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;connection successful\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 客户端程序开始的主函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_fd = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化服务器详细信息</span></span><br><span class="line"></span><br><span class="line">    connect_to_server(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 连接到服务器</span></span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于发送数据的缓冲区</span></span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于接收数据的缓冲区</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 持续从用户获取输入并发送到服务器，直到从服务器接收到&quot;bye!!!&quot;</span></span><br><span class="line">    <span class="keyword">while</span> (fgets(send_buf, BUFFLEN, <span class="built_in">stdin</span>)) &#123;</span><br><span class="line">        <span class="comment">// 向服务器写入用户输入</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_fd, send_buf, strnlen(send_buf, BUFFLEN)) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Client):%s&quot;</span>, send_buf); <span class="comment">// 打印用户输入</span></span><br><span class="line">        <span class="built_in">memset</span>(send_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除发送缓冲区</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (read(socket_fd, recv_buf, BUFFLEN) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Server:%s&quot;</span>, recv_buf); <span class="comment">// 打印服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(recv_buf, <span class="string">&quot;bye!!!&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除接收缓冲区</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(socket_fd); <span class="comment">// 关闭套接字</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>网络编程</tag>
+        <tag>socket</tag>
+        <tag>计算机网络</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>asio socket的创建和连接</title>
+    <url>/2024/07/03/linux-socket-programming-2/</url>
+    <content><![CDATA[<h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
+<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
+<li>创建上下文<code>io_context</code></li>
+<li>选择协议</li>
+<li>生成<code>socket</code></li>
+<li>打开<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
+<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
+<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
+<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
+<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
+<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
+<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
+<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
+<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
+<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>将”Hello World”转换成这种类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>网络编程</tag>
+        <tag>socket</tag>
+        <tag>计算机网络</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>java语法</title>
     <url>/2024/03/16/java-grammar/</url>
     <content><![CDATA[<h1 id="the-grammar-of-java"><a href="#the-grammar-of-java" class="headerlink" title="the grammar of java"></a>the grammar of java</h1><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>byte:</p>
@@ -2866,242 +3255,6 @@
       </categories>
       <tags>
         <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>socket的创建和连接</title>
-    <url>/2024/06/30/linux-socket-programming-1/</url>
-    <content><![CDATA[<h1 id="socket编程"><a href="#socket编程" class="headerlink" title="socket编程"></a>socket编程</h1><h2 id="socket的概念"><a href="#socket的概念" class="headerlink" title="socket的概念"></a>socket的概念</h2><p>Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。</p>
-<p>Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上的主机，而端口号则用于区分同一台主机上的不同服务。</p>
-<h2 id="socket的类型"><a href="#socket的类型" class="headerlink" title="socket的类型"></a>socket的类型</h2><p>socket 可以分为几种类型，主要依据它们支持的协议和通信模式：</p>
-<ul>
-<li><strong>流式 Socket (SOCK_STREAM)：</strong> 基于 TCP 协议，提供面向连接的服务，保证数据的顺序传输，且不会丢失数据。</li>
-<li><strong>数据报 Socket (SOCK_DGRAM)：</strong> 基于 UDP 协议，提供无连接服务，数据报文独立传输，不保证数据的顺序和完整性，但传输效率较高。</li>
-<li><strong>原始 Socket (SOCK_RAW)：</strong> 直接访问 IP 层，允许应用程序直接处理 IP 数据包，常用于网络分析或特殊用途的软件。</li>
-</ul>
-<h2 id="socket提供的函数"><a href="#socket提供的函数" class="headerlink" title="socket提供的函数"></a>socket提供的函数</h2><ul>
-<li><code>socket()</code> 创建一个新的确定类型的套接字，类型用一个整型数值标识，并为它分配系统资源。</li>
-<li><code>bind()</code> 一般用于服务器端，将一个套接字与一个套接字地址结构相关联，比如，一个指定的本地端口和IP地址。</li>
-<li><code>listen()</code> 用于服务器端，使一个绑定的TCP套接字进入监听状态。</li>
-<li><code>connect()</code>用于客户端，为一个套接字分配一个自由的本地端口号。 如果是TCP套接字的话，它会试图获得一个新的TCP连接。</li>
-<li><code>accept()</code>用于服务器端。 它接受一个从远端客户端发出的创建一个新的TCP连接的接入请求，创建一个新的套接字，与该连接相应的套接字地址相关联。</li>
-<li><code>send()</code>和<code>recv()</code>,或者<code>write()</code>和<code>read()</code>,或者<code>recvfrom()</code>和<code>sendto()</code>,用于往&#x2F;从远程套接字发送和接受数据。</li>
-<li><code>close()</code>用于系统释放分配给一个套接字的资源。 如果是TCP，连接会被中断。</li>
-<li><code>gethostbyname()</code>和&#96;gethostbyaddr()</li>
-<li><code>select()</code>用于修整有如下情况的套接字列表： 准备读，准备写或者是有错误。</li>
-<li><code>poll()</code>用于检查套接字的状态。 套接字可以被测试，看是否可以写入、读取或是有错误。</li>
-<li><code>getsockopt()</code>用于查询指定的套接字一个特定的套接字选项的当前值。</li>
-<li><code>setsockopt()</code>用于为指定的套接字设定一个特定的套接字选项。</li>
-</ul>
-<h3 id="1-socket"><a href="#1-socket" class="headerlink" title="1. socket()"></a>1. <code>socket()</code></h3><ul>
-<li><strong>作用</strong>：创建一个新的 Socket。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int domain</code>：地址族，如 <code>AF_INET</code>（IPv4）或 <code>AF_INET6</code>（IPv6）。</li>
-<li><code>int type</code>：Socket 类型，如 <code>SOCK_STREAM</code>（面向连接，流式）或 <code>SOCK_DGRAM</code>（无连接，数据报）。</li>
-<li><code>int protocol</code>：协议，通常是 <code>0</code>，表示使用与 <code>type</code> 关联的默认协议。</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-bind"><a href="#2-bind" class="headerlink" title="2. bind()"></a>2. <code>bind()</code></h3><ul>
-<li><strong>作用</strong>：将 Socket 与本地地址（IP 地址和端口号）相关联。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>const struct sockaddr *addr</code>：指向包含地址信息的 <code>sockaddr</code> 结构体的指针。</li>
-<li><code>socklen_t addrlen</code>：<code>sockaddr</code> 结构体的长度。</li>
-</ul>
-</li>
-</ul>
-<h3 id="3-listen"><a href="#3-listen" class="headerlink" title="3. listen()"></a>3. <code>listen()</code></h3><ul>
-<li><strong>作用</strong>：使 Socket 准备接收连接，通常用于服务器端。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>int backlog</code>：待处理连接请求的最大队列长度。</li>
-</ul>
-</li>
-</ul>
-<h3 id="4-accept"><a href="#4-accept" class="headerlink" title="4. accept()"></a>4. <code>accept()</code></h3><ul>
-<li><strong>作用</strong>：接受传入的连接请求，并返回一个新的 Socket 文件描述符用于通信。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：监听的 Socket 文件描述符。</li>
-<li><code>struct sockaddr *addr</code>：可选参数，用于存储客户端的地址信息。</li>
-<li><code>socklen_t *addrlen</code>：可选参数，用于存储地址信息的长度。</li>
-</ul>
-</li>
-</ul>
-<h3 id="5-connect"><a href="#5-connect" class="headerlink" title="5. connect()"></a>5. <code>connect()</code></h3><ul>
-<li><strong>作用</strong>：初始化与远程主机的连接，通常用于客户端。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>const struct sockaddr *addr</code>：指向包含远程主机地址信息的 <code>sockaddr</code> 结构体的指针。</li>
-<li><code>socklen_t addrlen</code>：<code>sockaddr</code> 结构体的长度。</li>
-</ul>
-</li>
-</ul>
-<h3 id="6-send"><a href="#6-send" class="headerlink" title="6. send()"></a>6. <code>send()</code></h3><ul>
-<li><strong>作用</strong>：发送数据到已连接的 Socket。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>const void *buf</code>：指向要发送数据的缓冲区的指针。</li>
-<li><code>size_t len</code>：要发送的数据长度。</li>
-<li><code>int flags</code>：发送标志，如 <code>MSG_DONTROUTE</code>。</li>
-</ul>
-</li>
-</ul>
-<h3 id="7-recv"><a href="#7-recv" class="headerlink" title="7. recv()"></a>7. <code>recv()</code></h3><ul>
-<li><strong>作用</strong>：从 Socket 接收数据。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>void *buf</code>：接收数据的缓冲区。</li>
-<li><code>size_t len</code>：缓冲区的大小。</li>
-<li><code>int flags</code>：接收标志，如 <code>MSG_PEEK</code>。</li>
-</ul>
-</li>
-</ul>
-<h3 id="8-sendto"><a href="#8-sendto" class="headerlink" title="8. sendto()"></a>8. <code>sendto()</code></h3><ul>
-<li><strong>作用</strong>：向特定地址发送数据，通常用于无连接的 Socket（如 UDP）。</li>
-<li><strong>参数</strong>：与 <code>send()</code> 类似，额外包括目标地址和地址长度。</li>
-</ul>
-<h3 id="9-recvfrom"><a href="#9-recvfrom" class="headerlink" title="9. recvfrom()"></a>9. <code>recvfrom()</code></h3><ul>
-<li><strong>作用</strong>：接收数据并返回源地址信息，通常用于无连接的 Socket（如 UDP）。</li>
-<li><strong>参数</strong>：与 <code>recv()</code> 类似，额外包括源地址信息和地址长度。</li>
-</ul>
-<h3 id="10-close"><a href="#10-close" class="headerlink" title="10. close()"></a>10. <code>close()</code></h3><ul>
-<li><strong>作用</strong>：关闭 Socket 文件描述符，释放资源。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：要关闭的 Socket 文件描述符。</li>
-</ul>
-</li>
-</ul>
-<h3 id="11-setsockopt"><a href="#11-setsockopt" class="headerlink" title="11. setsockopt()"></a>11. <code>setsockopt()</code></h3><ul>
-<li><strong>作用</strong>：设置 Socket 的选项，如超时、重用地址等。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>int level</code>：设置选项的级别，如 <code>SOL_SOCKET</code> 或 <code>IPPROTO_TCP</code>。</li>
-<li><code>int optname</code>：选项名称。</li>
-<li><code>const void *optval</code>：指向选项值的指针。</li>
-<li><code>socklen_t optlen</code>：选项值的长度。</li>
-</ul>
-</li>
-</ul>
-<h3 id="12-getsockopt"><a href="#12-getsockopt" class="headerlink" title="12. getsockopt()"></a>12. <code>getsockopt()</code></h3><ul>
-<li><strong>作用</strong>：获取 Socket 的选项。</li>
-<li><strong>参数</strong>：与 <code>setsockopt()</code> 类似。</li>
-</ul>
-<h3 id="13-shutdown"><a href="#13-shutdown" class="headerlink" title="13. shutdown()"></a>13. <code>shutdown()</code></h3><ul>
-<li><strong>作用</strong>：关闭 Socket 的读取或写入方向。</li>
-<li><strong>参数</strong>：<ul>
-<li><code>int sockfd</code>：Socket 文件描述符。</li>
-<li><code>int how</code>：关闭的方向，如 <code>SHUT_RD</code>（读取方向）或 <code>SHUT_WR</code>（写入方向）。</li>
-</ul>
-</li>
-</ul>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
-<li>使用 Socket 编程时，应确保正确处理错误情况，检查每个函数的返回值，并适当地处理任何错误代码。</li>
-<li>对于某些函数，如 <code>send()</code> 和 <code>recv()</code>，如果在非阻塞模式下使用，可能需要处理 EAGAIN 或 EWOULDBLOCK 错误码，这表明操作无法立即完成。</li>
-<li>在实际编程中，根据具体需求，可能还需要使用到其他函数，例如 <code>select()</code> 或 <code>poll()</code> 用于多路复用，或者 <code>fork()</code> 和 <code>exec()</code> 用于创建子进程处理连接。</li>
-</ul>
-<h2 id="TCP-socket通信流程"><a href="#TCP-socket通信流程" class="headerlink" title="TCP socket通信流程"></a>TCP socket通信流程</h2><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://s2.loli.net/2024/06/30/SPcvUQlrHe3F9ZI.png"
-                      alt="tcp-socket.png"
-                ></p>
-<p>服务器端流程如下：</p>
-<ol>
-<li>创建服务器的<code>socket</code></li>
-<li>初始化<code>sever_addr</code>(服务器地址)</li>
-<li>将<code>socket</code>和<code>server_addr</code>绑定 bind</li>
-<li>开始监听<code>listen</code></li>
-<li>开一个循环保证服务器不会结束，不断的<code>accept</code>接入的客户端请求，进行读写操作<code>write</code>和<code>read</code> (send()和recv()也行)</li>
-<li>关闭<code>socket</code></li>
-</ol>
-<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BACLOG 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建新的socket，返回文件描述符</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> res = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> 如果想要使用UDP协议，只需要将SOCK_STREAM改为SOCK_DGRAM即可</span></span><br><span class="line">    <span class="keyword">if</span> (res &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;create socket failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;create socket successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化服务器地址信息</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    <span class="comment">// 监听所有可用地址</span></span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = htons(INADDR_ANY);</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定socket到指定的地址</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">try_bind</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (bind(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;bind failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;bind successfully&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理客户端请求</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">process_client_request</span><span class="params">(<span class="type">int</span> socket_client)</span> &#123;</span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送的消息，以方便日后添加或修改</span></span><br><span class="line">    <span class="built_in">snprintf</span>(send_buf, BUFFLEN, <span class="string">&quot;Hello, this is the server&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">ssize_t</span> num_read = read(socket_client, recv_buf, BUFFLEN);</span><br><span class="line">        <span class="comment">// 客户端断开连接，或读取失败</span></span><br><span class="line">        <span class="keyword">if</span> (num_read &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num_read == <span class="number">0</span>)</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;Client closed connection&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                perror(<span class="string">&quot;read failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        recv_buf[num_read] = <span class="string">&#x27;\0&#x27;</span>; <span class="comment">// 为接收的字符串添加结束字符</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;From Client: %s\n&quot;</span>, recv_buf);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strncmp</span>(recv_buf, <span class="string">&quot;exit&quot;</span>, <span class="number">4</span>) == <span class="number">0</span>) &#123; <span class="comment">// 客户端请求退出</span></span><br><span class="line">            <span class="comment">// 修改发送的消息</span></span><br><span class="line">            <span class="built_in">strcpy</span>(send_buf, <span class="string">&quot;bye!!!&quot;</span>);</span><br><span class="line">            <span class="comment">// 返回消息给客户端</span></span><br><span class="line">            write(socket_client, send_buf, <span class="built_in">strlen</span>(send_buf));</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Me(Server)：%s\n&quot;</span>, send_buf);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 向客户端写入发送缓冲区的内容</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_client, send_buf, <span class="built_in">strlen</span>(send_buf)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Server): %s\n&quot;</span>, send_buf);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 清空接收缓冲区，准备下一次读取</span></span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_server = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span> <span class="comment">// 声明地址结构</span></span><br><span class="line"></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化地址结构</span></span><br><span class="line">    try_bind(socket_server, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 绑定地址到socket</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始监听连接请求，设定最大等待连接数量为BACLOG</span></span><br><span class="line">    <span class="keyword">if</span> (listen(socket_server, BACLOG) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;listen failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;start listening&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">client_addr</span>;</span></span><br><span class="line">    <span class="type">socklen_t</span> client_addr_size = <span class="keyword">sizeof</span>(client_addr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 初始化客户端地址结构</span></span><br><span class="line">        <span class="built_in">memset</span>(&amp;client_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(client_addr));</span><br><span class="line">        <span class="comment">// 接受新的连接请求</span></span><br><span class="line">        <span class="type">int</span> socket_client = accept(socket_server, (<span class="keyword">struct</span> sockaddr*)&amp;client_addr, &amp;client_addr_size);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Client %s:%d connected\n&quot;</span>,</span><br><span class="line">            inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));</span><br><span class="line">        <span class="keyword">if</span> (socket_client &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 尝试接受另一个连接</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 满足要求后开始处理客户端请求</span></span><br><span class="line">        process_client_request(socket_client);</span><br><span class="line">        close(socket_client); <span class="comment">// 关闭客户端连接</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 正常情况下不会执行到这一步</span></span><br><span class="line">    close(socket_server);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>客户端流程如下：</p>
-<ol>
-<li>创建客户端<code>socket</code></li>
-<li>初始化<code>server_addr</code></li>
-<li>连接到服务器<code>connect</code></li>
-<li>利用<code>write</code>和<code>read</code>进行读写操作 (send()和recv()也行)</li>
-<li>关闭<code>socket</code></li>
-</ol>
-<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 创建套接字并返回其文件描述符</span></span><br><span class="line"><span class="comment"> * 如果创建失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> sock_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sock_fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket创建失败&quot;</span>); <span class="comment">// 使用perror提供更多的错误信息</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;socket create successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> sock_fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 初始化服务器地址结构的函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = inet_addr(<span class="string">&quot;192.168.5.120&quot;</span>); <span class="comment">// 服务器IP</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 建立到服务器的连接</span></span><br><span class="line"><span class="comment"> * 如果连接失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">connect_to_server</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (connect(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;connection failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;connection successful\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 客户端程序开始的主函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_fd = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化服务器详细信息</span></span><br><span class="line"></span><br><span class="line">    connect_to_server(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 连接到服务器</span></span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于发送数据的缓冲区</span></span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于接收数据的缓冲区</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 持续从用户获取输入并发送到服务器，直到从服务器接收到&quot;bye!!!&quot;</span></span><br><span class="line">    <span class="keyword">while</span> (fgets(send_buf, BUFFLEN, <span class="built_in">stdin</span>)) &#123;</span><br><span class="line">        <span class="comment">// 向服务器写入用户输入</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_fd, send_buf, strnlen(send_buf, BUFFLEN)) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Client):%s&quot;</span>, send_buf); <span class="comment">// 打印用户输入</span></span><br><span class="line">        <span class="built_in">memset</span>(send_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除发送缓冲区</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (read(socket_fd, recv_buf, BUFFLEN) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Server:%s&quot;</span>, recv_buf); <span class="comment">// 打印服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(recv_buf, <span class="string">&quot;bye!!!&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除接收缓冲区</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(socket_fd); <span class="comment">// 关闭套接字</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>网络编程</tag>
-        <tag>socket</tag>
-        <tag>计算机网络</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>asio socket的创建和连接</title>
-    <url>/2024/07/03/linux-socket-programming-2/</url>
-    <content><![CDATA[<h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
-<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
-<li>创建上下文<code>io_context</code></li>
-<li>选择协议</li>
-<li>生成<code>socket</code></li>
-<li>打开<code>socket</code></li>
-</ol>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
-<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
-<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
-<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
-<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
-<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
-<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
-<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
-<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
-<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
-
-<p>将”Hello World”转换成这种类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-
-<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
-<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>网络编程</tag>
-        <tag>socket</tag>
-        <tag>计算机网络</tag>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
