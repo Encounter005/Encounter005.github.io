@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Raven005">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/06/30/linux-socket-programming-1/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="socket编程socket的概念Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。 Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="socket的创建和连接">
+<meta property="og:url" content="http://example.com/2024/06/30/linux-socket-programming-1/index.html">
+<meta property="og:site_name" content="Raven&#39;s blog">
+<meta property="og:description" content="socket编程socket的概念Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。 Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/06/30/SPcvUQlrHe3F9ZI.png">
+<meta property="article:published_time" content="2024-06-29T16:51:53.000Z">
+<meta property="article:modified_time" content="2024-11-08T02:21:34.892Z">
+<meta property="article:author" content="Raven005">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="网络编程">
+<meta property="article:tag" content="socket">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/06/30/SPcvUQlrHe3F9ZI.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/head.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/head.svg">
+    <meta name="theme-color" content="#7aa2f7">
+    <link rel="shortcut icon" href="/images/head.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            socket的创建和连接 | Raven&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":true,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/background_light.jpg","skip_dirs":[]}},"colors":{"primary":"#7aa2f7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":true,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/background_light.jpg","dark":"/images/background_dark.jpg"},"title":"Raven's blog","subtitle":{"text":["coding is life"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/Encounter005","instagram":null,"zhihu":"https://www.zhihu.com/people/eznoob","twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":true,"version":"9.3.0"}},"version":"2.7.3","navbar":{"auto_hide":false,"color":{"left":"#7aa2f7","right":"#c0caf5","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"info","announcement":"不定期更新","show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Raven's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+<!--        <span class="swup-progress-icon">-->
+<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+<!--        </span>-->
+    
+</div>
+
+
+
+    <style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Raven&#39;s blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container flex flex-col justify-between min-h-dvh">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/head.svg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Raven&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">31</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container flex relative justify-between box-border w-full h-full">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">socket的创建和连接</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/head.svg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Raven005</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-06-30 00:51:53</span>
+        <span class="mobile">2024-06-30 00:51:53</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-11-08 10:21:34</span>
+            <span class="mobile">2024-11-08 10:21:34</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/C-C/">C/C++</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/socket/">socket</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.7k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>11 Mins</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="socket编程"><a href="#socket编程" class="headerlink" title="socket编程"></a>socket编程</h1><h2 id="socket的概念"><a href="#socket的概念" class="headerlink" title="socket的概念"></a>socket的概念</h2><p>Socket（套接字）是计算机网络编程中的一个基本概念，它为应用程序提供了访问底层网络协议的接口，使得进程间能够通过网络进行通信。在更广泛的意义上，Socket 是操作系统提供的一个抽象层，用于简化网络编程并隐藏复杂的网络协议细节。</p>
+<p>Socket 是两个进程间通信的端点，每个 Socket 都有唯一的地址，这个地址包括 IP 地址和端口号。IP 地址用于定位网络上的主机，而端口号则用于区分同一台主机上的不同服务。</p>
+<h2 id="socket的类型"><a href="#socket的类型" class="headerlink" title="socket的类型"></a>socket的类型</h2><p>socket 可以分为几种类型，主要依据它们支持的协议和通信模式：</p>
+<ul>
+<li><strong>流式 Socket (SOCK_STREAM)：</strong> 基于 TCP 协议，提供面向连接的服务，保证数据的顺序传输，且不会丢失数据。</li>
+<li><strong>数据报 Socket (SOCK_DGRAM)：</strong> 基于 UDP 协议，提供无连接服务，数据报文独立传输，不保证数据的顺序和完整性，但传输效率较高。</li>
+<li><strong>原始 Socket (SOCK_RAW)：</strong> 直接访问 IP 层，允许应用程序直接处理 IP 数据包，常用于网络分析或特殊用途的软件。</li>
+</ul>
+<h2 id="socket提供的函数"><a href="#socket提供的函数" class="headerlink" title="socket提供的函数"></a>socket提供的函数</h2><ul>
+<li><code>socket()</code> 创建一个新的确定类型的套接字，类型用一个整型数值标识，并为它分配系统资源。</li>
+<li><code>bind()</code> 一般用于服务器端，将一个套接字与一个套接字地址结构相关联，比如，一个指定的本地端口和IP地址。</li>
+<li><code>listen()</code> 用于服务器端，使一个绑定的TCP套接字进入监听状态。</li>
+<li><code>connect()</code>用于客户端，为一个套接字分配一个自由的本地端口号。 如果是TCP套接字的话，它会试图获得一个新的TCP连接。</li>
+<li><code>accept()</code>用于服务器端。 它接受一个从远端客户端发出的创建一个新的TCP连接的接入请求，创建一个新的套接字，与该连接相应的套接字地址相关联。</li>
+<li><code>send()</code>和<code>recv()</code>,或者<code>write()</code>和<code>read()</code>,或者<code>recvfrom()</code>和<code>sendto()</code>,用于往&#x2F;从远程套接字发送和接受数据。</li>
+<li><code>close()</code>用于系统释放分配给一个套接字的资源。 如果是TCP，连接会被中断。</li>
+<li><code>gethostbyname()</code>和&#96;gethostbyaddr()</li>
+<li><code>select()</code>用于修整有如下情况的套接字列表： 准备读，准备写或者是有错误。</li>
+<li><code>poll()</code>用于检查套接字的状态。 套接字可以被测试，看是否可以写入、读取或是有错误。</li>
+<li><code>getsockopt()</code>用于查询指定的套接字一个特定的套接字选项的当前值。</li>
+<li><code>setsockopt()</code>用于为指定的套接字设定一个特定的套接字选项。</li>
+</ul>
+<h3 id="1-socket"><a href="#1-socket" class="headerlink" title="1. socket()"></a>1. <code>socket()</code></h3><ul>
+<li><strong>作用</strong>：创建一个新的 Socket。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int domain</code>：地址族，如 <code>AF_INET</code>（IPv4）或 <code>AF_INET6</code>（IPv6）。</li>
+<li><code>int type</code>：Socket 类型，如 <code>SOCK_STREAM</code>（面向连接，流式）或 <code>SOCK_DGRAM</code>（无连接，数据报）。</li>
+<li><code>int protocol</code>：协议，通常是 <code>0</code>，表示使用与 <code>type</code> 关联的默认协议。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-bind"><a href="#2-bind" class="headerlink" title="2. bind()"></a>2. <code>bind()</code></h3><ul>
+<li><strong>作用</strong>：将 Socket 与本地地址（IP 地址和端口号）相关联。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>const struct sockaddr *addr</code>：指向包含地址信息的 <code>sockaddr</code> 结构体的指针。</li>
+<li><code>socklen_t addrlen</code>：<code>sockaddr</code> 结构体的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-listen"><a href="#3-listen" class="headerlink" title="3. listen()"></a>3. <code>listen()</code></h3><ul>
+<li><strong>作用</strong>：使 Socket 准备接收连接，通常用于服务器端。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>int backlog</code>：待处理连接请求的最大队列长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-accept"><a href="#4-accept" class="headerlink" title="4. accept()"></a>4. <code>accept()</code></h3><ul>
+<li><strong>作用</strong>：接受传入的连接请求，并返回一个新的 Socket 文件描述符用于通信。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：监听的 Socket 文件描述符。</li>
+<li><code>struct sockaddr *addr</code>：可选参数，用于存储客户端的地址信息。</li>
+<li><code>socklen_t *addrlen</code>：可选参数，用于存储地址信息的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-connect"><a href="#5-connect" class="headerlink" title="5. connect()"></a>5. <code>connect()</code></h3><ul>
+<li><strong>作用</strong>：初始化与远程主机的连接，通常用于客户端。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>const struct sockaddr *addr</code>：指向包含远程主机地址信息的 <code>sockaddr</code> 结构体的指针。</li>
+<li><code>socklen_t addrlen</code>：<code>sockaddr</code> 结构体的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-send"><a href="#6-send" class="headerlink" title="6. send()"></a>6. <code>send()</code></h3><ul>
+<li><strong>作用</strong>：发送数据到已连接的 Socket。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>const void *buf</code>：指向要发送数据的缓冲区的指针。</li>
+<li><code>size_t len</code>：要发送的数据长度。</li>
+<li><code>int flags</code>：发送标志，如 <code>MSG_DONTROUTE</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-recv"><a href="#7-recv" class="headerlink" title="7. recv()"></a>7. <code>recv()</code></h3><ul>
+<li><strong>作用</strong>：从 Socket 接收数据。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>void *buf</code>：接收数据的缓冲区。</li>
+<li><code>size_t len</code>：缓冲区的大小。</li>
+<li><code>int flags</code>：接收标志，如 <code>MSG_PEEK</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-sendto"><a href="#8-sendto" class="headerlink" title="8. sendto()"></a>8. <code>sendto()</code></h3><ul>
+<li><strong>作用</strong>：向特定地址发送数据，通常用于无连接的 Socket（如 UDP）。</li>
+<li><strong>参数</strong>：与 <code>send()</code> 类似，额外包括目标地址和地址长度。</li>
+</ul>
+<h3 id="9-recvfrom"><a href="#9-recvfrom" class="headerlink" title="9. recvfrom()"></a>9. <code>recvfrom()</code></h3><ul>
+<li><strong>作用</strong>：接收数据并返回源地址信息，通常用于无连接的 Socket（如 UDP）。</li>
+<li><strong>参数</strong>：与 <code>recv()</code> 类似，额外包括源地址信息和地址长度。</li>
+</ul>
+<h3 id="10-close"><a href="#10-close" class="headerlink" title="10. close()"></a>10. <code>close()</code></h3><ul>
+<li><strong>作用</strong>：关闭 Socket 文件描述符，释放资源。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：要关闭的 Socket 文件描述符。</li>
+</ul>
+</li>
+</ul>
+<h3 id="11-setsockopt"><a href="#11-setsockopt" class="headerlink" title="11. setsockopt()"></a>11. <code>setsockopt()</code></h3><ul>
+<li><strong>作用</strong>：设置 Socket 的选项，如超时、重用地址等。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>int level</code>：设置选项的级别，如 <code>SOL_SOCKET</code> 或 <code>IPPROTO_TCP</code>。</li>
+<li><code>int optname</code>：选项名称。</li>
+<li><code>const void *optval</code>：指向选项值的指针。</li>
+<li><code>socklen_t optlen</code>：选项值的长度。</li>
+</ul>
+</li>
+</ul>
+<h3 id="12-getsockopt"><a href="#12-getsockopt" class="headerlink" title="12. getsockopt()"></a>12. <code>getsockopt()</code></h3><ul>
+<li><strong>作用</strong>：获取 Socket 的选项。</li>
+<li><strong>参数</strong>：与 <code>setsockopt()</code> 类似。</li>
+</ul>
+<h3 id="13-shutdown"><a href="#13-shutdown" class="headerlink" title="13. shutdown()"></a>13. <code>shutdown()</code></h3><ul>
+<li><strong>作用</strong>：关闭 Socket 的读取或写入方向。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>int sockfd</code>：Socket 文件描述符。</li>
+<li><code>int how</code>：关闭的方向，如 <code>SHUT_RD</code>（读取方向）或 <code>SHUT_WR</code>（写入方向）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li>使用 Socket 编程时，应确保正确处理错误情况，检查每个函数的返回值，并适当地处理任何错误代码。</li>
+<li>对于某些函数，如 <code>send()</code> 和 <code>recv()</code>，如果在非阻塞模式下使用，可能需要处理 EAGAIN 或 EWOULDBLOCK 错误码，这表明操作无法立即完成。</li>
+<li>在实际编程中，根据具体需求，可能还需要使用到其他函数，例如 <code>select()</code> 或 <code>poll()</code> 用于多路复用，或者 <code>fork()</code> 和 <code>exec()</code> 用于创建子进程处理连接。</li>
+</ul>
+<h2 id="TCP-socket通信流程"><a href="#TCP-socket通信流程" class="headerlink" title="TCP socket通信流程"></a>TCP socket通信流程</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://s2.loli.net/2024/06/30/SPcvUQlrHe3F9ZI.png"
+                      alt="tcp-socket.png"
+                ></p>
+<p>服务器端流程如下：</p>
+<ol>
+<li>创建服务器的<code>socket</code></li>
+<li>初始化<code>sever_addr</code>(服务器地址)</li>
+<li>将<code>socket</code>和<code>server_addr</code>绑定 bind</li>
+<li>开始监听<code>listen</code></li>
+<li>开一个循环保证服务器不会结束，不断的<code>accept</code>接入的客户端请求，进行读写操作<code>write</code>和<code>read</code> (send()和recv()也行)</li>
+<li>关闭<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BACLOG 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建新的socket，返回文件描述符</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> res = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> 如果想要使用UDP协议，只需要将SOCK_STREAM改为SOCK_DGRAM即可</span></span><br><span class="line">    <span class="keyword">if</span> (res &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;create socket failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;create socket successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化服务器地址信息</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    <span class="comment">// 监听所有可用地址</span></span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = htons(INADDR_ANY);</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定socket到指定的地址</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">try_bind</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (bind(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;bind failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;bind successfully&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理客户端请求</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">process_client_request</span><span class="params">(<span class="type">int</span> socket_client)</span> &#123;</span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送的消息，以方便日后添加或修改</span></span><br><span class="line">    <span class="built_in">snprintf</span>(send_buf, BUFFLEN, <span class="string">&quot;Hello, this is the server&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">ssize_t</span> num_read = read(socket_client, recv_buf, BUFFLEN);</span><br><span class="line">        <span class="comment">// 客户端断开连接，或读取失败</span></span><br><span class="line">        <span class="keyword">if</span> (num_read &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (num_read == <span class="number">0</span>)</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;Client closed connection&quot;</span>);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                perror(<span class="string">&quot;read failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        recv_buf[num_read] = <span class="string">&#x27;\0&#x27;</span>; <span class="comment">// 为接收的字符串添加结束字符</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;From Client: %s\n&quot;</span>, recv_buf);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strncmp</span>(recv_buf, <span class="string">&quot;exit&quot;</span>, <span class="number">4</span>) == <span class="number">0</span>) &#123; <span class="comment">// 客户端请求退出</span></span><br><span class="line">            <span class="comment">// 修改发送的消息</span></span><br><span class="line">            <span class="built_in">strcpy</span>(send_buf, <span class="string">&quot;bye!!!&quot;</span>);</span><br><span class="line">            <span class="comment">// 返回消息给客户端</span></span><br><span class="line">            write(socket_client, send_buf, <span class="built_in">strlen</span>(send_buf));</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Me(Server)：%s\n&quot;</span>, send_buf);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 向客户端写入发送缓冲区的内容</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_client, send_buf, <span class="built_in">strlen</span>(send_buf)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Server): %s\n&quot;</span>, send_buf);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 清空接收缓冲区，准备下一次读取</span></span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_server = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span> <span class="comment">// 声明地址结构</span></span><br><span class="line"></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化地址结构</span></span><br><span class="line">    try_bind(socket_server, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 绑定地址到socket</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始监听连接请求，设定最大等待连接数量为BACLOG</span></span><br><span class="line">    <span class="keyword">if</span> (listen(socket_server, BACLOG) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;listen failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;start listening&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">client_addr</span>;</span></span><br><span class="line">    <span class="type">socklen_t</span> client_addr_size = <span class="keyword">sizeof</span>(client_addr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 初始化客户端地址结构</span></span><br><span class="line">        <span class="built_in">memset</span>(&amp;client_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(client_addr));</span><br><span class="line">        <span class="comment">// 接受新的连接请求</span></span><br><span class="line">        <span class="type">int</span> socket_client = accept(socket_server, (<span class="keyword">struct</span> sockaddr*)&amp;client_addr, &amp;client_addr_size);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Client %s:%d connected\n&quot;</span>,</span><br><span class="line">            inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));</span><br><span class="line">        <span class="keyword">if</span> (socket_client &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 尝试接受另一个连接</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 满足要求后开始处理客户端请求</span></span><br><span class="line">        process_client_request(socket_client);</span><br><span class="line">        close(socket_client); <span class="comment">// 关闭客户端连接</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 正常情况下不会执行到这一步</span></span><br><span class="line">    close(socket_server);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>客户端流程如下：</p>
+<ol>
+<li>创建客户端<code>socket</code></li>
+<li>初始化<code>server_addr</code></li>
+<li>连接到服务器<code>connect</code></li>
+<li>利用<code>write</code>和<code>read</code>进行读写操作 (send()和recv()也行)</li>
+<li>关闭<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SERVER_PORT 10005</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFLEN 1024</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 创建套接字并返回其文件描述符</span></span><br><span class="line"><span class="comment"> * 如果创建失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">create_socket</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> sock_fd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sock_fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;socket创建失败&quot;</span>); <span class="comment">// 使用perror提供更多的错误信息</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;socket create successfully\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> sock_fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 初始化服务器地址结构的函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">initialize_address</span><span class="params">(<span class="keyword">struct</span> sockaddr_in *server_addr)</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(server_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(*server_addr));</span><br><span class="line">    server_addr-&gt;sin_family = AF_INET;</span><br><span class="line">    server_addr-&gt;sin_port = htons(SERVER_PORT);</span><br><span class="line">    server_addr-&gt;sin_addr.s_addr = inet_addr(<span class="string">&quot;192.168.5.120&quot;</span>); <span class="comment">// 服务器IP</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 建立到服务器的连接</span></span><br><span class="line"><span class="comment"> * 如果连接失败，程序将以状态1退出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">connect_to_server</span><span class="params">(<span class="type">int</span> socket_fd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *server_addr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (connect(socket_fd, server_addr, <span class="keyword">sizeof</span>(*server_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;connection failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;connection successful\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 客户端程序开始的主函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> socket_fd = create_socket(); <span class="comment">// 创建socket</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span></span><br><span class="line">    initialize_address(&amp;server_addr); <span class="comment">// 初始化服务器详细信息</span></span><br><span class="line"></span><br><span class="line">    connect_to_server(socket_fd, (<span class="keyword">struct</span> sockaddr*)&amp;server_addr); <span class="comment">// 连接到服务器</span></span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> send_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于发送数据的缓冲区</span></span><br><span class="line">    <span class="type">char</span> recv_buf[BUFFLEN] = &#123;<span class="number">0</span>&#125;; <span class="comment">// 用于接收数据的缓冲区</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 持续从用户获取输入并发送到服务器，直到从服务器接收到&quot;bye!!!&quot;</span></span><br><span class="line">    <span class="keyword">while</span> (fgets(send_buf, BUFFLEN, <span class="built_in">stdin</span>)) &#123;</span><br><span class="line">        <span class="comment">// 向服务器写入用户输入</span></span><br><span class="line">        <span class="keyword">if</span> (write(socket_fd, send_buf, strnlen(send_buf, BUFFLEN)) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Me(Client):%s&quot;</span>, send_buf); <span class="comment">// 打印用户输入</span></span><br><span class="line">        <span class="built_in">memset</span>(send_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除发送缓冲区</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (read(socket_fd, recv_buf, BUFFLEN) == <span class="number">-1</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;receive failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Server:%s&quot;</span>, recv_buf); <span class="comment">// 打印服务器的响应</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(recv_buf, <span class="string">&quot;bye!!!&quot;</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memset</span>(recv_buf, <span class="number">0</span>, BUFFLEN); <span class="comment">// 清除接收缓冲区</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(socket_fd); <span class="comment">// 关闭套接字</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/C-C/">#C/C++</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">#网络编程</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/socket/">#socket</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">#计算机网络</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/Linux/">#Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+  <div class="recommended-article px-2 sm:px-6 md:px-8">
+   <div class="recommended-desktop">
+    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+    </div>
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/03/linux-socket-programming-2/" title="asio socket的创建和连接" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="asio socket的创建和连接" class="!max-w-none">
+  <span class="title">asio socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/07/26/tcp-packet/" title="tcp粘包问题" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="tcp粘包问题" class="!max-w-none">
+  <span class="title">tcp粘包问题</span>
+</a><a class="recommended-article-item" href="/2024/03/24/network-optimization/" title="OpenWrt TCP UDP 网络性能优化" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="OpenWrt TCP UDP 网络性能优化" class="!max-w-none">
+  <span class="title">OpenWrt TCP UDP 网络性能优化</span>
+</a></div>
+   </div>
+   <div class="recommended-mobile">
+   <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+   </div>
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/03/linux-socket-programming-2/" title="asio socket的创建和连接" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="asio socket的创建和连接" class="!max-w-none">
+  <span class="title">asio socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/07/26/tcp-packet/" title="tcp粘包问题" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="tcp粘包问题" class="!max-w-none">
+  <span class="title">tcp粘包问题</span>
+</a></div>
+   </div>
+  </div>
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/07/02/operating-system-1/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">操作系统笔记01</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/05/02/python-grammar-1/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">python-grammar-1</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">socket的创建和连接</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#socket%E7%BC%96%E7%A8%8B"><span class="nav-text">socket编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#socket%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-text">socket的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">socket的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket%E6%8F%90%E4%BE%9B%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">socket提供的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-socket"><span class="nav-text">1. socket()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-bind"><span class="nav-text">2. bind()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-listen"><span class="nav-text">3. listen()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-accept"><span class="nav-text">4. accept()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-connect"><span class="nav-text">5. connect()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-send"><span class="nav-text">6. send()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-recv"><span class="nav-text">7. recv()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-sendto"><span class="nav-text">8. sendto()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-recvfrom"><span class="nav-text">9. recvfrom()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-close"><span class="nav-text">10. close()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-setsockopt"><span class="nav-text">11. setsockopt()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-getsockopt"><span class="nav-text">12. getsockopt()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-shutdown"><span class="nav-text">13. shutdown()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-socket%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B"><span class="nav-text">TCP socket通信流程</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Raven005</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        31 posts in total
+                    </span>
+                    
+                        <span>
+                            84.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.7.3</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/libs/mermaid.min.js"></script>
+
+    
+<script src="/js/plugins/mermaid.js"></script>
+
+
+
+
+
+
+
+
+
+    
+<script src="/js/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":1}});</script></body>
+</html>

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Raven005">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/07/03/linux-socket-programming-2/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="终端节点的创建所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信 如果是客户端，可以通过对端的ip和端口构造一个endpoint对象 12345678910111213141516171819202122232425int client_endpoint() {    &#x2F;&#x2F; 定义需要解析的IP地址字符串和端口号    std::string ra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="asio socket的创建和连接">
+<meta property="og:url" content="http://example.com/2024/07/03/linux-socket-programming-2/index.html">
+<meta property="og:site_name" content="Raven&#39;s blog">
+<meta property="og:description" content="终端节点的创建所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信 如果是客户端，可以通过对端的ip和端口构造一个endpoint对象 12345678910111213141516171819202122232425int client_endpoint() {    &#x2F;&#x2F; 定义需要解析的IP地址字符串和端口号    std::string ra">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png">
+<meta property="article:published_time" content="2024-07-03T08:22:19.000Z">
+<meta property="article:modified_time" content="2024-11-08T02:21:34.892Z">
+<meta property="article:author" content="Raven005">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="网络编程">
+<meta property="article:tag" content="socket">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/head.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/head.svg">
+    <meta name="theme-color" content="#7aa2f7">
+    <link rel="shortcut icon" href="/images/head.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            asio socket的创建和连接 | Raven&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":true,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/background_light.jpg","skip_dirs":[]}},"colors":{"primary":"#7aa2f7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":true,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/background_light.jpg","dark":"/images/background_dark.jpg"},"title":"Raven's blog","subtitle":{"text":["coding is life"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/Encounter005","instagram":null,"zhihu":"https://www.zhihu.com/people/eznoob","twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":true,"version":"9.3.0"}},"version":"2.7.3","navbar":{"auto_hide":false,"color":{"left":"#7aa2f7","right":"#c0caf5","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"info","announcement":"不定期更新","show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Raven's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+<!--        <span class="swup-progress-icon">-->
+<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+<!--        </span>-->
+    
+</div>
+
+
+
+    <style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Raven&#39;s blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container flex flex-col justify-between min-h-dvh">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/head.svg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Raven&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">31</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container flex relative justify-between box-border w-full h-full">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">asio socket的创建和连接</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/head.svg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Raven005</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-07-03 16:22:19</span>
+        <span class="mobile">2024-07-03 16:22:19</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-11-08 10:21:34</span>
+            <span class="mobile">2024-11-08 10:21:34</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/C-C/">C/C++</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/socket/">socket</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2.6k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>10 Mins</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="终端节点的创建"><a href="#终端节点的创建" class="headerlink" title="终端节点的创建"></a>终端节点的创建</h1><p>所谓终端节点就是用来通信的端对端的节点，可以通过ip地址和端口构造，其的节点可以连接这个终端节点做通信</p>
+<p>如果是客户端，可以通过对端的ip和端口构造一个<code>endpoint</code>对象</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">client_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 定义需要解析的IP地址字符串和端口号</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num   = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    boost::system::error_code error; <span class="comment">// 错误代码容器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Boost.Asio库中的ip::address_from_string()函数解析IP地址字符串</span></span><br><span class="line">    boost::asio::ip::address ip_address =</span><br><span class="line">        boost::asio::ip::address::<span class="built_in">from_string</span>( raw_ip_address, error );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查解析过程是否有错误发生，并输出相应的错误信息或返回错误代码</span></span><br><span class="line">    <span class="keyword">if</span> (error.<span class="built_in">value</span>() != <span class="number">0</span>) {</span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to parse IP address. Error code is: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">value</span>() &lt;&lt; <span class="string">", Message: "</span></span><br><span class="line">                  &lt;&lt; error.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 返回错误代码</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用解析的IP地址和端口号构建TCP endpoint对象</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">( ip_address, port_num )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数返回值，表示操作是否成功执行（如果未抛出异常则假设为0）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是服务端，则只需要本地地址绑定就可以生成<code>endpoint</code></p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">server_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>; <span class="comment">// 设置服务器监听端口号为8080</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用IPv4地址类型设置一个任意的本地IP地址。这意味着服务器将侦听来自任何合法的IPv4地址。</span></span><br><span class="line">    boost::asio::ip::address ip_address = boost::asio::ip::address_v4::<span class="built_in">any</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建一个TCP端点（endpoint），它将绑定到指定的本地IP地址和端口号上</span></span><br><span class="line">    boost::asio::ip::<span class="function">tcp::endpoint <span class="title">ep</span><span class="params">(ip_address, port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 表示函数执行成功，返回值为0</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h1><ol>
+<li>创建上下文<code>io_context</code></li>
+<li>选择协议</li>
+<li>生成<code>socket</code></li>
+<li>打开<code>socket</code></li>
+</ol>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_tcp_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v4</span>(); <span class="comment">// 初始化并配置为IPv4协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::socket <span class="title">sock</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        protocol )</span></span>; <span class="comment">// 使用给定的io_context创建一个新套接字，并将其初始化为指定协议版本</span></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    sock.<span class="built_in">open</span>( protocol, ec ); <span class="comment">// 尝试打开一个与指定协议兼容的新套接字</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开套接字失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了TCP套接字</span></span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>上面的<code>socket</code>只是通信的<code>socket</code>,如果是服务端，我们还需要生成一个<code>acceptor</code>的<code>socket</code>,用来接受新的连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">create_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v6的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    boost::asio::io_context ios; <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    tcp protocol = tcp::<span class="built_in">v6</span>(); <span class="comment">// 初始化并配置为IPv6协议</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        ios )</span></span>; <span class="comment">// 使用给定的io_context创建一个新接受器（acceptor），用于监听连接请求</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试打开一个与指定协议兼容的新接受器</span></span><br><span class="line">    acceptor.<span class="built_in">open</span>( protocol, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to open the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果打开接受器失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功创建了IPv6协议的接受器（acceptor）</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="绑定acceptor"><a href="#绑定acceptor" class="headerlink" title="绑定acceptor"></a>绑定acceptor</h1><p>对于acceptor类型的socket,服务器需要将其绑定到指定的断点，所有连接这个端点的连接都可以被接收到</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind_acceptor_socket</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 使用boost::asio中的ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定要绑定的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址和端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">        endpoint )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">    boost::system::error_code ec; <span class="comment">// 创建错误代码对象，用于捕获可能发生的异常</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尝试将接受器（acceptor）绑定到指定的网络端点</span></span><br><span class="line">    acceptor.<span class="built_in">bind</span>( endpoint, ec );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( ec.<span class="built_in">value</span>() != <span class="number">0</span> ) { <span class="comment">// 检查是否发生任何错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">"Failed to bind the socket! Error code: "</span> &lt;&lt; ec.<span class="built_in">value</span>()</span><br><span class="line">                  &lt;&lt; <span class="string">" Message: "</span> &lt;&lt; ec.<span class="built_in">message</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ec.<span class="built_in">value</span>(); <span class="comment">// 如果绑定失败，返回错误代码作为结果值</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功的情况下，函数返回0表示成功绑定了接受器（acceptor）到指定端口</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="连接指定的端点"><a href="#连接指定的端点" class="headerlink" title="连接指定的端点"></a>连接指定的端点</h1><p>作为客户端可以连接服务器指定的端点进行连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">connect_to_endpoint</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// IP地址字符串和端口号定义</span></span><br><span class="line">    std::string raw_ip_address = <span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num    = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用std::exception类来捕获可能抛出的异常</span></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::tcp;</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">(boost::asio::ip::address::from_string(raw_ip_address), port_num)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">        boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">soc</span><span class="params">(ios, endpoint.protocol())</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 尝试连接到指定端点（endpoint）</span></span><br><span class="line">        soc.<span class="built_in">connect</span>(endpoint);</span><br><span class="line">    } <span class="built_in">catch</span> (std::exception &amp;e) {</span><br><span class="line">        <span class="comment">// 如果在尝试连接时抛出异常，捕获它并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// 返回一个非零值表示连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error.<span class="built_in">value</span>(); <span class="comment">// 函数返回0表示成功建立了与指定端点的连接</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="服务器接收连接"><a href="#服务器接收连接" class="headerlink" title="服务器接收连接"></a>服务器接收连接</h1><p>当有客户端连接时，服务器需要接收连接</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept_new_connection</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 指定要监听的端口号，这里为8080</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> port_num = <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> boost::asio::ip::</span><br><span class="line">        tcp; <span class="comment">// 使用ip模块和tcp类定义协议版本v4的套接字接受器（acceptor）</span></span><br><span class="line"></span><br><span class="line">    <span class="function">tcp::endpoint <span class="title">endpoint</span><span class="params">( boost::asio::ip::address_v4::any(),</span></span></span><br><span class="line"><span class="params"><span class="function">        port_num )</span></span>; <span class="comment">// 创建一个网络端点对象用于指定IP地址为任何可用地址和指定的端口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IO上下文，用于处理异步操作</span></span><br><span class="line"></span><br><span class="line">    boost::asio::io_context ios;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        <span class="function">tcp::acceptor <span class="title">acceptor</span><span class="params">( ios,</span></span></span><br><span class="line"><span class="params"><span class="function">            endpoint.protocol() )</span></span>; <span class="comment">// 使用给定的io_context创建并初始化一个新接受器（acceptor），同时绑定到指定的端点</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置最大连接队列长度为BACKLOG</span></span><br><span class="line">        acceptor.<span class="built_in">listen</span>( BACKLOG );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建socket并初始化为指定协议版本的套接字</span></span><br><span class="line">        <span class="function">tcp::socket <span class="title">socket</span><span class="params">( ios, endpoint.protocol() )</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 接受新的客户端连接请求，并将其绑定到新的socket对象上</span></span><br><span class="line">        acceptor.<span class="built_in">accept</span>( socket );</span><br><span class="line">    } <span class="built_in">catch</span> ( std::exception &amp;e ) {</span><br><span class="line">        <span class="comment">// 如果在处理过程中抛出异常，捕获并输出错误信息</span></span><br><span class="line"></span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 返回一个非零值表示接受新连接失败</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功接收新的客户端连接后返回0作为结果值</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h1><p>buffer就是用来接收和发送数据时缓存数据的接口</p>
+<p><code>boost::asio提</code>供了<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>两种类型的buffer，他们是一段连续的空间，首字节存储了后续数据的长度。<code>asio::mutable_buffer</code>用于写服务，<code>asio::const_buffer</code>用于读服务。但是着这两个结构都没有被asio的api直接使用</p>
+<p>对于api的buffer参数，asio提出了<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>两种类型的buffer参数，他们是由多个<code>asio::mutable_buffer</code>和多个<code>asio::const_buffer</code>组成的容器。<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>的具体类型是<code>boost::asio::mutable_buffer</code>和<code>boost::asio::const_buffer</code>。也就是说<code>boost::asio</code>为了节省空间，将一部分连续空间组合起来，交给api使用。可以理解为<code>MutableBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>，<code>ConstBufferSequence</code>的数据结构为<code>std::vector&lt;boost::asio::const_buffer&gt;</code></p>
+<p><code>std::vector&lt;boost::asio::mutable_buffer&gt;</code>的结构如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="https://s2.loli.net/2024/07/03/kqJpCB9e13wNYVx.png" alt="mutable_buffer.png"></p>
+<p>每个vector存储的都是<code>mutable_buffer</code>的地址，每个<code>mutable_buffer</code>的第一个字节表示数据的长度，后面跟着数据内容。</p>
+<p>这么复杂的结构交给用户使用并不合适，所以asio提出了buffer()函数，该函数接收多种形式的字节流，该函数返回<code>asio::mutable_buffers_1</code>或者<code>asio::const_buffers_1</code>结构的对象。</p>
+<p>如果传递给buffer()的参数是一个只读类型，则函数返回<code>asio::const_buffers_1 </code>类型对象。</p>
+<p>如果传递给buffer()的参数是一个可写类型，则返回<code>asio::mutable_buffers_1 </code>类型对象。</p>
+<p><code>asio::const_buffers_1</code>和<code>asio::mutable_buffers_1</code>是<code>asio::mutable_buffer</code>和<code>asio::const_buffer</code>的适配器，提供了符合<code>MutableBufferSequence</code>和<code>ConstBufferSequence</code>概念的接口，所以他们可以作为boost::asio的api函数的参数使用。</p>
+<p>总的来说，我们可以用buffer()函数来生成我们要使用的缓存存储数据<br>比如boost的发送接口send要求的参数为<code>ConstBufferSequence</code>类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ConstBufferSequence&gt;</span></span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">send</span><span class="params">(<span class="type">const</span> ConstBufferSequence &amp;buffers)</span></span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>将”Hello World”转换成这种类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_const_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    std::string buf = <span class="string">"Hello World"</span>;</span><br><span class="line">    boost::<span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(buf.c_str(), buf.length())</span></span>;</span><br><span class="line">    std::vector&lt;boost::asio::const_buffer&gt; buffers;</span><br><span class="line">    buffers.<span class="built_in">push_back</span>(asio_buf);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>现在buffers就是可以传递给接口send的类型，但是这样太复杂了，可以直接使用buffer函数转为为send所需要的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_str</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="function">asio::const_buffer <span class="title">asio_buf</span><span class="params">(<span class="string">"Hello World"</span>)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>asio_buf可以直接传递给send接口。也可以将数组转化为send接受的类型</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_buffer_array</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> BUF_SIZE = <span class="number">20</span>;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;<span class="type">char</span>[]&gt; <span class="title">buf</span><span class="params">(<span class="keyword">new</span> <span class="type">char</span>[BUF_SIZE])</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> input_buf = boost::asio::<span class="built_in">buffer</span>(<span class="built_in">static_cast</span>&lt;<span class="type">void</span>*&gt;(buf.<span class="built_in">get</span>()), BUF_SIZE);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>对于流式操作，可以用<code>streambuf</code>，将输入输出流和<code>streambuf</code>组合起来，可以实现流式输入和输出</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">use_stream_buffer</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">// 创建一个 asio::streambuf 对象来存储和处理流操作。</span></span><br><span class="line">    asio::streambuf buf;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将 std::ostream 与作为参数传递给 `operator&lt;&lt;` 的 streambuf 关联起来，用于写入数据。</span></span><br><span class="line">    <span class="function">std::ostream <span class="title">output</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向输出流中写入两条消息，并以换行符分隔。</span></span><br><span class="line">    output &lt;&lt; <span class="string">"Message1\n"</span>;</span><br><span class="line">    output &lt;&lt; <span class="string">"Message2"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个 std::istream 与 streambuf 相关联，以便从其中读取数据。</span></span><br><span class="line">    <span class="comment">// 注意：这里传递的 `&amp;buf` 实际上是作为 `std::streambuf*` 的指针，而不是 `asio::streambuf` 类型。这是一个小错误示例代码中的注释可能未能正确地指出这一点。</span></span><br><span class="line">    </span><br><span class="line">    <span class="function">std::istream <span class="title">input</span><span class="params">(&amp;buf)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义一个字符串变量用于存储读取的数据，并使用 getline() 函数从输入流中读取数据直到遇到换行符 '\n'。</span></span><br><span class="line">    std::string message1;</span><br><span class="line">    std::<span class="built_in">getline</span>(input, message1);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在，`message1` 变量将包含读取的 "Message1" 字符串（因为 getline() 函数停止在遇到下一个换行符之前）。</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/C-C/">#C/C++</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">#网络编程</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/socket/">#socket</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">#计算机网络</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/Linux/">#Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+  <div class="recommended-article px-2 sm:px-6 md:px-8">
+   <div class="recommended-desktop">
+    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+    </div>
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/06/30/linux-socket-programming-1/" title="socket的创建和连接" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="socket的创建和连接" class="!max-w-none">
+  <span class="title">socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/08/24/asio-IOServicePool/" title="asio-IOServicePool" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="asio-IOServicePool" class="!max-w-none">
+  <span class="title">asio-IOServicePool</span>
+</a><a class="recommended-article-item" href="/2024/07/26/tcp-packet/" title="tcp粘包问题" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="tcp粘包问题" class="!max-w-none">
+  <span class="title">tcp粘包问题</span>
+</a></div>
+   </div>
+   <div class="recommended-mobile">
+   <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+   </div>
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/06/30/linux-socket-programming-1/" title="socket的创建和连接" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="socket的创建和连接" class="!max-w-none">
+  <span class="title">socket的创建和连接</span>
+</a><a class="recommended-article-item" href="/2024/08/24/asio-IOServicePool/" title="asio-IOServicePool" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="asio-IOServicePool" class="!max-w-none">
+  <span class="title">asio-IOServicePool</span>
+</a></div>
+   </div>
+  </div>
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/07/10/cpp-pointer/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">智能指针</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/07/02/operating-system-1/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">操作系统笔记01</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">asio socket的创建和连接</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E8%8A%82%E7%82%B9%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">终端节点的创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAsocket"><span class="nav-text">创建socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%91%E5%AE%9Aacceptor"><span class="nav-text">绑定acceptor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%8C%87%E5%AE%9A%E7%9A%84%E7%AB%AF%E7%82%B9"><span class="nav-text">连接指定的端点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A5%E6%94%B6%E8%BF%9E%E6%8E%A5"><span class="nav-text">服务器接收连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#buffer"><span class="nav-text">buffer</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Raven005</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        31 posts in total
+                    </span>
+                    
+                        <span>
+                            84.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.7.3</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/libs/mermaid.min.js"></script>
+
+    
+<script src="/js/plugins/mermaid.js"></script>
+
+
+
+
+
+
+
+
+
+    
+<script src="/js/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":1}});</script></body>
+</html>

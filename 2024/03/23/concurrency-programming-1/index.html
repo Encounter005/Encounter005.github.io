@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Raven005">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/03/23/concurrency-programming-1/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="线程基础线程的创建12345678910111213141516#include &lt;iostream&gt;#include &lt;thread&gt;void func() &#123;    std::cout &lt;&lt; &quot;hello world\n&quot;;&#125;int main() &#123;    std::thread t1(func);    t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发编程-1">
+<meta property="og:url" content="http://example.com/2024/03/23/concurrency-programming-1/index.html">
+<meta property="og:site_name" content="Raven&#39;s blog">
+<meta property="og:description" content="线程基础线程的创建12345678910111213141516#include &lt;iostream&gt;#include &lt;thread&gt;void func() &#123;    std::cout &lt;&lt; &quot;hello world\n&quot;;&#125;int main() &#123;    std::thread t1(func);    t">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ooo.0x0.ooo/2024/03/23/OgtpNY.png">
+<meta property="og:image" content="https://ooo.0x0.ooo/2024/03/23/OgtJEv.png">
+<meta property="article:published_time" content="2024-03-23T14:43:23.000Z">
+<meta property="article:modified_time" content="2024-11-08T02:21:34.890Z">
+<meta property="article:author" content="Raven005">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="并发编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ooo.0x0.ooo/2024/03/23/OgtpNY.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/head.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/head.svg">
+    <meta name="theme-color" content="#7aa2f7">
+    <link rel="shortcut icon" href="/images/head.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            并发编程-1 | Raven&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":true,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/background_light.jpg","skip_dirs":[]}},"colors":{"primary":"#7aa2f7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":true,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/background_light.jpg","dark":"/images/background_dark.jpg"},"title":"Raven's blog","subtitle":{"text":["coding is life"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/Encounter005","instagram":null,"zhihu":"https://www.zhihu.com/people/eznoob","twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":true,"version":"9.3.0"}},"version":"2.7.3","navbar":{"auto_hide":false,"color":{"left":"#7aa2f7","right":"#c0caf5","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"info","announcement":"不定期更新","show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Raven's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+<!--        <span class="swup-progress-icon">-->
+<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+<!--        </span>-->
+    
+</div>
+
+
+
+    <style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Raven&#39;s blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container flex flex-col justify-between min-h-dvh">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/head.svg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Raven&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">31</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container flex relative justify-between box-border w-full h-full">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">并发编程-1</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/head.svg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Raven005</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-03-23 22:43:23</span>
+        <span class="mobile">2024-03-23 22:43:23</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-11-08 10:21:34</span>
+            <span class="mobile">2024-11-08 10:21:34</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/C-C/">C/C++</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>3.6k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>15 Mins</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="线程基础"><a href="#线程基础" class="headerlink" title="线程基础"></a>线程基础</h1><h2 id="线程的创建"><a href="#线程的创建" class="headerlink" title="线程的创建"></a>线程的创建</h2><div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;hello world\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(func)</span></span>;</span><br><span class="line">    t1.<span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>如果函数需要传参</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(std::string name)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; name &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(func , <span class="string">&quot;127.0.0.1&quot;</span>)</span></span>;</span><br><span class="line">    t1.<span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>仿函数作为参数</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Background_task</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">void</span> <span class="keyword">operator</span>[](<span class="type">const</span> std::string&amp; str) &#123;</span><br><span class="line">        std::cout &lt;&lt; str &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>注意：</p>
+<p>如果采用如下的方式调用函数，编译器一定会报错</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::thread <span class="title">t1</span><span class="params">(Background_task())</span></span>;</span><br><span class="line">t1.<span class="built_in">join</span>();</span><br></pre></td></tr></table></figure></div>
+
+<p>因为编译器会将t1当作一个函数对象，返回一个<code>std::thread</code>类型的值，函数的参数为一个函数指针，该函数指针返回值为<code>Back_ground_task</code>，参数为void</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">thread</span> (*)(<span class="built_in">Background_task</span> (*)());</span><br></pre></td></tr></table></figure></div>
+
+<p>修改的方式如下</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::thread <span class="title">t1</span><span class="params">((background_task()))</span></span>;</span><br><span class="line">t1.<span class="built_in">join</span>();</span><br><span class="line">std::thread t2&#123;<span class="built_in">background_task</span>()&#125;;</span><br><span class="line">t2.<span class="built_in">join</span>();</span><br></pre></td></tr></table></figure></div>
+
+<p>lambda表达式作为参数</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::thread <span class="title">t1</span><span class="params">([](<span class="type">const</span> std::string&amp; str)&#123;</span></span></span><br><span class="line"><span class="params"><span class="function">    std::cout &lt;&lt; str &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span></span></span><br><span class="line"><span class="params"><span class="function">&#125; , <span class="string">&quot;hello world\n&quot;</span>)</span></span>;</span><br><span class="line">t1.<span class="built_in">join</span>();</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>注意在线程中参数是以拷贝的形式进行传递，因此对于拷贝耗时的对象可以选择用引用或者指针进行传递。但是需要考虑对象的生命周期。因为线程的运行长度可能会超过参数的生命周期，这个时候如果线程还在访问一个已经被销毁的对象就会出现问题</p>
+<h3 id="detach-和-join"><a href="#detach-和-join" class="headerlink" title="detach 和 join"></a>detach 和 join</h3><blockquote>
+<p>主要API</p>
+</blockquote>
+<p>一旦启动线程之后，我们必须决定是要等待到这个线程结束(join)，或者直接和主线程独立开来(detach)，我们必须二者选其一。如果<code>std::thread</code>对象销毁时我们还没有触发任何操作，则<code>std::thread</code>对象在析构函数将调用<code>std::terminate()</code>从而导致进程异常退出</p>
+<ul>
+<li><p><code>join</code>: 调用这个API时，当前线程就会停滞，直到目标线程执行完毕。</p>
+</li>
+<li><p><code>detach</code>: 这个API是让目标线程成为守护线程。一旦<code>detach</code>之后，目标线程将独立运行，即便其对应的<code>std::thread</code>对象销毁也不影响线程的执行。并且无法与之通信。</p>
+</li>
+</ul>
+<p>对于这两个接口，都必须是可执行的线程才有意义。可以通过<code>joinable()</code>接口查询是否可以对它们进行<code>join</code>或者<code>detach</code></p>
+<h3 id="管理线程"><a href="#管理线程" class="headerlink" title="管理线程"></a>管理线程</h3><ul>
+<li><p><code>yield</code>: 通常在自己的主要任务已经完成时，希望让出处理器给其他任务使用</p>
+</li>
+<li><p><code>get_id</code>: 返回当前线程的id，可以用来标识不同的线程</p>
+</li>
+<li><p><code>sleep_for</code>: 可以让当前线程停滞一段时间</p>
+</li>
+<li><p><code>sleep_until</code>: 和<code>sleep_for</code>类似，但是以具体时间点为参数，这两个API都是以<code>chrono</code>api为基础</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_time</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> now = std::chrono::system_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="keyword">auto</span> <span class="type">in_time_t</span> = std::chrono::system_clock::<span class="built_in">to_time_t</span>(now);</span><br><span class="line"></span><br><span class="line">    std::stringstream ssin;</span><br><span class="line">    ssin &lt;&lt; std::<span class="built_in">put_time</span>(std::<span class="built_in">localtime</span>(&amp;<span class="type">in_time_t</span>) , <span class="string">&quot;%Y-%m-%d %X&quot;</span>);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;now is: &quot;</span> &lt;&lt; ssin.<span class="built_in">str</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sleep_thread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">3</span>));</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;[thread-&quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot;] is waking up\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">loop_thread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;[thread-&quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&quot;] print: &quot;</span> &lt;&lt; i &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">print_time</span>();</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(sleep_thread)</span> , <span class="title">t2</span><span class="params">(loop_thread)</span></span>;</span><br><span class="line">    t1.<span class="built_in">join</span>();</span><br><span class="line">    t2.<span class="built_in">detach</span>();</span><br><span class="line">    <span class="built_in">print_time</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="线程的归属权"><a href="#线程的归属权" class="headerlink" title="线程的归属权"></a>线程的归属权</h3><blockquote>
+<p>每个线程都有其归属权，也就是说归属给每个变量管理</p>
+</blockquote>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">std::thread <span class="title">t1</span><span class="params">(func)</span></span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><code>t1</code>是一个线程变量，管理一个线程，该线程执行<code>func()</code>对于<code>std::thread</code>C++不允许拷贝构造和拷贝赋值，所以只能通过移动和局部变量返回的方式将线程变量管理权转移给其他变量管理。</p>
+<p>例如下面的例子</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">        std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">        std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;; <span class="comment">// namespace</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//1. t1绑定函数func1()</span></span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(func1)</span></span>;</span><br><span class="line">    <span class="comment">//2. 转移t1的管理的线程给t2，转移后t1无效</span></span><br><span class="line">    std::thread t2 = std::<span class="built_in">move</span>(t1);</span><br><span class="line">    <span class="comment">//3. t1绑定函数func2()</span></span><br><span class="line">    t1 = std::<span class="built_in">thread</span>(func2);</span><br><span class="line">    <span class="comment">//4. 新建一个线程t3</span></span><br><span class="line">    std::thread t3;</span><br><span class="line">    <span class="comment">//5. 转移t2管理的线程给t3，，</span></span><br><span class="line">    t3 = std::<span class="built_in">move</span>(t2);</span><br><span class="line">    <span class="comment">//6. 转移t3管理的线程给t1</span></span><br><span class="line">    t1 = std::<span class="built_in">move</span>(t3);</span><br><span class="line">    <span class="comment">// <span class="doctag">BUG:</span>不可以将一个线程的管理权交给一个已经绑定线程的变量，</span></span><br><span class="line">    <span class="comment">//否则会触发线程的terminate函数引发崩溃</span></span><br><span class="line">    <span class="comment">// t1 = std::move(t3);</span></span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2000</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>当我们启动一个线程之后，如果主线程崩溃，会导致子线程也会异常退出，调用<code>std::terminate()</code>，如果自线程在进行一些重要的操作比如将充值信息入库等，丢失这些信息是很为危险的。所以常用的做法是捕获异常，并且在异常情况下保证子线程稳定运行结束后，主线程抛出异常结束运行</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">catch_exception</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> some_local_state = <span class="number">0</span>;</span><br><span class="line">    std::function&lt;<span class="type">void</span>()&gt; myfunc = []()&#123;</span><br><span class="line">        <span class="comment">// doing something</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">functhread</span><span class="params">(myfunc)</span></span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="comment">// 本线程做的一些事情，可能引发崩溃</span></span><br><span class="line">        std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">1</span>));</span><br><span class="line">    &#125; <span class="built_in">catch</span> (std::exception&amp; e) &#123;</span><br><span class="line">        functhread.<span class="built_in">join</span>();</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;ababababa\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    functhread.<span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>但是用这种方式编码会显得臃肿，可以使用<code>RAII</code>技术，保证线程对象析构的时候等待线程运行结束，回收资源。</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">thread_guard</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::thread&amp; <span class="type">_t</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">thread_guard</span><span class="params">(std::thread&amp; t)</span> : _t(t) &#123;</span>&#125;</span><br><span class="line">    ~<span class="built_in">thread_guard</span>() &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="type">_t</span>.<span class="built_in">joinable</span>()) &#123;</span><br><span class="line">            <span class="type">_t</span>.<span class="built_in">join</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">thread_guard</span>(<span class="type">const</span> thread_guard&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    thread_guard&amp; <span class="keyword">operator</span>=(<span class="type">const</span> thread_guard&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">auto_guard</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> some_local_state = <span class="number">0</span>;</span><br><span class="line">    std::function&lt;<span class="type">void</span>()&gt; myfunc = []()&#123;</span><br><span class="line">        <span class="comment">// doing something</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(myfunc)</span></span>;</span><br><span class="line">    <span class="function">thread_guard <span class="title">guard</span><span class="params">(t1)</span></span>;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;auto guard finish\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="慎用隐式转换"><a href="#慎用隐式转换" class="headerlink" title="慎用隐式转换"></a>慎用隐式转换</h3><p>C++中会有一些隐式转换，例如<code>char*</code>转换为<code>std::string</code>等，这些隐式转换在线程的调用上可能会造成崩溃问题</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">danger_oops</span><span class="params">(<span class="type">int</span> som_param)</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(buffer, <span class="string">&quot;%i&quot;</span>, som_param);</span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span>在线程内部将char const* 转化为std::string</span></span><br><span class="line">    <span class="comment">// 指针常量  char const*  指针本身不能变</span></span><br><span class="line">    <span class="comment">// 常量指针  const char * 指向的内容不能变</span></span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(print_str, <span class="number">3</span>, buffer)</span></span>;</span><br><span class="line">    t.<span class="built_in">detach</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;danger oops finished &quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>在以上代码中，当我们定义一个线程变量<code>thread t</code>时，传递给这个线程参数<code>buffer</code>会被保存到<code>thread</code>的成员变量中。而在线程对象t内部启动并运行线程时，参数才会被传递给调用函数<code>print_str</code>。而此时<code>buffer</code>可能到<code>&#125;</code>就被销毁了。改进方式很简单，我们将参数传递给<code>thread</code>时显示转换成<code>string</code>就可以了，其实相当于拷贝一份过去。</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="type">void</span> <span class="title">danger_oops</span><span class="params">(<span class="type">int</span> som_param)</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(buffer, <span class="string">&quot;%i&quot;</span>, som_param);</span><br><span class="line">    <span class="comment">//在线程内部将char const* 转化为std::string</span></span><br><span class="line">    <span class="comment">//指针常量  char const*  指针本身不能变</span></span><br><span class="line">    <span class="comment">//常量指针  const char * 指向的内容不能变</span></span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(print_str, <span class="number">3</span>, std::string(buffer))</span></span>;</span><br><span class="line">    t.<span class="built_in">detach</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;danger oops finished &quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="引用参数"><a href="#引用参数" class="headerlink" title="引用参数"></a>引用参数</h3><p>在线程要调用的回调函数参数作为引用类型时，需要将参数显式转换为引用对象传递给构造函数，如果采用如下调用会编译失败</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_param</span><span class="params">(<span class="type">int</span>&amp; param)</span> </span>&#123;</span><br><span class="line">    ++param;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ref_oops</span><span class="params">(<span class="type">int</span> some_param)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;before change , param is &quot;</span> &lt;&lt; some_param &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 需要引用显式转换</span></span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(change_param , some_param)</span></span>;</span><br><span class="line">    t2.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;after change , param is &quot;</span> &lt;&lt; some_param &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>即使函数<code>change_param</code>的参数为<code>int&amp;</code>类型，我们传递给t2的构造函数为<code>some_param</code>，也不会达到在<code>change_param</code>函数内部修改关联到外部<code>some_param</code>的效果。因为<code>some_param</code>在传递给<code>thread</code>的构造函数后会转变为右值保存，右值传递给一个左值引用会出问题，所以编译也出了问题。</p>
+<p>只需要使用<code>std::ref()</code>就可以解决</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">change_param</span><span class="params">(<span class="type">int</span>&amp; param)</span> </span>&#123;</span><br><span class="line">    ++param;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ref_oops</span><span class="params">(<span class="type">int</span> some_param)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;before change , param is &quot;</span> &lt;&lt; some_param &lt;&lt; std::endl;</span><br><span class="line">    <span class="comment">// 需要引用显式转换</span></span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(change_param , std::ref(some_param))</span></span>;</span><br><span class="line">    t2.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;after change , param is &quot;</span> &lt;&lt; some_param &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="绑定类成员函数"><a href="#绑定类成员函数" class="headerlink" title="绑定类成员函数"></a>绑定类成员函数</h3><p>有时候我们需要绑定一个类的成员函数。</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">X</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">do_length_work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;do_length_work&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bind_class_oops</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    X my_x;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(&amp;X::do_length_work , &amp;my_x)</span></span>;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>注意，如果<code>thread</code>绑定的是普通函数，可以在函数前加<code>&amp;</code>或者不加<code>&amp;</code>，因为编译器默认将普通函数名作为函数地址，但是如果是绑定类的成员函数，必须加<code>&amp;</code></p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">thead_work1</span><span class="params">(std::string str)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;str is &quot;</span> &lt;&lt; str &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line">std::string hellostr = <span class="string">&quot;hello world!&quot;</span>;</span><br><span class="line"><span class="comment">//两种方式都正确</span></span><br><span class="line"><span class="function">std::thread <span class="title">t1</span><span class="params">(thead_work1, hellostr)</span></span>;</span><br><span class="line"><span class="function">std::thread <span class="title">t2</span><span class="params">(&amp;thead_work1, hellostr)</span></span>;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="使用move操作"><a href="#使用move操作" class="headerlink" title="使用move操作"></a>使用move操作</h3><p>有时候传递给线程的参数是独占的，所谓独占就是不支持拷贝赋值和构造，但是我们可以通过<code>std::move()</code>的方式将参数的所有权转移给线程。</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">deal_unqiue</span><span class="params">(std::unique_ptr&lt;<span class="type">int</span>&gt; p)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;unique ptr data is &quot;</span> &lt;&lt; *p &lt;&lt; std::endl;</span><br><span class="line">    (*p)++;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;after unqiue ptr data is &quot;</span> &lt;&lt; *p &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">move_oops</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> p = std::<span class="built_in">make_unique</span>&lt;<span class="type">int</span>&gt;(<span class="number">100</span>);</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(deal_unqiue , std::move(p))</span></span>;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="一次调用"><a href="#一次调用" class="headerlink" title="一次调用"></a>一次调用</h3><p>在一些情况下，我们有些任务需要执行一次，并且我们只希望它执行一次，例如资源的初始化人物。这个时候就可以用到<code>std::call_once</code>和<code>std::once_flag</code>。这两个接口保证即便在多线程的环境下，相应的函数也只会调用一次。</p>
+<p>例如下面的代码，有四个线程会执行<code>init()</code>函数，但是只有一个线程会执行。</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Initializing....&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">(std::once_flag&amp; flag)</span> </span>&#123;</span><br><span class="line">    std::<span class="built_in">call_once</span>(flag, init);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::once_flag flag;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">( worker, std::ref(flag) )</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">( worker, std::ref(flag) )</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t3</span><span class="params">( worker, std::ref(flag) )</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t4</span><span class="params">( worker, std::ref(flag) )</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t5</span><span class="params">( worker, std::ref(flag) )</span></span>;</span><br><span class="line">    t1.<span class="built_in">join</span>();</span><br><span class="line">    t2.<span class="built_in">join</span>();</span><br><span class="line">    t3.<span class="built_in">join</span>();</span><br><span class="line">    t4.<span class="built_in">join</span>();</span><br><span class="line">    t5.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>注意，我们无法确定哪个线程执行了<code>init()</code>函数，但是我们也不需要关心，因为只要有一个线程执行了<code>init()</code>函数就可以了</p>
+<h3 id="并发任务"><a href="#并发任务" class="headerlink" title="并发任务"></a>并发任务</h3><p>实例：需要计算某个范围内所有数的平方根总和</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> MAX = <span class="number">10e8</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">double</span> sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span> min , <span class="type">int</span> max)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = min ; i &lt;= max; i++) &#123;</span><br><span class="line">        sum += <span class="built_in">sqrt</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">task</span><span class="params">(<span class="type">int</span> min , <span class="type">int</span> max)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 得到调用func之前的时间</span></span><br><span class="line">    <span class="keyword">auto</span> start_time = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">    sum = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">func</span>(min , max);</span><br><span class="line">    <span class="comment">// 得到调用后func之后的时间</span></span><br><span class="line">    <span class="keyword">auto</span> end_time = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="comment">// 得到持续的时间</span></span><br><span class="line">    <span class="keyword">auto</span> ms = std::chrono::<span class="built_in">duration_cast</span>&lt;std::chrono::milliseconds&gt;(end_time - start_time).<span class="built_in">count</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Task finish, &quot;</span> &lt;&lt; ms &lt;&lt; <span class="string">&quot; ms consumed , Result: &quot;</span> &lt;&lt; sum &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">task</span>(<span class="number">1</span> , MAX);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>输出为</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task finish, 1821 ms consumed , Result: 2.10819e+13</span><br></pre></td></tr></table></figure></div>
+
+<p>很明显上面的计算使用单线程性能太差，可以使用并发进行。</p>
+<ol>
+<li>先获取当前硬件支持多少个线程并行执行</li>
+<li>根据处理器情况决定线程数量</li>
+<li>对于每一个线程都通过<code>func()</code>函数来完成任务，并划分一部分数据给它处理</li>
+<li>等待每一个线程结束。</li>
+</ol>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">concurrent_task</span><span class="params">(<span class="type">int</span> min , <span class="type">int</span> max)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> start_time = std::chrono::steady_clock::<span class="built_in">nowxainshi</span>();</span><br><span class="line">    <span class="comment">// 得到线程数量</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> concurrent_count = std::thread::<span class="built_in">hardware_concurrency</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;hardware_concurrency: &quot;</span> &lt;&lt; concurrent_count &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    std::vector&lt;std::thread&gt; threads;</span><br><span class="line">    min = <span class="number">0</span>;</span><br><span class="line">    sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> t = <span class="number">0</span>; t &lt; concurrent_count; t++) &#123;</span><br><span class="line">        <span class="type">int</span> range = max / concurrent_count * (t + <span class="number">1</span>);</span><br><span class="line">        threads.<span class="built_in">push_back</span>(std::<span class="built_in">thread</span>(func , min , range));</span><br><span class="line">        min = range + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;i : threads) &#123;</span><br><span class="line">        i.<span class="built_in">join</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> end_time = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="keyword">auto</span> ms = std::chrono::<span class="built_in">duration_cast</span>&lt;std::chrono::milliseconds&gt;(end_time - start_time).<span class="built_in">count</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Task finish, &quot;</span> &lt;&lt; ms &lt;&lt; <span class="string">&quot; ms consumed , Result: &quot;</span> &lt;&lt; sum &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>输出如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hardware_concurrency: 20</span><br><span class="line">Task finish, 2086 ms consumed , Result: 1.53287e+12</span><br></pre></td></tr></table></figure></div>
+
+<p>但是我们会发现性能并没有多少提升，并且结果还是错的。</p>
+<p>要搞清楚为什么，我们需要一点背景知识</p>
+<p>对于现代处理器来说，为了加速处理的速度，每个处理器都会有自己的高速缓存，这个高速缓存是与每个处理相对应的</p>
+<blockquote>
+<p>现在的处理器起码有三级缓存</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://ooo.0x0.ooo/2024/03/23/OgtpNY.png"
+                      alt="OgtpNY.png"
+                ></p>
+<p>处理器在进行计算的时候，高速缓存会参与其中，例如数据的读和写。而高速缓存和系统主存（Memory）是有可能存在不一致的。即：某个结果计算后保存在处理器的高速缓存中了，但是没有同步到主存中，此时这个值对于其他处理器就是不可见的。</p>
+<p>事情还没有这么简单。我们对于全局变量值的修改<code>sum += sqrt(i);</code>这条语句，它并非是原子的。它其实很多条指令的组合才完成的。假设在某个设备上，这条语句通过下面这几个步骤来完成的，时序可能如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://ooo.0x0.ooo/2024/03/23/OgtJEv.png"
+                      alt="OgtJEv.png"
+                ></p>
+<p>如图所示，在时间点a的时候，所有线程对于<code>sum</code>变量的值是一致的。</p>
+<p>但是在时间点b之后，thread3上已经对<code>sum</code>进行了赋值，而这个时候其他几个线程也同时在其他处理器上使用了这个值，那么这个时候它们所使用的值是旧的，也就是错误的。最后得到的结果也就是错误的。</p>
+<h3 id="竞争条件与临界区"><a href="#竞争条件与临界区" class="headerlink" title="竞争条件与临界区"></a>竞争条件与临界区</h3><p>当多个进程或者线程同时访问共享数据时，只要有一个任务会修改数据，那么就可能会发生问题。此时结果依赖于这些任务执行的相对时间，这种场景称为<a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/426072739" >竞争条件 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>访问共享数据的代码片段称之为<strong>临界区</strong>。例如上面的实例，临界区就是读写<code>sum</code>变量的地方</p>
+<p>要避免竞争条件，就需要对临界区进行数据保护。</p>
+<p>那么对于上面的实例的解决方法就是一次只让一个线程访问共享数据，访问完了再让其他线程接着访问，这样就可以避免问题发生了。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/C-C/">#C/C++</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">#并发编程</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+  <div class="recommended-article px-2 sm:px-6 md:px-8">
+   <div class="recommended-desktop">
+    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+    </div>
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/03/26/concurrency-programming-3/" title="并发编程-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-3" class="!max-w-none">
+  <span class="title">并发编程-3</span>
+</a><a class="recommended-article-item" href="/2024/03/23/concurrency-programming-2/" title="并发编程-2" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-2" class="!max-w-none">
+  <span class="title">并发编程-2</span>
+</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
+  <span class="title">GDB使用指南-3</span>
+</a></div>
+   </div>
+   <div class="recommended-mobile">
+   <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+   </div>
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/03/26/concurrency-programming-3/" title="并发编程-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-3" class="!max-w-none">
+  <span class="title">并发编程-3</span>
+</a><a class="recommended-article-item" href="/2024/03/23/concurrency-programming-2/" title="并发编程-2" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-2" class="!max-w-none">
+  <span class="title">并发编程-2</span>
+</a></div>
+   </div>
+  </div>
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/03/23/concurrency-programming-2/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">并发编程-2</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/03/20/gdb-3/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">GDB使用指南-3</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">并发编程-1</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80"><span class="nav-text">线程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">线程的创建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#detach-%E5%92%8C-join"><span class="nav-text">detach 和 join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%BA%BF%E7%A8%8B"><span class="nav-text">管理线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%BD%92%E5%B1%9E%E6%9D%83"><span class="nav-text">线程的归属权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%85%8E%E7%94%A8%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2"><span class="nav-text">慎用隐式转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8F%82%E6%95%B0"><span class="nav-text">引用参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%91%E5%AE%9A%E7%B1%BB%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="nav-text">绑定类成员函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8move%E6%93%8D%E4%BD%9C"><span class="nav-text">使用move操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E6%AC%A1%E8%B0%83%E7%94%A8"><span class="nav-text">一次调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E4%BB%BB%E5%8A%A1"><span class="nav-text">并发任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6%E4%B8%8E%E4%B8%B4%E7%95%8C%E5%8C%BA"><span class="nav-text">竞争条件与临界区</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Raven005</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        31 posts in total
+                    </span>
+                    
+                        <span>
+                            84.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.7.3</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/libs/mermaid.min.js"></script>
+
+    
+<script src="/js/plugins/mermaid.js"></script>
+
+
+
+
+
+
+
+
+
+    
+<script src="/js/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":1}});</script></body>
+</html>

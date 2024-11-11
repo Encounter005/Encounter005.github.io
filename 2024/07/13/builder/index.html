@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Raven005">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/07/13/builder/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="简介建造者模式（Builder Pattern）是一种在软件设计中用来组织对象的构造过程的方法。它将对象的构建和表示分离，允许独立改变构建过程或生成不同的表示形式。这种模式特别适用于那些需要创建复杂对象的场景，在这些场景中，对象的组成部分可能相互依赖或者取决于外部环境条件。 建造者模式的主要组件建造者模式通常包含以下主要组件：  产品（Product）接口：定义了一个通用的产品或对象结构。所有具体">
+<meta property="og:type" content="article">
+<meta property="og:title" content="建造者模式">
+<meta property="og:url" content="http://example.com/2024/07/13/builder/index.html">
+<meta property="og:site_name" content="Raven&#39;s blog">
+<meta property="og:description" content="简介建造者模式（Builder Pattern）是一种在软件设计中用来组织对象的构造过程的方法。它将对象的构建和表示分离，允许独立改变构建过程或生成不同的表示形式。这种模式特别适用于那些需要创建复杂对象的场景，在这些场景中，对象的组成部分可能相互依赖或者取决于外部环境条件。 建造者模式的主要组件建造者模式通常包含以下主要组件：  产品（Product）接口：定义了一个通用的产品或对象结构。所有具体">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-12T16:57:29.000Z">
+<meta property="article:modified_time" content="2024-11-08T02:21:34.890Z">
+<meta property="article:author" content="Raven005">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/head.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/head.svg">
+    <meta name="theme-color" content="#7aa2f7">
+    <link rel="shortcut icon" href="/images/head.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            建造者模式 | Raven&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":true,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/background_light.jpg","skip_dirs":[]}},"colors":{"primary":"#7aa2f7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":true,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/background_light.jpg","dark":"/images/background_dark.jpg"},"title":"Raven's blog","subtitle":{"text":["coding is life"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/Encounter005","instagram":null,"zhihu":"https://www.zhihu.com/people/eznoob","twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":true,"version":"9.3.0"}},"version":"2.7.3","navbar":{"auto_hide":false,"color":{"left":"#7aa2f7","right":"#c0caf5","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"info","announcement":"不定期更新","show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Raven's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+<!--        <span class="swup-progress-icon">-->
+<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+<!--        </span>-->
+    
+</div>
+
+
+
+    <style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Raven&#39;s blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container flex flex-col justify-between min-h-dvh">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/head.svg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Raven&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">31</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container flex relative justify-between box-border w-full h-full">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">建造者模式</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/head.svg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Raven005</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-07-13 00:57:29</span>
+        <span class="mobile">2024-07-13 00:57:29</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-11-08 10:21:34</span>
+            <span class="mobile">2024-11-08 10:21:34</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>2k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>7 Mins</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>建造者模式（Builder Pattern）是一种在软件设计中用来组织对象的构造过程的方法。它将对象的构建和表示分离，允许独立改变构建过程或生成不同的表示形式。这种模式特别适用于那些需要创建复杂对象的场景，在这些场景中，对象的组成部分可能相互依赖或者取决于外部环境条件。</p>
+<h2 id="建造者模式的主要组件"><a href="#建造者模式的主要组件" class="headerlink" title="建造者模式的主要组件"></a>建造者模式的主要组件</h2><p>建造者模式通常包含以下主要组件：</p>
+<ol>
+<li><p><strong>产品（Product）接口</strong>：定义了一个通用的产品或对象结构。所有具体产品的构建都会遵循这个接口。</p>
+</li>
+<li><p><strong>抽象建造者（Builder Interface）</strong>：为创建特定产品提供一组方法，这些方法用于设置产品的不同部分。该接口是所有具体建造者的超类。</p>
+</li>
+<li><p><strong>具体建造者（Concrete Builder）</strong>：实现抽象建造者接口，并定义了如何构建具体的产品实例。每个具体的建造者将根据需要构建不同的部分或选择不同的配置来创建产品。</p>
+</li>
+<li><p><strong>产品工厂（Product Factory）</strong> 或 <strong>导演（Director）</strong>：在一些情况下，可以使用一个中心类来调用特定的建造者方法并构建出一个完整的产品对象。这个类通常不直接与产品的具体实现交互，而是通过调用建造者的接口来完成构建过程。</p>
+</li>
+</ol>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>建造者模式适用于以下几种情况：</p>
+<ul>
+<li><strong>复杂对象构造</strong>：当创建对象时涉及多个步骤或依赖于外部环境条件（例如操作系统版本、网络配置等）。</li>
+<li><strong>可选功能构建</strong>：在产品中包含可选择的组件或选项，如定制电脑配置（CPU类型、内存大小、硬盘驱动器类型等）。</li>
+</ul>
+<h2 id="实例说明"><a href="#实例说明" class="headerlink" title="实例说明"></a>实例说明</h2><p>为了更好地理解建造者模式，我们可以使用一个简单的例子来说明如何应用这个设计模式。假设我们正在组装一台电脑开发一个构建过程，允许用户根据需求自定义电脑的配置</p>
+<div class="highlight-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Product</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Computer</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Computer</span><span class="params">()</span> </span>= <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setCPU</span><span class="params">( <span class="type">const</span> std::string &amp;cpu )</span> </span>&#123; cpu_ = cpu; &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setMemory</span><span class="params">( <span class="type">const</span> std::string &amp;memory )</span> </span>&#123; memory_ = memory; &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setStorage</span><span class="params">( <span class="type">const</span> std::string &amp;storage )</span> </span>&#123; storage_ = storage; &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;CPU:     &quot;</span> &lt;&lt; cpu_ &lt;&lt; std::endl;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Memory:  &quot;</span> &lt;&lt; memory_ &lt;&lt; std::endl;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Storage: &quot;</span> &lt;&lt; storage_ &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::string cpu_;</span><br><span class="line">    std::string memory_;</span><br><span class="line">    std::string storage_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Builder interface</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ComputerBuilder</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ComputerBuilder</span>()                       = <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">buildCPU</span><span class="params">( <span class="type">const</span> std::string &amp; )</span>     </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">buildMemory</span><span class="params">( <span class="type">const</span> std::string &amp; )</span>  </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">buildStorage</span><span class="params">( <span class="type">const</span> std::string &amp; )</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> std::shared_ptr&lt;Computer&gt; <span class="title">getResult</span><span class="params">()</span>    </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Concrete Builder</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DesktopComputerBuilder</span> : <span class="keyword">public</span> ComputerBuilder &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">DesktopComputerBuilder</span>() : <span class="built_in">computer_</span>( std::<span class="built_in">make_shared</span>&lt;Computer&gt;() ) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">buildCPU</span><span class="params">( <span class="type">const</span> std::string &amp;cpu )</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        computer_-&gt;<span class="built_in">setCPU</span>( cpu );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">buildMemory</span><span class="params">( <span class="type">const</span> std::string &amp;memory )</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        computer_-&gt;<span class="built_in">setMemory</span>( memory );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">buildStorage</span><span class="params">( <span class="type">const</span> std::string &amp;storage )</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        computer_-&gt;<span class="built_in">setStorage</span>( storage );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::shared_ptr&lt;Computer&gt; <span class="title">getResult</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123; <span class="keyword">return</span> computer_; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    std::shared_ptr&lt;Computer&gt; computer_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Director</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ComputerAssembler</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">std::shared_ptr&lt;Computer&gt; <span class="title">assembleComputer</span><span class="params">( ComputerBuilder &amp;builder )</span> </span>&#123;</span><br><span class="line">        builder.<span class="built_in">buildCPU</span>( <span class="string">&quot;Inter i7&quot;</span> );</span><br><span class="line">        builder.<span class="built_in">buildStorage</span>( <span class="string">&quot;980 PRO 1TB SSD&quot;</span> );</span><br><span class="line">        builder.<span class="built_in">buildMemory</span>( <span class="string">&quot;16GB&quot;</span> );</span><br><span class="line">        <span class="keyword">return</span> builder.<span class="built_in">getResult</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    DesktopComputerBuilder builder;</span><br><span class="line">    ComputerAssembler assembler;</span><br><span class="line">    <span class="keyword">auto</span> computer = assembler.<span class="built_in">assembleComputer</span>( builder );</span><br><span class="line">    computer-&gt;<span class="built_in">print</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>在给出的代码示例中，实现了建造者模式的主要组成部分：</p>
+<ol>
+<li><p><strong>产品接口</strong>（<code>Computer</code>）：定义了一个用于创建电脑的基本接口。所有的具体产品（如台式电脑、笔记本电脑等）都必须遵循这个接口。</p>
+</li>
+<li><p><strong>抽象建造者（Builder Interface）</strong>（<code>ComputerBuilder</code>）：定义了构建电脑所需的通用方法，比如设置CPU、内存和存储设备等。这些方法对所有具体的建造者类开放，允许它们独立于具体产品来操作构建过程。</p>
+</li>
+<li><p><strong>具体建造者</strong>（<code>DesktopComputerBuilder</code>）：实现了抽象建造者接口并提供了具体实现的方法。每个具体建造者会根据自己的规则和逻辑来执行构建步骤，比如在台式电脑上选择不同的组件配置。</p>
+</li>
+<li><p><strong>导演类（Director）</strong>（<code>ComputerAssembler</code>）：负责调用具体的建造者类进行构建过程。它不直接与产品接口或具体的产品实例交互，而是通过调用抽象建造者的接口方法完成构建。</p>
+</li>
+<li><p><code>test_func</code> 函数展示了如何使用这些组成部分来构建一个台式电脑的例子：</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Cpp"><figure class="iseeu highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DesktopComputerBuilder builder;</span><br><span class="line">ComputerAssembler assembler;</span><br><span class="line"><span class="keyword">auto</span> computer = assembler.<span class="built_in">assembleComputer</span>( builder );</span><br><span class="line">computer-&gt;<span class="built_in">print</span>();</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个例子中：</p>
+<ul>
+<li><strong>Builder</strong> (<code>DesktopComputerBuilder</code>) 实例化并执行了具体的构建步骤，比如选择CPU型号、内存大小和存储设备类型。</li>
+<li><strong>Director</strong> (<code>ComputerAssembler</code>) 负责调用 <code>DesktopComputerBuilder</code> 的方法来逐步构造电脑。</li>
+</ul>
+<p>通过这样的结构设计，建造者模式使得在不同场景下可以有不同的构建过程（不同的具体产品），同时保持了代码的可扩展性和灵活性。例如，我们可以轻松地添加新的构建步骤或创建完全不同的产品类型而无需修改现有的组装逻辑。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>建造者模式是一种强大的设计模式，尤其在需要创建具有复杂构造过程的对象时非常有用。它通过封装构建过程和分离产品构建逻辑来提高系统的灵活性、可扩展性和可维护性。</p>
+<h2 id="建造者模式的缺点"><a href="#建造者模式的缺点" class="headerlink" title="建造者模式的缺点"></a>建造者模式的缺点</h2><p>尽管建造者模式在很多情况下能够提供强大的对象构造能力，但就像任何设计模式一样，它也有其局限性和潜在的问题：</p>
+<ol>
+<li><p><strong>增加系统复杂性</strong>：引入多个类和接口会增加系统的复杂度。对于那些没有足够需求变化或不需要高度可配置性的项目来说，构建者模式可能会导致过度工程化。</p>
+</li>
+<li><p><strong>创建过多的实例</strong>：如果建造过程涉及到很多步骤或者每个步骤都有可能产生不同的实例，那么在某些实现中可能会创建大量的对象，这可能导致内存使用和性能问题。优化构建过程以减少不必要的对象创建是很重要的。</p>
+</li>
+<li><p><strong>代码维护难度</strong>：由于构造过程的细节被封装在多个类中，这对于系统维护来说可能需要更多的关注点。如果建造过程发生变化（例如引入新的组件或改变现有组件的选择逻辑），那么通常需要修改不止一个地方，这可能导致维护和更新的成本增加。</p>
+</li>
+<li><p><strong>耦合性问题</strong>：尽管抽象建造者试图通过接口来隐藏构建步骤的细节，但具体建造者的实现可能会与产品类紧密关联。这种依赖关系可能使得重构变得困难，并且如果对建造过程进行微小调整，可能需要修改多个相关部分。</p>
+</li>
+<li><p><strong>代码可读性和理解难度</strong>：建造者模式中的类和方法通常用于封装复杂的构建逻辑，这在一定程度上增加了代码的阅读和理解难度。对于没有熟悉此设计模式的人来说，在初次接触时可能会觉得难以理解整个系统的构造过程。</p>
+</li>
+<li><p><strong>资源消耗</strong>：如果构建步骤涉及外部依赖或需要大量计算资源（如网络请求、数据库查询等），那么建造者模式可能会增加整体系统对这些资源的需求，从而影响性能和用户体验。</p>
+</li>
+<li><p><strong>非线性构建路径</strong>：在某些实现中，建造过程可能不是单一线性的，而是有多个选择点。这可能导致难以预测的结果或更复杂的错误处理逻辑。</p>
+</li>
+</ol>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#设计模式</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+  <div class="recommended-article px-2 sm:px-6 md:px-8">
+   <div class="recommended-desktop">
+    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+    </div>
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/13/factory/" title="工厂模式" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="工厂模式" class="!max-w-none">
+  <span class="title">工厂模式</span>
+</a><a class="recommended-article-item" href="/2024/07/10/cpp-pointer/" title="智能指针" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="智能指针" class="!max-w-none">
+  <span class="title">智能指针</span>
+</a><a class="recommended-article-item" href="/2024/03/23/concurrency-programming-1/" title="并发编程-1" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-1" class="!max-w-none">
+  <span class="title">并发编程-1</span>
+</a></div>
+   </div>
+   <div class="recommended-mobile">
+   <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+   </div>
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/13/factory/" title="工厂模式" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="工厂模式" class="!max-w-none">
+  <span class="title">工厂模式</span>
+</a><a class="recommended-article-item" href="/2024/07/10/cpp-pointer/" title="智能指针" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="智能指针" class="!max-w-none">
+  <span class="title">智能指针</span>
+</a></div>
+   </div>
+  </div>
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/07/13/singleton/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">单例模式</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/07/13/factory/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">工厂模式</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">建造者模式</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%BB%E8%A6%81%E7%BB%84%E4%BB%B6"><span class="nav-text">建造者模式的主要组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="nav-text">实例说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-text">建造者模式的缺点</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Raven005</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        31 posts in total
+                    </span>
+                    
+                        <span>
+                            84.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.7.3</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/libs/mermaid.min.js"></script>
+
+    
+<script src="/js/plugins/mermaid.js"></script>
+
+
+
+
+
+
+
+
+
+    
+<script src="/js/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":1}});</script></body>
+</html>

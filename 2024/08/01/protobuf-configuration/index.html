@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Raven005">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/08/01/protobuf-configuration/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="protobuf简介Protocol Buffers（简称 protobuf）是 Google 开发的一种数据交换格式。它是一种灵活、高效且自动化的结构化数据序列化方法，类似于 XML、JSON 和其他配置文件格式，但更小、更快、更简单。我们的逻辑是有类等抽象数据构成的，而tcp是面向字节流的，我们需要将类结构序列化为字符串来传输。 主要特点：  语言无关：protobuf 支持多种编程语言，包括">
+<meta property="og:type" content="article">
+<meta property="og:title" content="protobuf的配置和使用">
+<meta property="og:url" content="http://example.com/2024/08/01/protobuf-configuration/index.html">
+<meta property="og:site_name" content="Raven&#39;s blog">
+<meta property="og:description" content="protobuf简介Protocol Buffers（简称 protobuf）是 Google 开发的一种数据交换格式。它是一种灵活、高效且自动化的结构化数据序列化方法，类似于 XML、JSON 和其他配置文件格式，但更小、更快、更简单。我们的逻辑是有类等抽象数据构成的，而tcp是面向字节流的，我们需要将类结构序列化为字符串来传输。 主要特点：  语言无关：protobuf 支持多种编程语言，包括">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-01T02:59:34.000Z">
+<meta property="article:modified_time" content="2024-11-08T02:21:34.892Z">
+<meta property="article:author" content="Raven005">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="网络编程">
+<meta property="article:tag" content="socket">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="protobuf">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/head.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/head.svg">
+    <meta name="theme-color" content="#7aa2f7">
+    <link rel="shortcut icon" href="/images/head.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            protobuf的配置和使用 | Raven&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":true,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/background_light.jpg","skip_dirs":[]}},"colors":{"primary":"#7aa2f7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":true,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/background_light.jpg","dark":"/images/background_dark.jpg"},"title":"Raven's blog","subtitle":{"text":["coding is life"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/Encounter005","instagram":null,"zhihu":"https://www.zhihu.com/people/eznoob","twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":true,"version":"9.3.0"}},"version":"2.7.3","navbar":{"auto_hide":false,"color":{"left":"#7aa2f7","right":"#c0caf5","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"info","announcement":"不定期更新","show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Raven's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+<!--        <span class="swup-progress-icon">-->
+<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+<!--        </span>-->
+    
+</div>
+
+
+
+    <style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Raven&#39;s blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container flex flex-col justify-between min-h-dvh">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/head.svg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Raven&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">19</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">31</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container flex relative justify-between box-border w-full h-full">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">protobuf的配置和使用</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/head.svg">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Raven005</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-08-01 10:59:34</span>
+        <span class="mobile">2024-08-01 10:59:34</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-11-08 10:21:34</span>
+            <span class="mobile">2024-11-08 10:21:34</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/C-C/">C/C++</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/socket/">socket</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/protobuf/">protobuf</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.3k Words</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>5 Mins</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="protobuf简介"><a href="#protobuf简介" class="headerlink" title="protobuf简介"></a>protobuf简介</h1><p>Protocol Buffers（简称 protobuf）是 Google 开发的一种数据交换格式。它是一种灵活、高效且自动化的结构化数据序列化方法，类似于 XML、JSON 和其他配置文件格式，但更小、更快、更简单。我们的逻辑是有类等抽象数据构成的，而tcp是面向字节流的，我们需要将类结构序列化为字符串来传输。</p>
+<p>主要特点：</p>
+<ol>
+<li>语言无关：protobuf 支持多种编程语言，包括 C++、Java、Python 等，并且可以轻松地在不同语言之间进行通信。</li>
+<li>平台无关：可以跨多个平台使用，无论是在 32 位还是 64 位系统上。</li>
+<li>效率高：相比于 XML 或 JSON，protobuf 在序列化和反序列化时的性能更好，生成的数据也更紧凑。</li>
+</ol>
+<h1 id="编译protobuf"><a href="#编译protobuf" class="headerlink" title="编译protobuf"></a>编译protobuf</h1><p>如果是linux系统，可以直接从自己的包管理器下载protobuf</p>
+<p>例如<code>archlinux</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S protobuf</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是windows系统，我们需要从<a class="link"   target="_blank" rel="noopener" href="https://github.com/protocolbuffers/protobuf/releases" >官网 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>下载源代码进行编译</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42968757/article/details/120033598" >具体教程 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>当protobuf编译完成后，我们可以通过<code>protobuf --version</code>来检查是否安装成功</p>
+<h1 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h1><ul>
+<li>定义消息格式：首先需要定义消息的结构，这通常是通过 .proto 文件完成的。这些文件描述了你想要交换的数据的结构。</li>
+</ul>
+<p>我们先创建一个<code>msg.proto</code>文件，并且写入如下内容</p>
+<div class="highlight-container" data-rel="Proto"><figure class="iseeu highlight proto"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">message </span><span class="title class_">Book</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="type">string</span> name = <span class="number">1</span>;</span><br><span class="line">   <span class="type">int32</span> pages = <span class="number">2</span>;</span><br><span class="line">   <span class="type">float</span> price = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这个文件用来定义我们需要发送的信息</p>
+<ul>
+<li>编译 .proto 文件：使用 Protocol Buffers 编译器（protoc），根据 .proto 文件生成特定语言的源代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --cpp_out=. ./msg.proto</span><br></pre></td></tr></table></figure></div>
+
+<p>.&#x2F;msg.proto 表示msg.proto所在的位置，因为我们是在msg.proto所在文件夹中执行的protoc命令,所以是当前路径即可。<br>执行后，会看到当前目录生成了msg.pb.h和msg.pb.cc两个文件，这两个文件就是我们要用到的头文件和cpp文件。</p>
+<ul>
+<li>序列化与反序列化：使用生成的类来创建消息对象，并将这些对象序列化为字节流，或者从字节流中反序列化为对象。</li>
+</ul>
+<p>这里我们写一个测试函数</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_protobuf</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Book book;</span><br><span class="line">    book.<span class="built_in">set_name</span>(<span class="string">&quot;CPP programing&quot;</span>);</span><br><span class="line">    book.<span class="built_in">set_pages</span>(<span class="number">100</span>);</span><br><span class="line">    book.<span class="built_in">set_price</span>(<span class="number">200</span>);</span><br><span class="line">    std::string bookstr;</span><br><span class="line">    book.<span class="built_in">SerializeToString</span>(&amp;bookstr);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;serialize str is &quot;</span> &lt;&lt; bookstr &lt;&lt; std::endl;</span><br><span class="line">    Book book2;</span><br><span class="line">    book2.<span class="built_in">ParseFromString</span>(bookstr);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;book2 name is &quot;</span> &lt;&lt; book2.<span class="built_in">name</span>() &lt;&lt; <span class="string">&quot; price is &quot;</span></span><br><span class="line">        &lt;&lt; book2.<span class="built_in">price</span>() &lt;&lt; <span class="string">&quot; pages is &quot;</span> &lt;&lt; book2.<span class="built_in">pages</span>() &lt;&lt; std::endl;</span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>输出如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">serialize str is</span><br><span class="line">CPP programingdHC</span><br><span class="line">book2 name is CPP programing price is 200 pages is 100</span><br></pre></td></tr></table></figure></div>
+
+<p>上面的demo中将book对象先序列化为字符串，再将字符串反序列化为book2对象。</p>
+<h1 id="在网络中的应用"><a href="#在网络中的应用" class="headerlink" title="在网络中的应用"></a>在网络中的应用</h1><p>先为服务器定义一个用来通信的protobuf</p>
+<div class="highlight-container" data-rel="Proto"><figure class="iseeu highlight proto"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">&quot;proto3&quot;</span>;</span><br><span class="line"><span class="keyword">message </span><span class="title class_">MsgData</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int32</span> id = <span class="number">1</span>;</span><br><span class="line">    <span class="type">string</span> data = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>id代表消息的编号，data代表消息的内容</p>
+<p>接着修改服务器接收和发送数据的逻辑<br>当服务器收到数据并完成切包处理，将信息反序列化为具体要使用的结构，打印相关信息，然后再发送给客户端</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Data msgdata;</span><br><span class="line">std::string receive_data;</span><br><span class="line">msgdata.<span class="built_in">ParseFromString</span>( std::<span class="built_in">string</span>(</span><br><span class="line">    _recv_msg_node-&gt;_msg, _recv_msg_node-&gt;_total_len ) );</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Recv msg is: &quot;</span> &lt;&lt; msgdata.<span class="built_in">data</span>() &lt;&lt; std::endl;</span><br><span class="line">std::string return_str =</span><br><span class="line">    <span class="string">&quot;server has receive msg, msg data is  &quot;</span> + msgdata.<span class="built_in">data</span>();</span><br><span class="line">Data msgreturn;</span><br><span class="line">msgreturn.<span class="built_in">set_id</span>( msgdata.<span class="built_in">id</span>() );</span><br><span class="line">msgreturn.<span class="built_in">set_data</span>( msgdata.<span class="built_in">data</span>() );</span><br><span class="line">msgreturn.<span class="built_in">SerializeToString</span>( &amp;return_str );</span><br><span class="line"><span class="built_in">Send</span>( return_str );</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>同样，客户端在发送的时候也利用protobu进行消息序列化，然后发送给服务器</p>
+<div class="highlight-container" data-rel="C++"><figure class="iseeu highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Data msgdata;</span><br><span class="line">msgdata.<span class="built_in">set_id</span>( <span class="number">1001</span> );</span><br><span class="line">msgdata.<span class="built_in">set_data</span>( <span class="string">&quot;Hello world!&quot;</span> );</span><br><span class="line">std::string request;</span><br><span class="line">msgdata.<span class="built_in">SerializeToString</span>( &amp;request );</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;message id: &quot;</span> &lt;&lt; msgdata.<span class="built_in">id</span>()</span><br><span class="line">          &lt;&lt; <span class="string">&quot; content: &quot;</span> &lt;&lt; msgdata.<span class="built_in">data</span>() &lt;&lt; std::endl;</span><br><span class="line">boost::asio::<span class="built_in">write</span>(</span><br><span class="line">    sock, boost::asio::<span class="built_in">buffer</span>( request, request.<span class="built_in">length</span>() ) );</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="关于protbuf在CMake中的配置"><a href="#关于protbuf在CMake中的配置" class="headerlink" title="关于protbuf在CMake中的配置"></a>关于protbuf在CMake中的配置</h1><blockquote>
+<p>注意一定要在编译参数中加入<code>-Wl,--copy-dt-needed-entries</code>，否则会报<a class="link"   target="_blank" rel="noopener" href="https://linuxpip.org/how-to-fix-dso-missing-from-command-line" >DSO missing <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<div class="highlight-container" data-rel="Cmake"><figure class="iseeu highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS</span><br><span class="line">    <span class="string">&quot;$&#123;CMAKE_CXX_FLAGS&#125; -g -O2  -Wall -Wextra -Weffc++ -Werror=uninitialized  -Werror=return-type -Wconversion -Wsign-compare -Werror=unused-result -Werror=suggest-override -Wzero-as-null-pointer-constant -Wmissing-declarations -Wold-style-cast -Wnon-virtual-dtor -Wl,--copy-dt-needed-entries&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>关于对proto文件的配置，可以参考这个</p>
+<div class="highlight-container" data-rel="Cmake"><figure class="iseeu highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取编译器</span></span><br><span class="line"><span class="keyword">find_program</span>(</span><br><span class="line">    PROTOC_CXX</span><br><span class="line">    protoc</span><br><span class="line">    DOC <span class="string">&quot;Protobuf Compiler (protoc)&quot;</span></span><br><span class="line">    REQUIRED</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要编译的 proto 文件</span></span><br><span class="line"><span class="keyword">file</span> (GLOB PROTO_SOURCE_FILES</span><br><span class="line">    <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/*.proto&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(PROTO_PATH    <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(PROTO_CXX_OUT <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/gen_cxx&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">file</span>(<span class="keyword">MAKE_DIRECTORY</span> <span class="variable">$&#123;PROTO_CXX_OUT&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 protoc 处理 proto 文件</span></span><br><span class="line"><span class="keyword">foreach</span>(input_proto <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span>)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(DIR <span class="variable">$&#123;input_proto&#125;</span> DIRECTORY)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(FILE_NAME <span class="variable">$&#123;input_proto&#125;</span> NAME_WE)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">set</span>(OUTPUT_CXX_HEADER   <span class="string">&quot;$&#123;PROTO_CXX_OUT&#125;/$&#123;FILE_NAME&#125;.pb.h&quot;</span>)</span><br><span class="line">    <span class="keyword">set</span>(OUTPUT_CXX_SOURCE   <span class="string">&quot;$&#123;PROTO_CXX_OUT&#125;/$&#123;FILE_NAME&#125;.pb.cc&quot;</span>)</span><br><span class="line">    <span class="keyword">list</span>(APPEND OUTPUT_SOURCES_CXX</span><br><span class="line">        <span class="variable">$&#123;OUTPUT_CXX_HEADER&#125;</span> <span class="variable">$&#123;OUTPUT_CXX_SOURCE&#125;</span>)</span><br><span class="line"><span class="keyword">endforeach</span>()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_custom_command</span>(</span><br><span class="line">    OUTPUT  <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span></span><br><span class="line">    <span class="keyword">COMMAND</span> <span class="variable">$&#123;PROTOC_CXX&#125;</span> --cpp_out=<span class="variable">$&#123;PROTO_CXX_OUT&#125;</span> --proto_path=<span class="variable">$&#123;PROTO_PATH&#125;</span> <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span></span><br><span class="line">    DEPENDS <span class="variable">$&#123;PROTO_SOURCE_FILES&#125;</span></span><br><span class="line">    WORKING_DIRECTORY <span class="variable">$&#123;PROTO_PATH&#125;</span></span><br><span class="line">    COMMENT <span class="string">&quot;Generate Cpp Protobuf Source Files&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_custom_target</span>(</span><br><span class="line">    compile_cxx_protos</span><br><span class="line">    DEPENDS <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置生成源文件包含目录变量供上层引用</span></span><br><span class="line"><span class="keyword">set</span>(PROTO_GEN_CXX_INCLUDE_DIRS <span class="variable">$&#123;PROTO_CXX_OUT&#125;</span> PARENT_SCOPE)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将生成的文件打包为库 proto_gen_cxx</span></span><br><span class="line"><span class="comment"># 程序可以链接到该库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(proto_gen_cxx <span class="variable">$&#123;OUTPUT_SOURCES_CXX&#125;</span>)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(proto_gen_cxx protobuf)</span><br><span class="line"><span class="keyword">add_dependencies</span>(proto_gen_cxx compile_cxx_protos)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/C-C/">#C/C++</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">#网络编程</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/socket/">#socket</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">#计算机网络</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/Linux/">#Linux</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item mx-0.5">
+                        <a href="/tags/protobuf/">#protobuf</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+  <div class="recommended-article px-2 sm:px-6 md:px-8">
+   <div class="recommended-desktop">
+    <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+    </div>
+    <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/26/tcp-packet/" title="tcp粘包问题" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="tcp粘包问题" class="!max-w-none">
+  <span class="title">tcp粘包问题</span>
+</a><a class="recommended-article-item" href="/2024/03/26/concurrency-programming-3/" title="并发编程-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-3" class="!max-w-none">
+  <span class="title">并发编程-3</span>
+</a><a class="recommended-article-item" href="/2024/03/20/gdb-3/" title="GDB使用指南-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="GDB使用指南-3" class="!max-w-none">
+  <span class="title">GDB使用指南-3</span>
+</a></div>
+   </div>
+   <div class="recommended-mobile">
+   <div class="recommended-article-header text-xl md:text-3xl font-bold mt-10">
+     <i aria-hidden="true"></i><span>推荐阅读</span>
+   </div>
+   <div class="recommended-article-group"><a class="recommended-article-item" href="/2024/07/26/tcp-packet/" title="tcp粘包问题" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="tcp粘包问题" class="!max-w-none">
+  <span class="title">tcp粘包问题</span>
+</a><a class="recommended-article-item" href="/2024/03/26/concurrency-programming-3/" title="并发编程-3" rel="bookmark">
+  <img src="/images/background_light.jpg" alt="并发编程-3" class="!max-w-none">
+  <span class="title">并发编程-3</span>
+</a></div>
+   </div>
+  </div>
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/08/24/asio-IOServicePool/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">asio-IOServicePool</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/07/26/tcp-packet/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">tcp粘包问题</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">protobuf的配置和使用</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#protobuf%E7%AE%80%E4%BB%8B"><span class="nav-text">protobuf简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91protobuf"><span class="nav-text">编译protobuf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="nav-text">使用流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-text">在网络中的应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Eprotbuf%E5%9C%A8CMake%E4%B8%AD%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">关于protbuf在CMake中的配置</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Raven005</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        31 posts in total
+                    </span>
+                    
+                        <span>
+                            84.4k words in total
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.7.3</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/libs/mermaid.min.js"></script>
+
+    
+<script src="/js/plugins/mermaid.js"></script>
+
+
+
+
+
+
+
+
+
+    
+<script src="/js/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":1}});</script></body>
+</html>
